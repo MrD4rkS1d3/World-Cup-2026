@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Family World Cup Live Tracker</title>
+    <title>Family World Cup Group Stage Score Tracker</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; }
         .container { max-width: 950px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
@@ -69,7 +69,7 @@
         .score-inputs input:disabled { background: #edf2f7; color: #4a5568; border-color: #e2e8f0; cursor: not-allowed; }
         
         .family-h2h { width: 22%; text-align: center; font-weight: bold; color: #2b6cb0; background: #ebf8ff; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #bee3f8; }
-        .joker-badge { font-size: 0.7rem; background: #d69e2e; color: white; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+        .Favourite-badge { font-size: 0.7rem; background: #d69e2e; color: white; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
 
         @media (max-width: 600px) {
             .match-date { width: 100%; margin-bottom: 5px; }
@@ -91,7 +91,7 @@
 </div>
 
 <div class="container">
-    <h1>Family World Cup Tournament</h1>
+    <h1>Family World Cup Group Stage Tournament</h1>
     <div id="admin-management-panel" style="display:none; background: #fffaf0; border: 2px dashed #ecc94b; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
     <h3>🛠️ Admin Management</h3>
     <button onclick="generateUpdateCode()" style="background: #38a169; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
@@ -104,26 +104,25 @@
 
     <h2>Official Live Tracker & Auto-Calculator</h2>
 
-    <!-- Landing View: Choose Who You Are -->
-    <div class="landing-view">
-        <p style="font-weight: bold; color: #4a5568; margin-bottom: 5px;">👋 WHO IS VIEWING THIS SCREEN?</p>
-        <p style="font-size: 0.85rem; color: #718096; margin-top:0;">Select your name to pick and permanently lock in your single Star favorite team.</p>
+    <!-- Landing View: Choose Who You Are 
+    <div class="landing-view" id="landing-section">
+        <p style="font-weight: bold; color: #4a5568; margin-bottom: 5px;">👋 Who are you setting the favorite team for?</p>
+        <p style="font-size: 0.85rem; color: #718096; margin-top:0;">Select the name to pick and permanently lock in the single Star favorite team.</p>
         <div class="profile-grid" id="profile-selectors">
-            <!-- Buttons rendered dynamically -->
+            // Buttons rendered dynamically
         </div>
-    </div>
+    </div>-->
 
-<div class="dashboard-header">
-    <h3 id="dashboard-title">🌟 Select Your Starred Team</h3>
-    <button class="lock-btn" id="lock-button" onclick="lockCurrentPlayerTeam()" disabled>🔒 Lock My Selection</button>
+<div class="dashboard-header" id="dashboard-section">
+    <h3 id="dashboard-title">🌟 Select players favourite Team</h3>
+ <!--<button class="lock-btn" id="lock-button" onclick="lockCurrentPlayerTeam()" disabled>🔒 Lock Selection</button>-->
 </div>
-
 <div class="rules-box" style="background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #2c5282;">
-    <strong style="display:block; margin-bottom: 5px;">💡 Star Selection Rules:</strong>
+    <strong style="display:block; margin-bottom: 5px;">💡 Favourite team Rules:</strong>
     <ul style="margin: 0; padding-left: 20px;">
-        <li>You may select <strong>only one</strong> team to Star.</li>
-        <li>Your Starred team's goals, wins, and clean sheets are <strong>doubled</strong> (x2) in the scoreboard.</li>
-        <li>Once you click <strong>"Lock My Selection"</strong>, your choice is permanent for this device.</li>
+       <!-- <li>You may select <strong>only one</strong> team to Star.</li>-->
+        <li>Your Starred favourite team's goals, wins, and clean sheets are <strong>doubled</strong> (x2) in the scoreboard.</li>
+        <!--<li>Once you click <strong>"Lock My Selection"</strong>, your choice is permanent for this device.</li>-->
     </ul>
 </div>
 
@@ -142,7 +141,7 @@
     <ul style="margin: 0; padding-left: 20px;">
         <li><strong>Win:</strong> 3 points | <strong>Draw:</strong> 1 point</li>
         <li><strong>Goal:</strong> 1 point | <strong>Clean Sheet:</strong> 2 points</li>
-        <li><strong>Joker (Starred Team):</strong> All points earned by your Starred team are <strong>doubled (x2)</strong>.</li>
+        <li><strong>Favourite (Starred Team):</strong> All points earned by your Starred team are <strong>doubled (x2)</strong>.</li>
     </ul>
 </div>
 
@@ -186,28 +185,43 @@
         Tom: ["South africa", "Ivory coast", "Scotland", "Saudi Arabia", "Curacao", "Panama"]
     };
     
-
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
-        Sam: JSON.parse(localStorage.getItem("star_Sam")) || [],
-        Martin: JSON.parse(localStorage.getItem("star_Martin")) || [],
-        Elissa: JSON.parse(localStorage.getItem("star_Elissa")) || [],
-        Paul: JSON.parse(localStorage.getItem("star_Paul")) || [],
-        Lewis: JSON.parse(localStorage.getItem("star_Lewis")) || [],
-        Jenni: JSON.parse(localStorage.getItem("star_Jenni")) || [],
-        Mum: JSON.parse(localStorage.getItem("star_Mum")) || [],
-        Tom: JSON.parse(localStorage.getItem("star_Tom")) || []
+        "Sam": [
+            "Spain"
+        ],
+        "Martin": [
+            "France"
+        ],
+        "Elissa": [
+            "England"
+        ],
+        "Paul": [
+            "Uruguay"
+        ],
+        "Lewis": [
+            "Argentina"
+        ],
+        "Jenni": [
+            "Portugal"
+        ],
+        "Mum": [
+            "Brazil"
+        ],
+        "Tom": [
+            "Ivory coast"
+        ]
     };
     // Tracks if specific user locked their choice on this device
     let lockedUsers = {
-        Sam: localStorage.getItem("lock_Sam") === "true",
-        Martin: localStorage.getItem("lock_Martin") === "true",
-        Elissa: localStorage.getItem("lock_Elissa") === "true",
-        Paul: localStorage.getItem("lock_Paul") === "true",
-        Lewis: localStorage.getItem("lock_Lewis") === "true",
-        Jenni: localStorage.getItem("lock_Jenni") === "true",
-        Mum: localStorage.getItem("lock_Mum") === "true",
-        Tom: localStorage.getItem("lock_Tom") === "true"
+        Sam:  "False",
+        Martin:  "False",
+        Elissa:  "False",
+        Paul:  "False",
+        Lewis:  "False",
+        Jenni:  "False",
+        Mum:  "False",
+        Tom:  "False"
     };
 
     let fixtures = [
@@ -1068,36 +1082,38 @@
         renderFixtures();
     }
 
-    function initLandingPage() {
-        let container = document.getElementById("profile-selectors");
-        container.innerHTML = "";
-        Object.keys(assignments).forEach(user => {
-            let btn = document.createElement("button");
-            btn.className = `profile-btn ${activePlayer === user ? 'active' : ''}`;
-            btn.innerText = user + (lockedUsers[user] ? " (Locked 🔒)" : "");
-            btn.onclick = () => selectProfile(user);
-            container.appendChild(btn);
-        });
-    }
+   // function initLandingPage() {
+    //    let container = document.getElementById("profile-selectors");
+     //   container.innerHTML = "";
+      //  Object.keys(assignments).forEach(user => {
+       //     let btn = document.createElement("button");
+        //    btn.className = `profile-btn ${activePlayer === user ? 'active' : ''}`;
+         //   btn.innerText = user + (lockedUsers[user] ? " (Locked 🔒)" : "");
+          //  btn.onclick = () => selectProfile(user);
+           // container.appendChild(btn);
+       // });
+   // }
 
     function selectProfile(user) {
         activePlayer = user;
-        initLandingPage();
+      //  initLandingPage();
         renderDashboard();
     }
 
     function renderDashboard() {
+        
         let container = document.getElementById("star-configurator");
         container.innerHTML = "";
         
-        let lockBtn = document.getElementById("lock-button");
+       // let lockBtn = document.getElementById("lock-button");
         if (activePlayer) {
-            document.getElementById("dashboard-title").innerText = `🌟 ${activePlayer}'s Selection Screen`;
-            lockBtn.disabled = lockedUsers[activePlayer];
-            lockBtn.innerText = lockedUsers[activePlayer] ? "🔒 Selection Locked In" : "🔒 Lock My Selection";
-        } else {
-            document.getElementById("dashboard-title").innerText = "🌟 Select Your Starred Team (Choose profile above)";
-            lockBtn.disabled = true;
+             document.getElementById("dashboard-section").innerText = "🌟 Team Assignments and Favourite teams";
+      //      document.getElementById("dashboard-title").innerText = `🌟 ${activePlayer}'s Selection Screen`;
+       //     lockBtn.disabled = lockedUsers[activePlayer];
+       //     lockBtn.innerText = lockedUsers[activePlayer] ? "🔒 Selection Locked In" : "🔒 Lock My Selection";
+       // } else {
+           
+        //    lockBtn.disabled = true;
         }
 
         Object.keys(assignments).forEach(user => {
@@ -1132,29 +1148,34 @@
     }
 
     function toggleStar(user, team) {
+        if (!isAdmin) { 
+            alert("Selection is locked! Please contact the Admin to change your team."); 
+        return; 
+    }
         let idx = starredTeams[user].indexOf(team);
         if (idx > -1) {
-            starredTeams[user] = [];
+            starredTeams[user] = (starredTeams[user][0] === team) ? [] : [team];;
         } else {
             starredTeams[user] = [team]; // Forces max 1 choice limit
         }
         
         // Temporarily track locally on browser session
-        localStorage.setItem(`star_${user}`, JSON.stringify(starredTeams[user]));
+        // localStorage.setItem(`star_${user}`, JSON.stringify(starredTeams[user]));
         
+
         calculateScores();
         renderDashboard();
         renderFixtures();
     }
 
-    function lockCurrentPlayerTeam() {
-        if (!activePlayer) return;
-        lockedUsers[activePlayer] = true;
-        localStorage.setItem(`lock_${activePlayer}`, "true");
-        
-        initLandingPage();
-        renderDashboard();
-    }
+   // function lockCurrentPlayerTeam() {
+   //    if (!isAdmin) return; // Only Admin can lock/unlock choices 
+   //    if (!activePlayer) return; 
+       
+   //    lockedUsers[activePlayer] = true; 
+      // initLandingPage(); 
+   //    renderDashboard(); 
+   // }
     function calculateScores() {
         let scores = { 
             Sam: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
@@ -1264,7 +1285,7 @@
 
             let h2hText = f.homeUser === f.awayUser ? `${f.homeUser} (Internal)` : `${f.homeUser} vs ${f.awayUser}`;
             if (homeIsStarred || awayIsStarred) {
-                h2hText += ` <span class="joker-badge">JOKER x2</span>`;
+                h2hText += ` <span class="Favourite-badge">Favourite x2</span>`;
             }
             
             let row = document.createElement("div");
@@ -1339,12 +1360,29 @@
         renderFixtures();
         renderQuickUpdate();
         calculateScores();
+      //  let landingSection = document.getElementById("landing-section");
+        //let dashboardHeader = document.getElementById("dashboard-section")
         let adminPanel = document.getElementById("admin-management-panel");
-        if (adminPanel) adminPanel.style.display = isAdmin ? "block" : "none";
+
+        if (adminPanel) {
+            adminPanel.style.display = isAdmin ? "block" : "none";
+        }
+       // if (dashboardHeader) {
+       //     dashboardHeader.style.display = isAdmin ? "block" : "none";
+       // }
+      //  if (landingSection) {
+      //      landingSection.style.display = isAdmin ? "none" : "block";
+      //  }
     }
 
-    function generateUpdateCode() {
-        let code = JSON.stringify(fixtures, null, 4);
+    function generateUpdateCode() { 
+        // Create a master object containing everything 
+        let masterData = { 
+            fixtures: fixtures, 
+            starredTeams: starredTeams, 
+            lockedUsers: lockedUsers 
+        }; 
+        let code = JSON.stringify(masterData, null, 4);        
         let blob = new Blob([code], {type: "text/plain"});
         let a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
@@ -1353,7 +1391,7 @@
         alert("Fixtures code downloaded!");
     }
 
-    initLandingPage();
+   // initLandingPage();
     renderAll();
 
 </script>
