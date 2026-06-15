@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Family World Cup Live Tracker</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        
+        /* Admin Bar */
+        .admin-bar { display: flex; justify-content: space-between; align-items: center; background: #2d3748; color: white; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.85rem; }
+        .admin-bar input { padding: 4px 8px; border-radius: 4px; border: none; font-size: 0.85rem; width: 120px; }
+        .admin-status { font-weight: bold; padding: 2px 8px; border-radius: 4px; }
+        .status-viewer { background: #4a5568; }
+        .status-admin { background: #38a169; }
+
+        h1 { text-align: center; color: #1a365d; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-size: 1.6rem; }
+        h2 { text-align: center; color: #4a5568; font-size: 1rem; font-weight: 400; margin-top: 0; margin-bottom: 25px; }
+        h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; color: #2b6cb0; margin-top: 35px; font-size: 1.2rem; }
+        
+        /* Landing View Profile Selection */
+        .landing-view { text-align: center; padding: 20px 0; }
+        .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
+        .profile-btn { background: #ebf8ff; border: 2px solid #bee3f8; color: #2b6cb0; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
+        .profile-btn:hover { background: #bee3f8; }
+        .profile-btn.active { background: #2b6cb0; color: white; border-color: #2b6cb0; }
+
+        /* Star Selector Dashboard Layout */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 35px; }
+        .dashboard-header h3 { border-bottom: none; margin: 0; padding: 0; }
+        .lock-btn { background-color: #e53e3e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+        .lock-btn:hover { background-color: #c53030; }
+        .lock-btn:disabled { background-color: #a0aec0; cursor: not-allowed; }
+
+        .config-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; margin-top: 15px; }
+        .manager-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); position: relative; }
+        .manager-card.dimmed { opacity: 0.6; pointer-events: none; background: #f7fafc; }
+        .manager-name { font-weight: bold; color: #2c5282; border-bottom: 1px solid #edf2f7; padding-bottom: 4px; margin-bottom: 8px; font-size: 0.9rem; }
+        
+        .team-chip { display: flex; justify-content: space-between; align-items: center; background: #f7fafc; padding: 6px 10px; margin-bottom: 4px; border-radius: 4px; font-size: 0.82rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
+        .team-chip:hover { background: #edf2f7; border-color: #cbd5e0; }
+        .team-chip.starred { background: #fefcbf; border-color: #f6e05e; font-weight: bold; }
+        .team-chip.locked-state { cursor: default; pointer-events: none; }
+        .star-icon { color: #d69e2e; font-size: 0.9rem; }
+        
+        /* Scoreboard Styling */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.9rem; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background-color: #2b6cb0; color: white; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+        tr:hover { background-color: #f7fafc; }
+        .points-cell { font-weight: bold; color: #2b6cb0; }
+        
+        /* Podium Badges */
+        .medal-badge { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.8rem; margin-right: 8px; }
+        .gold-medal { background-color: #ffd700; color: #7a5e00; box-shadow: 0 2px 4px rgba(255,215,0,0.3); }
+        .silver-medal { background-color: #c0c0c0; color: #4a4a4a; box-shadow: 0 2px 4px rgba(192,192,192,0.3); }
+        .bronze-medal { background-color: #cd7f32; color: #ffffff; box-shadow: 0 2px 4px rgba(205,127,50,0.3); }
+        .normal-rank { background-color: #e2e8f0; color: #4a5568; }
+
+        .round-header { background: #edf2f7; padding: 8px 12px; font-weight: bold; color: #2d3748; margin-top: 20px; border-radius: 6px; font-size: 0.95rem; }
+        .fixture-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #edf2f7; background: #fff; border-radius: 6px; margin-bottom: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-size: 0.88rem; }
+        .completed { background-color: #f0fff4; border-left: 4px solid #38a169; }
+        .upcoming { border-left: 4px solid #ed8936; }
+        .match-date { width: 15%; font-size: 0.75rem; font-weight: bold; color: #718096; }
+        .team-left { width: 22%; text-align: right; font-weight: 600; }
+        .team-right { width: 22%; text-align: left; font-weight: 600; }
+        .score-inputs { width: 14%; text-align: center; display: flex; gap: 4px; justify-content: center; align-items: center; }
+        .score-inputs input { width: 30px; text-align: center; padding: 3px; border: 1px solid #cbd5e0; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
+        .score-inputs input:disabled { background: #edf2f7; color: #4a5568; border-color: #e2e8f0; cursor: not-allowed; }
+        
+        .family-h2h { width: 22%; text-align: center; font-weight: bold; color: #2b6cb0; background: #ebf8ff; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #bee3f8; }
+        .joker-badge { font-size: 0.7rem; background: #d69e2e; color: white; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+
+        @media (max-width: 600px) {
+            .match-date { width: 100%; margin-bottom: 5px; }
+            .team-left { width: 38%; }
+            .score-inputs { width: 24%; }
+            .team-right { width: 38%; }
+            .family-h2h { width: 100%; text-align: center; margin-top: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-bar">
+    <div>Tournament Mode: <span id="admin-status-badge" class="admin-status status-viewer">Viewer Mode (Read-Only)</span></div>
+    <div>
+        <label>Admin Key: </label>
+        <input type="password" id="admin-pass" placeholder="Enter key..." oninput="checkAdminPassword(this.value)">
+    </div>
+</div>
+
+<div class="container">
+    <h1>Family World Cup Tournament</h1>
+    <div id="admin-management-panel" style="display:none; background: #fffaf0; border: 2px dashed #ecc94b; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
+    <h3>🛠️ Admin Management</h3>
+    <button onclick="generateUpdateCode()" style="background: #38a169; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+        💾 Export Updated Fixtures
+    </button>
+    <h4 style="margin-top: 20px;">⚡ Quick Update (Past/Today's Matches)</h4>
+    <div id="quick-update-list" style="font-size: 0.85rem;"></div>
+    </div>
+</div>
+
+    <h2>Official Live Tracker & Auto-Calculator</h2>
+
+    <!-- Landing View: Choose Who You Are -->
+    <div class="landing-view">
+        <p style="font-weight: bold; color: #4a5568; margin-bottom: 5px;">👋 WHO IS VIEWING THIS SCREEN?</p>
+        <p style="font-size: 0.85rem; color: #718096; margin-top:0;">Select your name to pick and permanently lock in your single Star favorite team.</p>
+        <div class="profile-grid" id="profile-selectors">
+            <!-- Buttons rendered dynamically -->
+        </div>
+    </div>
+
+<div class="dashboard-header">
+    <h3 id="dashboard-title">🌟 Select Your Starred Team</h3>
+    <button class="lock-btn" id="lock-button" onclick="lockCurrentPlayerTeam()" disabled>🔒 Lock My Selection</button>
+</div>
+
+<div class="rules-box" style="background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #2c5282;">
+    <strong style="display:block; margin-bottom: 5px;">💡 Star Selection Rules:</strong>
+    <ul style="margin: 0; padding-left: 20px;">
+        <li>You may select <strong>only one</strong> team to Star.</li>
+        <li>Your Starred team's goals, wins, and clean sheets are <strong>doubled</strong> (x2) in the scoreboard.</li>
+        <li>Once you click <strong>"Lock My Selection"</strong>, your choice is permanent for this device.</li>
+    </ul>
+</div>
+
+    <div class="config-grid" id="star-configurator">
+        <!-- Cards generated dynamically -->
+    </div>
+ <div id="champion-section" style="display: none; background: #f0fff4; border: 2px solid #38a169; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
+    <h2 style="margin: 0; color: #22543d;">🏆 GROUP STAGE CHAMPION</h2>
+    <p id="champion-name" style="font-size: 1.5rem; font-weight: bold; color: #2f855a; margin: 10px 0 0 0;"></p>
+</div>
+
+<h3>🏆 Live Scoreboard</h3>
+
+<div class="rules-box" style="background: #f0f7ff; border: 1px solid #bee3f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.85rem; color: #2c5282;">
+    <strong style="display:block; margin-bottom: 8px;">📊 Scoring Rules:</strong>
+    <ul style="margin: 0; padding-left: 20px;">
+        <li><strong>Win:</strong> 3 points | <strong>Draw:</strong> 1 point</li>
+        <li><strong>Goal:</strong> 1 point | <strong>Clean Sheet:</strong> 2 points</li>
+        <li><strong>Joker (Starred Team):</strong> All points earned by your Starred team are <strong>doubled (x2)</strong>.</li>
+    </ul>
+</div>
+
+<table id="scoreboard">
+    <thead>
+        <tr>
+            <th style="width: 35%;">Family Member</th>
+            <th style="text-align:center;">Wins</th>
+            <th style="text-align:center;">Draws</th>
+            <th style="text-align:center;">Goals</th>
+            <th style="text-align:center;">Clean Sheets</th>
+            <th style="text-align:center;">Total Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        </tbody>
+</table>
+            <!-- Calculated dynamically -->
+        </tbody>
+    </table>
+
+    <h3>🗓️ Full Tournament Fixtures</h3>
+    <div id="fixtures-container">
+        <!-- Loaded dynamically -->
+    </div>
+</div>
+
+<script>
+    const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
+    let isAdmin = false;
+    let activePlayer = null;
+
+    let assignments = {
+        Sam: ["Canada", "Belgium", "Uzbekistan", "Norway", "South Korea", "Spain"],
+        Martin: ["Czechia", "Japan", "Australia", "France", "Tunisia", "Switzerland"],
+        Elissa: ["England", "Germany", "Haiti", "Iraq", "Ghana", "Algeria"],
+        Paul: ["Uruguay", "Turkey", "Jordan", "Iran", "New Zealand", "Mexico"],
+        Lewis: ["Morocco", "Egypt", "Argentina", "USA", "Congo", "Sweden"],
+        Jenni: ["Bosnia H", "Portugal", "Paraguay", "Qatar", "Senegal", "Colombia"],
+        Mum: ["Brazil", "Austria", "Croatia", "Netherlands", "Ecuador", "Cape verde"],
+        Tom: ["South africa", "Ivory coast", "Scotland", "Saudi Arabia", "Curacao", "Panama"]
+    };
+    
+
+    // Tracks starred selections globally, loads from local device storage if previously saved
+    let starredTeams = {
+        Sam: JSON.parse(localStorage.getItem("star_Sam")) || [],
+        Martin: JSON.parse(localStorage.getItem("star_Martin")) || [],
+        Elissa: JSON.parse(localStorage.getItem("star_Elissa")) || [],
+        Paul: JSON.parse(localStorage.getItem("star_Paul")) || [],
+        Lewis: JSON.parse(localStorage.getItem("star_Lewis")) || [],
+        Jenni: JSON.parse(localStorage.getItem("star_Jenni")) || [],
+        Mum: JSON.parse(localStorage.getItem("star_Mum")) || [],
+        Tom: JSON.parse(localStorage.getItem("star_Tom")) || []
+    };
+    // Tracks if specific user locked their choice on this device
+    let lockedUsers = {
+        Sam: localStorage.getItem("lock_Sam") === "true",
+        Martin: localStorage.getItem("lock_Martin") === "true",
+        Elissa: localStorage.getItem("lock_Elissa") === "true",
+        Paul: localStorage.getItem("lock_Paul") === "true",
+        Lewis: localStorage.getItem("lock_Lewis") === "true",
+        Jenni: localStorage.getItem("lock_Jenni") === "true",
+        Mum: localStorage.getItem("lock_Mum") === "true",
+        Tom: localStorage.getItem("lock_Tom") === "true"
+    };
+
+    let fixtures = [
+    {
+        "id": 1,
+        "round": 1,
+        "date": "Thu 11 June",
+        "home": "Mexico",
+        "away": "South africa",
+        "homeUser": "Paul",
+        "awayUser": "Tom",
+        "homeScore": 2,
+        "awayScore": 0,
+        "status": "completed"
+    },
+    {
+        "id": 2,
+        "round": 1,
+        "date": "Fri 12 June",
+        "home": "South Korea",
+        "away": "Czechia",
+        "homeUser": "Sam",
+        "awayUser": "Martin",
+        "homeScore": 2,
+        "awayScore": 1,
+        "status": "completed"
+    },
+    {
+        "id": 3,
+        "round": 1,
+        "date": "Fri 12 June",
+        "home": "Canada",
+        "away": "Bosnia H",
+        "homeUser": "Sam",
+        "awayUser": "Jenni",
+        "homeScore": 1,
+        "awayScore": 1,
+        "status": "completed"
+    },
+    {
+        "id": 4,
+        "round": 1,
+        "date": "Sat 13 June",
+        "home": "USA",
+        "away": "Paraguay",
+        "homeUser": "Lewis",
+        "awayUser": "Jenni",
+        "homeScore": 4,
+        "awayScore": 1,
+        "status": "completed"
+    },
+    {
+        "id": 5,
+        "round": 1,
+        "date": "Sat 13 June",
+        "home": "Qatar",
+        "away": "Switzerland",
+        "homeUser": "Jenni",
+        "awayUser": "Martin",
+        "homeScore": 1,
+        "awayScore": 1,
+        "status": "completed"
+    },
+    {
+        "id": 6,
+        "round": 1,
+        "date": "Sat 13 June",
+        "home": "Brazil",
+        "away": "Morocco",
+        "homeUser": "Mum",
+        "awayUser": "Lewis",
+        "homeScore": 1,
+        "awayScore": 1,
+        "status": "completed"
+    },
+    {
+        "id": 7,
+        "round": 1,
+        "date": "Sun 14 June",
+        "home": "Haiti",
+        "away": "Scotland",
+        "homeUser": "Elissa",
+        "awayUser": "Tom",
+        "homeScore": 0,
+        "awayScore": 1,
+        "status": "completed"
+    },
+    {
+        "id": 8,
+        "round": 1,
+        "date": "Sun 14 June",
+        "home": "Australia",
+        "away": "Turkey",
+        "homeUser": "Martin",
+        "awayUser": "Paul",
+        "homeScore": 2,
+        "awayScore": 0,
+        "status": "completed"
+    },
+    {
+        "id": 9,
+        "round": 1,
+        "date": "Sun 14 June",
+        "home": "Germany",
+        "away": "Curacao",
+        "homeUser": "Elissa",
+        "awayUser": "Tom",
+        "homeScore": 7,
+        "awayScore": 1,
+        "status": "completed"
+    },
+    {
+        "id": 10,
+        "round": 1,
+        "date": "Sun 14 June",
+        "home": "Netherlands",
+        "away": "Japan",
+        "homeUser": "Mum",
+        "awayUser": "Martin",
+        "homeScore": "2",
+        "awayScore": "2",
+        "status": "completed"
+    },
+    {
+        "id": 11,
+        "round": 1,
+        "date": "Mon 15 June",
+        "home": "Ivory coast",
+        "away": "Ecuador",
+        "homeUser": "Tom",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 12,
+        "round": 1,
+        "date": "Mon 15 June",
+        "home": "Sweden",
+        "away": "Tunisia",
+        "homeUser": "Lewis",
+        "awayUser": "Martin",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 13,
+        "round": 1,
+        "date": "Mon 15 June",
+        "home": "Spain",
+        "away": "Cape verde",
+        "homeUser": "Sam",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 14,
+        "round": 1,
+        "date": "Mon 15 June",
+        "home": "Belgium",
+        "away": "Egypt",
+        "homeUser": "Sam",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 15,
+        "round": 1,
+        "date": "Mon 15 June",
+        "home": "Saudi Arabia",
+        "away": "Uruguay",
+        "homeUser": "Tom",
+        "awayUser": "Paul",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 16,
+        "round": 1,
+        "date": "Tue 16 June",
+        "home": "Iran",
+        "away": "New Zealand",
+        "homeUser": "Paul",
+        "awayUser": "Paul",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 17,
+        "round": 1,
+        "date": "Tue 16 June",
+        "home": "France",
+        "away": "Senegal",
+        "homeUser": "Martin",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 18,
+        "round": 1,
+        "date": "Tue 16 June",
+        "home": "Iraq",
+        "away": "Norway",
+        "homeUser": "Elissa",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 19,
+        "round": 1,
+        "date": "Wed 17 June",
+        "home": "Argentina",
+        "away": "Algeria",
+        "homeUser": "Lewis",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 20,
+        "round": 1,
+        "date": "Wed 17 June",
+        "home": "Austria",
+        "away": "Jordan",
+        "homeUser": "Mum",
+        "awayUser": "Paul",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 21,
+        "round": 1,
+        "date": "Wed 17 June",
+        "home": "Portugal",
+        "away": "Congo",
+        "homeUser": "Jenni",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 22,
+        "round": 1,
+        "date": "Wed 17 June",
+        "home": "England",
+        "away": "Croatia",
+        "homeUser": "Elissa",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 23,
+        "round": 1,
+        "date": "Thu 18 June",
+        "home": "Ghana",
+        "away": "Panama",
+        "homeUser": "Elissa",
+        "awayUser": "Tom",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 24,
+        "round": 1,
+        "date": "Thu 18 June",
+        "home": "Uzbekistan",
+        "away": "Colombia",
+        "homeUser": "Sam",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 25,
+        "round": 2,
+        "date": "Thu 18 June",
+        "home": "Czechia",
+        "away": "South africa",
+        "homeUser": "Martin",
+        "awayUser": "Tom",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 26,
+        "round": 2,
+        "date": "Thu 18 June",
+        "home": "Switzerland",
+        "away": "Bosnia H",
+        "homeUser": "Martin",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 27,
+        "round": 2,
+        "date": "Thu 18 June",
+        "home": "Canada",
+        "away": "Qatar",
+        "homeUser": "Sam",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 28,
+        "round": 2,
+        "date": "Fri 19 June",
+        "home": "Mexico",
+        "away": "South Korea",
+        "homeUser": "Paul",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 29,
+        "round": 2,
+        "date": "Fri 19 June",
+        "home": "USA",
+        "away": "Australia",
+        "homeUser": "Lewis",
+        "awayUser": "Martin",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 30,
+        "round": 2,
+        "date": "Fri 19 June",
+        "home": "Scotland",
+        "away": "Morocco",
+        "homeUser": "Tom",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 31,
+        "round": 2,
+        "date": "Sat 20 June",
+        "home": "Brazil",
+        "away": "Haiti",
+        "homeUser": "Mum",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 32,
+        "round": 2,
+        "date": "Sat 20 June",
+        "home": "Turkey",
+        "away": "Paraguay",
+        "homeUser": "Paul",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 33,
+        "round": 2,
+        "date": "Sat 20 June",
+        "home": "Netherlands",
+        "away": "Sweden",
+        "homeUser": "Mum",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 34,
+        "round": 2,
+        "date": "Sat 20 June",
+        "home": "Germany",
+        "away": "Ivory coast",
+        "homeUser": "Elissa",
+        "awayUser": "Tom",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 35,
+        "round": 2,
+        "date": "Sun 21 June",
+        "home": "Ecuador",
+        "away": "Curacao",
+        "homeUser": "Mum",
+        "awayUser": "Tom",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 36,
+        "round": 2,
+        "date": "Sun 21 June",
+        "home": "Tunisia",
+        "away": "Japan",
+        "homeUser": "Martin",
+        "awayUser": "Martin",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 37,
+        "round": 2,
+        "date": "Sun 21 June",
+        "home": "Spain",
+        "away": "Saudi Arabia",
+        "homeUser": "Sam",
+        "awayUser": "Tom",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 38,
+        "round": 2,
+        "date": "Sun 21 June",
+        "home": "Belgium",
+        "away": "Iran",
+        "homeUser": "Sam",
+        "awayUser": "Paul",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 39,
+        "round": 2,
+        "date": "Sun 21 June",
+        "home": "Uruguay",
+        "away": "Cape verde",
+        "homeUser": "Paul",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 40,
+        "round": 2,
+        "date": "Mon 22 June",
+        "home": "New Zealand",
+        "away": "Egypt",
+        "homeUser": "Paul",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 41,
+        "round": 2,
+        "date": "Mon 22 June",
+        "home": "Argentina",
+        "away": "Austria",
+        "homeUser": "Lewis",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 42,
+        "round": 2,
+        "date": "Mon 22 June",
+        "home": "France",
+        "away": "Iraq",
+        "homeUser": "Martin",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 43,
+        "round": 2,
+        "date": "Tue 23 June",
+        "home": "Norway",
+        "away": "Senegal",
+        "homeUser": "Sam",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 44,
+        "round": 2,
+        "date": "Tue 23 June",
+        "home": "Jordan",
+        "away": "Algeria",
+        "homeUser": "Paul",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 45,
+        "round": 2,
+        "date": "Tue 23 June",
+        "home": "Portugal",
+        "away": "Uzbekistan",
+        "homeUser": "Jenni",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 46,
+        "round": 2,
+        "date": "Tue 23 June",
+        "home": "England",
+        "away": "Ghana",
+        "homeUser": "Elissa",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 47,
+        "round": 2,
+        "date": "Wed 24 June",
+        "home": "Panama",
+        "away": "Croatia",
+        "homeUser": "Tom",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 48,
+        "round": 2,
+        "date": "Wed 24 June",
+        "home": "Colombia",
+        "away": "Congo",
+        "homeUser": "Jenni",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 49,
+        "round": 3,
+        "date": "Wed 24 June",
+        "home": "Switzerland",
+        "away": "Canada",
+        "homeUser": "Martin",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 50,
+        "round": 3,
+        "date": "Wed 24 June",
+        "home": "Bosnia H",
+        "away": "Qatar",
+        "homeUser": "Jenni",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 51,
+        "round": 3,
+        "date": "Wed 24 June",
+        "home": "Morocco",
+        "away": "Haiti",
+        "homeUser": "Lewis",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 52,
+        "round": 3,
+        "date": "Wed 24 June",
+        "home": "Scotland",
+        "away": "Brazil",
+        "homeUser": "Tom",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 53,
+        "round": 3,
+        "date": "Thu 25 June",
+        "home": "South africa",
+        "away": "South Korea",
+        "homeUser": "Tom",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 54,
+        "round": 3,
+        "date": "Thu 25 June",
+        "home": "Czechia",
+        "away": "Mexico",
+        "homeUser": "Martin",
+        "awayUser": "Paul",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 55,
+        "round": 3,
+        "date": "Thu 25 June",
+        "home": "Curacao",
+        "away": "Ivory coast",
+        "homeUser": "Tom",
+        "awayUser": "Tom",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 56,
+        "round": 3,
+        "date": "Thu 25 June",
+        "home": "Ecuador",
+        "away": "Germany",
+        "homeUser": "Mum",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 57,
+        "round": 3,
+        "date": "Fri 26 June",
+        "home": "Tunisia",
+        "away": "Netherlands",
+        "homeUser": "Martin",
+        "awayUser": "Mum",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 58,
+        "round": 3,
+        "date": "Fri 26 June",
+        "home": "Japan",
+        "away": "Sweden",
+        "homeUser": "Martin",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 59,
+        "round": 3,
+        "date": "Fri 26 June",
+        "home": "Turkey",
+        "away": "USA",
+        "homeUser": "Paul",
+        "awayUser": "Lewis",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 60,
+        "round": 3,
+        "date": "Fri 26 June",
+        "home": "Paraguay",
+        "away": "Australia",
+        "homeUser": "Jenni",
+        "awayUser": "Martin",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 61,
+        "round": 3,
+        "date": "Fri 26 June",
+        "home": "Norway",
+        "away": "France",
+        "homeUser": "Sam",
+        "awayUser": "Martin",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 62,
+        "round": 3,
+        "date": "Fri 26 June",
+        "home": "Senegal",
+        "away": "Iraq",
+        "homeUser": "Jenni",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 63,
+        "round": 3,
+        "date": "Sat 27 June",
+        "home": "Cape verde",
+        "away": "Saudi Arabia",
+        "homeUser": "Mum",
+        "awayUser": "Tom",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 64,
+        "round": 3,
+        "date": "Sat 27 June",
+        "home": "Uruguay",
+        "away": "Spain",
+        "homeUser": "Paul",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 65,
+        "round": 3,
+        "date": "Sat 27 June",
+        "home": "New Zealand",
+        "away": "Belgium",
+        "homeUser": "Paul",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 66,
+        "round": 3,
+        "date": "Sat 27 June",
+        "home": "Egypt",
+        "away": "Iran",
+        "homeUser": "Lewis",
+        "awayUser": "Paul",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 67,
+        "round": 3,
+        "date": "Sat 27 June",
+        "home": "Panama",
+        "away": "England",
+        "homeUser": "Tom",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 68,
+        "round": 3,
+        "date": "Sat 27 June",
+        "home": "Croatia",
+        "away": "Ghana",
+        "homeUser": "Mum",
+        "awayUser": "Elissa",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 70,
+        "round": 3,
+        "date": "Sun 28 June",
+        "home": "Colombia",
+        "away": "Portugal",
+        "homeUser": "Jenni",
+        "awayUser": "Jenni",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    },
+    {
+        "id": 71,
+        "round": 3,
+        "date": "Sun 28 June",
+        "home": "Congo",
+        "away": "Uzbekistan",
+        "homeUser": "Lewis",
+        "awayUser": "Sam",
+        "homeScore": "",
+        "awayScore": "",
+        "status": "upcoming"
+    }
+];
+
+    function checkAdminPassword(val) {
+        let badge = document.getElementById("admin-status-badge");
+        if (val === ADMIN_PASSWORD) {
+            isAdmin = true;
+            badge.innerText = "⚡ Admin Core Mode (Editing Unlocked)";
+            badge.className = "admin-status status-admin";
+        } else {
+            isAdmin = false;
+            badge.innerText = "Viewer Mode (Read-Only)";
+            badge.className = "admin-status status-viewer";
+        }
+        renderDashboard();
+        renderFixtures();
+    }
+
+    function initLandingPage() {
+        let container = document.getElementById("profile-selectors");
+        container.innerHTML = "";
+        Object.keys(assignments).forEach(user => {
+            let btn = document.createElement("button");
+            btn.className = `profile-btn ${activePlayer === user ? 'active' : ''}`;
+            btn.innerText = user + (lockedUsers[user] ? " (Locked 🔒)" : "");
+            btn.onclick = () => selectProfile(user);
+            container.appendChild(btn);
+        });
+    }
+
+    function selectProfile(user) {
+        activePlayer = user;
+        initLandingPage();
+        renderDashboard();
+    }
+
+    function renderDashboard() {
+        let container = document.getElementById("star-configurator");
+        container.innerHTML = "";
+        
+        let lockBtn = document.getElementById("lock-button");
+        if (activePlayer) {
+            document.getElementById("dashboard-title").innerText = `🌟 ${activePlayer}'s Selection Screen`;
+            lockBtn.disabled = lockedUsers[activePlayer];
+            lockBtn.innerText = lockedUsers[activePlayer] ? "🔒 Selection Locked In" : "🔒 Lock My Selection";
+        } else {
+            document.getElementById("dashboard-title").innerText = "🌟 Select Your Starred Team (Choose profile above)";
+            lockBtn.disabled = true;
+        }
+
+        Object.keys(assignments).forEach(user => {
+            let card = document.createElement("div");
+            
+            // If not admin, grey out other profiles so players can only click their own card
+            let isDimmed = !isAdmin && (activePlayer !== user);
+            card.className = `manager-card ${isDimmed ? 'dimmed' : ''}`;
+            card.innerHTML = `<div class="manager-name">${user} ${lockedUsers[user] ? '🔒' : ''}</div>`;
+            
+            assignments[user].forEach(team => {
+                let chip = document.createElement("div");
+                let isStarred = starredTeams[user].includes(team);
+                
+                chip.className = `team-chip ${isStarred ? 'starred' : ''} ${(lockedUsers[user] && !isAdmin) ? 'locked-state' : ''}`;
+                chip.id = `chip-${user}-${team.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                chip.innerHTML = `<span>${team}</span><span class="star-icon">${isStarred ? '★' : '☆'}</span>`;
+                
+                chip.onclick = () => {
+                    if (!isAdmin && activePlayer !== user) return;
+                    if (lockedUsers[user] && !isAdmin) return; 
+                    toggleStar(user, team);
+                };
+                card.appendChild(chip);
+            });
+            container.appendChild(card);
+        }); 
+    let adminPanel = document.getElementById("admin-management-panel");
+    if (adminPanel) {
+        adminPanel.style.display = isAdmin ? "block" : "none";
+    }
+    }
+
+    function toggleStar(user, team) {
+        let idx = starredTeams[user].indexOf(team);
+        if (idx > -1) {
+            starredTeams[user] = [];
+        } else {
+            starredTeams[user] = [team]; // Forces max 1 choice limit
+        }
+        
+        // Temporarily track locally on browser session
+        localStorage.setItem(`star_${user}`, JSON.stringify(starredTeams[user]));
+        
+        calculateScores();
+        renderDashboard();
+        renderFixtures();
+    }
+
+    function lockCurrentPlayerTeam() {
+        if (!activePlayer) return;
+        lockedUsers[activePlayer] = true;
+        localStorage.setItem(`lock_${activePlayer}`, "true");
+        
+        initLandingPage();
+        renderDashboard();
+    }
+    function calculateScores() {
+        let scores = { 
+            Sam: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Martin: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Elissa: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Paul: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Lewis: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Jenni: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Mum: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Tom: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 }
+        };
+    fixtures.forEach(f => {
+            if (f.status === "completed" && f.homeScore !== "" && f.awayScore !== "") {
+                let hG = parseInt(f.homeScore);
+                let aG = parseInt(f.awayScore);
+                
+                let homeMult = starredTeams[f.homeUser] && starredTeams[f.homeUser].includes(f.home) ? 2 : 1;
+                let awayMult = starredTeams[f.awayUser] && starredTeams[f.awayUser].includes(f.away) ? 2 : 1;
+
+                if(scores[f.homeUser]) scores[f.homeUser].goals += (hG * homeMult);
+                if(scores[f.awayUser]) scores[f.awayUser].goals += (aG * awayMult);
+                
+                if (f.homeUser !== f.awayUser) {
+                    if (hG === 0 && scores[f.awayUser]) scores[f.awayUser].cs += (1 * awayMult);
+                    if (aG === 0 && scores[f.homeUser]) scores[f.homeUser].cs += (1 * homeMult);
+                }
+
+                if (hG > aG) {
+                    if(scores[f.homeUser]) scores[f.homeUser].wins += (1 * homeMult);
+                } else if (aG > hG) {
+                    if(scores[f.awayUser]) scores[f.awayUser].wins += (1 * awayMult);
+                } else {
+                    if(f.homeUser === f.awayUser) {
+                        if(scores[f.homeUser]) scores[f.homeUser].draws += (1 * homeMult); 
+                    } else {
+                        if(scores[f.homeUser]) scores[f.homeUser].draws += (1 * homeMult);
+                        if(scores[f.awayUser]) scores[f.awayUser].draws += (1 * awayMult);
+                    }
+                }
+            }
+        });
+        Object.keys(scores).forEach(p => {
+            scores[p].pts = (scores[p].wins * 3) + (scores[p].draws * 1) + scores[p].goals + (scores[p].cs * 2);
+        });
+
+        renderScoreboard(scores);
+
+        // --- NEW CHAMPION LOGIC ---
+        let champSection = document.getElementById("champion-section");
+        let allFinished = fixtures.every(f => f.status === "completed");
+
+        if (allFinished) {
+            let sorted = Object.keys(scores).map(key => ({name: key, ...scores[key]})).sort((a,b) => b.pts - a.pts);
+            document.getElementById("champion-name").innerText = `🎉 ${sorted[0].name} with ${sorted[0].pts} points! 🎉`;
+            champSection.style.display = "block";
+        } else {
+            champSection.style.display = "none";
+        }
+    }
+
+    function renderScoreboard(scores) {
+        let sorted = Object.keys(scores).map(key => ({name: key, ...scores[key]})).sort((a,b) => b.pts - a.pts);
+        let tbody = document.querySelector("#scoreboard tbody");
+        tbody.innerHTML = "";
+        
+        sorted.forEach((p, index) => {
+            let badgeClass = "normal-rank";
+            let rankContent = index + 1;
+            
+            if (index === 0) { badgeClass = "gold-medal"; rankContent = "🥇"; }
+            else if (index === 1) { badgeClass = "silver-medal"; rankContent = "🥈"; }
+            else if (index === 2) { badgeClass = "bronze-medal"; rankContent = "🥉"; }
+
+            tbody.innerHTML += `<tr>
+                <td>
+                    <span class="medal-badge ${badgeClass}">${rankContent}</span>
+                    <strong>${p.name}</strong>
+                </td>
+                <td style="text-align:center;">${p.wins}</td>
+                <td style="text-align:center;">${p.draws}</td>
+                <td style="text-align:center;">${p.goals}</td>
+                <td style="text-align:center;">${p.cs}</td>
+                <td style="text-align:center;" class="points-cell">${p.pts}</td>
+            </tr>`;
+        });
+    }
+
+    function renderFixtures() {
+        let container = document.getElementById("fixtures-container");
+        container.innerHTML = "";
+        let currentRound = 0;
+
+        fixtures.forEach(f => {
+            if (f.round !== currentRound) {
+                currentRound = f.round;
+                let roundDiv = document.createElement("div");
+                roundDiv.className = "round-header";
+                roundDiv.innerText = `• ROUND ${currentRound} FIXTURES`;
+                container.appendChild(roundDiv);
+            }
+
+            let homeIsStarred = starredTeams[f.homeUser] && starredTeams[f.homeUser].includes(f.home);
+            let awayIsStarred = starredTeams[f.awayUser] && starredTeams[f.awayUser].includes(f.away);
+
+            let homeDisplay = f.home + (homeIsStarred ? " 🌟" : "");
+            let awayDisplay = f.away + (awayIsStarred ? " 🌟" : "");
+
+            let h2hText = f.homeUser === f.awayUser ? `${f.homeUser} (Internal)` : `${f.homeUser} vs ${f.awayUser}`;
+            if (homeIsStarred || awayIsStarred) {
+                h2hText += ` <span class="joker-badge">JOKER x2</span>`;
+            }
+            
+            let row = document.createElement("div");
+            row.className = `fixture-row ${f.status}`;
+            
+            // Only unlock standard input field fields if global admin flag is true
+            let inputState = isAdmin ? "" : "disabled";
+
+            row.innerHTML = `
+                <span class="match-date">${f.date}</span>
+                <span class="team-left">${homeDisplay}</span>
+                <div class="score-inputs">
+                    <input type="number" min="0" value="${f.homeScore}" ${inputState} 
+    onchange="updateFixtureData(${f.id}, 'home', this.value)">
+<span>-</span>
+<input type="number" min="0" value="${f.awayScore}" ${inputState} 
+    onchange="updateFixtureData(${f.id}, 'away', this.value)">
+                </div>
+                <span class="team-right">${awayDisplay}</span>
+                <span class="family-h2h">${h2hText}</span>
+            `;
+            container.appendChild(row);
+        });
+    let adminPanel = document.getElementById("admin-management-panel");
+    if (adminPanel) {
+        adminPanel.style.display = isAdmin ? "block" : "none";
+    }
+}   
+// --- NEW: GENERATE UPDATE CODE ---
+    function updateFixtureData(id, side, val) {
+        let f = fixtures.find(match => match.id === id);
+        if (side === 'home') f.homeScore = val;
+        if (side === 'away') f.awayScore = val;
+        f.status = (f.homeScore === "" || f.awayScore === "") ? "upcoming" : "completed";
+    }
+
+    function renderQuickUpdate() {
+    let list = document.getElementById("quick-update-list");
+    if (!list) return;
+    list.innerHTML = ""; 
+    const today = new Date().getDate(); 
+    let pending = fixtures.filter(f => {
+        let day = parseInt(f.date.split(" ")[1]);
+        return f.status === "upcoming" && day <= today;
+    });
+    
+    if (pending.length === 0) {
+        list.innerHTML = "No past matches pending! ✅";
+        return;
+    }
+
+    pending.forEach(f => {
+        let div = document.createElement("div");
+        div.style.padding = "5px 0";
+        // We use 'onchange' here, but it won't force a page refresh anymore
+        div.innerHTML = `<strong>${f.home} vs ${f.away}</strong>: 
+            <input type="number" style="width:40px" onchange="updateFixtureData(${f.id}, 'home', this.value)" value="${f.homeScore}" placeholder="H">
+            <input type="number" style="width:40px" onchange="updateFixtureData(${f.id}, 'away', this.value)" value="${f.awayScore}" placeholder="A">`;
+        list.appendChild(div);
+    });
+
+    // Add a manual refresh button
+    let btn = document.createElement("button");
+    btn.innerText = "🔄 Update Scoreboard";
+    btn.style.marginTop = "10px";
+    btn.onclick = () => renderAll();
+    list.appendChild(btn);
+}
+
+    function renderAll() {
+        renderDashboard();
+        renderFixtures();
+        renderQuickUpdate();
+        calculateScores();
+        let adminPanel = document.getElementById("admin-management-panel");
+        if (adminPanel) adminPanel.style.display = isAdmin ? "block" : "none";
+    }
+
+    function generateUpdateCode() {
+        let code = JSON.stringify(fixtures, null, 4);
+        let blob = new Blob([code], {type: "text/plain"});
+        let a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "updated_fixtures.txt";
+        a.click();
+        alert("Fixtures code downloaded!");
+    }
+
+    initLandingPage();
+    renderAll();
+
+</script>
+</body>
+</html>
