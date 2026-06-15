@@ -114,7 +114,7 @@
     </div>-->
 
 <div class="dashboard-header" id="dashboard-section">
-    <h3 id="dashboard-title">🌟 Team assignments and favourite teams</h3>
+    <h3 id="dashboard-title">🌟 Select players favourite Team</h3>
  <!--<button class="lock-btn" id="lock-button" onclick="lockCurrentPlayerTeam()" disabled>🔒 Lock Selection</button>-->
 </div>
 <div class="rules-box" style="background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #2c5282;">
@@ -181,7 +181,7 @@
         Paul: ["Uruguay", "Turkey", "Jordan", "Iran", "New Zealand", "Mexico"],
         Lewis: ["Morocco", "Egypt", "Argentina", "USA", "DR Congo", "Sweden"],
         Jenni: ["Bosnia H", "Portugal", "Paraguay", "Qatar", "Senegal", "Colombia"],
-        Mum: ["Brazil", "Austria", "Croatia", "Netherlands", "Ecuador", "Cape verde"],
+        Sue: ["Brazil", "Austria", "Croatia", "Netherlands", "Ecuador", "Cape verde"],
         Tom: ["South africa", "Ivory coast", "Scotland", "Saudi Arabia", "Curacao", "Panama"]
     };
     
@@ -205,7 +205,7 @@
         "Jenni": [
             "Portugal"
         ],
-        "Mum": [
+        "Sue": [
             "Brazil"
         ],
         "Tom": [
@@ -220,7 +220,7 @@
         Paul: false,
         Lewis: false,
         Jenni: false,
-        Mum: false,
+        Sue: false,
         Tom: false
     };
 
@@ -351,8 +351,8 @@
     "away": "Japan",
     "homeUser": "Sue",
     "awayUser": "Martin",
-    "homeScore": 2,
-    "awayScore": 2,
+    "homeScore": "2",
+    "awayScore": "2",
     "status": "completed"
 },
 {
@@ -364,8 +364,8 @@
     "away": "Ecuador",
     "homeUser": "Tom",
     "awayUser": "Sue",
-    "homeScore": 1,
-    "awayScore": 1,
+    "homeScore": "1",
+    "awayScore": "0",
     "status": "completed"
 },
 {
@@ -377,8 +377,8 @@
     "away": "Tunisia",
     "homeUser": "Lewis",
     "awayUser": "Martin",
-    "homeScore": 5,
-    "awayScore": 1,
+    "homeScore": "5",
+    "awayScore": "1",
     "status": "completed"
 },
 {
@@ -390,9 +390,9 @@
     "away": "Cape verde",
     "homeUser": "Sam",
     "awayUser": "Sue",
-    "homeScore": 0,
-    "awayScore": 0,
-    "status": "completed"
+    "homeScore": "",
+    "awayScore": "",
+    "status": "upcoming"
 },
 {
     "id": 14,
@@ -403,9 +403,9 @@
     "away": "Egypt",
     "homeUser": "Sam",
     "awayUser": "Lewis",
-    "homeScore": 1,
-    "awayScore": 1,
-    "status": "completed"
+    "homeScore": "",
+    "awayScore": "",
+    "status": "upcoming"
 },
 {
     "id": 15,
@@ -1282,7 +1282,7 @@
             Paul: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
             Lewis: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
             Jenni: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Mum: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
+            Sue: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
             Tom: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 }
         };
     fixtures.forEach(f => {
