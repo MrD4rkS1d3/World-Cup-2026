@@ -5,7 +5,7 @@
     <title>Family World Cup Group Stage Score Tracker</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; }
-        .container { max-width: 950px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         
         /* Admin Bar */
         .admin-bar { display: flex; justify-content: space-between; align-items: center; background: #2d3748; color: white; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.85rem; }
@@ -18,6 +18,135 @@
         h2 { text-align: center; color: #4a5568; font-size: 1rem; font-weight: 400; margin-top: 0; margin-bottom: 25px; }
         h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; color: #2b6cb0; margin-top: 35px; font-size: 1.2rem; }
         
+        #hero-banner {
+    background: linear-gradient(135deg,#2b6cb0,#1a365d);
+    color:white;
+    padding:24px;
+    border-radius:12px;
+    margin-bottom:20px;
+    text-align:center;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.hero-title {
+    font-size:2rem;
+    font-weight:800;
+    margin-bottom:4px;
+    letter-spacing:0.5px;
+}
+
+.hero-subtitle {
+    opacity:0.9;
+    margin-bottom:18px;
+    font-size:0.95rem;
+}
+
+.hero-stats {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+}
+
+.hero-stat {
+    background: rgba(255,255,255,0.15);
+    padding: 10px 18px;
+    border-radius: 999px;
+    text-align: center;
+
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    min-width: 140px;
+    max-width: 220px;
+}
+
+.hero-stat small {
+    display: block;
+    font-size: 0.7rem;
+    opacity: 0.8;
+    margin-top: 3px;
+}
+.hero-stat span {
+    display: block;
+}
+@media (max-width:900px) {
+
+    .hero-stats {
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+.hero-label {
+    display:block;
+    font-size:0.7rem;
+    opacity:0.8;
+    text-transform:uppercase;
+}
+
+.hero-stat span:last-child {
+    font-weight:700;
+}
+
+.hero-link {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.hero-link:hover {
+    transform: translateY(-2px);
+}
+
+.hero-link::after {
+    content: "↘";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    opacity: 0.5;
+    font-size: 0.8rem;
+}
+
+.hero-link:hover::after {
+    opacity: 1;
+}
+
+.hero-value {
+    font-weight: 700;
+    display: block;
+}
+
+.hero-sub {
+    display: block;
+    font-size: 0.7rem;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+#hero-shock {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+#hero-progress,
+#hero-match,
+#hero-leader {
+    display:block;
+    font-weight:700;
+}
+
+#hero-shock-sub {
+    margin-top: 4px;
+}
+#hero-next-match,
+#hero-match-sub,
+#hero-leader-points {
+    display:block;
+    margin-top:3px;
+    font-size:0.7rem;
+    opacity:0.8;
+}
+
         /* Landing View Profile Selection */
         .landing-view { text-align: center; padding: 20px 0; }
         .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-top: 15px; }
@@ -26,6 +155,7 @@
         .profile-btn.active { background: #2b6cb0; color: white; border-color: #2b6cb0; }
 
         /* Star Selector Dashboard Layout */
+        
         .dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 35px; }
         .dashboard-header h3 { border-bottom: none; margin: 0; padding: 0; }
         .lock-btn { background-color: #e53e3e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
@@ -36,52 +166,358 @@
         .manager-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); position: relative; }
         .manager-card.dimmed { opacity: 0.6; pointer-events: none; background: #f7fafc; }
         .manager-name { font-weight: bold; color: #2c5282; border-bottom: 1px solid #edf2f7; padding-bottom: 4px; margin-bottom: 8px; font-size: 0.9rem; }
-        
+        .team-name { display:flex; align-items:center; gap:6px; flex:1; }
         .team-chip { display: flex; justify-content: space-between; align-items: center; background: #f7fafc; padding: 6px 10px; margin-bottom: 4px; border-radius: 4px; font-size: 0.82rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
         .team-chip:hover { background: #edf2f7; border-color: #cbd5e0; }
         .team-chip.starred { background: #fefcbf; border-color: #f6e05e; font-weight: bold; }
         .team-chip.locked-state { cursor: default; pointer-events: none; }
-        .star-icon { color: #d69e2e; font-size: 0.9rem; }
-        
-        /* Scoreboard Styling */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.9rem; }
-        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background-color: #2b6cb0; color: white; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
-        tr:hover { background-color: #f7fafc; }
-        .points-cell { font-weight: bold; color: #2b6cb0; }
-        
-        /* Podium Badges */
-        .medal-badge { display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; font-weight: bold; font-size: 0.8rem; margin-right: 8px; }
-        .gold-medal { background-color: #ffd700; color: #7a5e00; box-shadow: 0 2px 4px rgba(255,215,0,0.3); }
-        .silver-medal { background-color: #c0c0c0; color: #4a4a4a; box-shadow: 0 2px 4px rgba(192,192,192,0.3); }
-        .bronze-medal { background-color: #cd7f32; color: #ffffff; box-shadow: 0 2px 4px rgba(205,127,50,0.3); }
-        .normal-rank { background-color: #e2e8f0; color: #4a5568; }
+        .star-icon { color:#d69e2e; font-size:0.9rem; margin-left:8px; flex-shrink:0; }
 
-        .round-header { background: #edf2f7; padding: 8px 12px; font-weight: bold; color: #2d3748; margin-top: 20px; border-radius: 6px; font-size: 0.95rem; }
-        .fixture-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid #edf2f7; background: #fff; border-radius: 6px; margin-bottom: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); font-size: 0.88rem; }
+        /* TOURNAMENT CENTRE */
+
+#tournament-centre {
+    margin-bottom:20px;
+}
+
+.centre-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+}
+
+.centre-card {
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    padding:16px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    transition:all 0.2s ease;
+}
+
+.centre-card:hover {
+    transform:translateY(-2px);
+}
+
+.centre-label {
+    font-size:0.8rem;
+    color:#4a5568;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.centre-value {
+    font-size:1.2rem;
+    font-weight:800;
+    color:#1a365d;
+}
+
+.centre-sub {
+    margin-top:6px;
+    font-size:0.8rem;
+    color:#718096;
+}
+
+@media (max-width:900px) {
+    .centre-grid {
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media (max-width:600px) {
+    .centre-grid {
+        grid-template-columns:1fr;
+    }
+}
+
+#tournament-awards {
+    margin-top:25px;
+}
+
+.awards-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:15px;
+}
+
+.award-card {
+    background:white;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    padding:16px;
+    text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.award-label {
+    font-size:0.8rem;
+    color:#718096;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.award-value {
+    font-size:1.05rem;
+    font-weight:700;
+    color:#1a365d;
+    margin-top:8px;
+}
+
+.award-sub {
+    margin-top:6px;
+    font-size:.85rem;
+    color:#718096;
+}
+
+        /* SCOREBOARD WRAPPER */
+        #scoreboard { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+        .scoreboard-wrapper {
+    margin-bottom:20px;
+}
+
+        /* HEADER + CELLS */
+        #scoreboard th, #scoreboard td { padding:12px 14px; border-bottom:1px solid #edf2f7; }
+
+        /* HEADER STYLE */
+        #scoreboard th { background:linear-gradient(135deg,#2b6cb0,#2c5282); color:white; text-transform:uppercase; font-size:0.75rem; letter-spacing:0.6px; }
+
+        /* ROW HOVER */
+        #scoreboard tr:hover td { background:#f7fafc; transition:background 0.15s ease; }
+
+        /* COLUMN STRUCTURE */
+#scoreboard th:nth-child(1),
+#scoreboard td:nth-child(1) {
+    text-align:left;
+}
+
+#scoreboard th:nth-child(n+2),
+#scoreboard td:nth-child(n+2) {
+    text-align:center;
+}
+
+        /* NAME CELL (medal + name alignment) */
+        #scoreboard th:first-child, #scoreboard td:first-child { width:22%; }
+
+        /* POINTS CHIP */
+        .points-cell { font-weight:800; color:#1a365d; background:#ebf8ff; padding:4px 10px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; min-width:44px; }
+
+        /* PODIUM MEDALS */
+        .medal-badge { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; font-weight:700; font-size:0.8rem; margin-right:8px; }
+        .gold-medal { background:linear-gradient(135deg,#ffd700,#ffcc33); color:#7a5e00; box-shadow:0 2px 6px rgba(255,215,0,0.25); }
+        .silver-medal { background:linear-gradient(135deg,#d6d6d6,#bfbfbf); color:#4a4a4a; box-shadow:0 2px 6px rgba(192,192,192,0.25); }
+        .bronze-medal { background:linear-gradient(135deg,#cd7f32,#b87333); color:#fff; box-shadow:0 2px 6px rgba(205,127,50,0.25); }
+        .normal-rank { background:#edf2f7; color:#4a5568; }
+
+        /* TOP 3 EMPHASIS */
+        #scoreboard tbody tr:nth-child(1) td { background:linear-gradient(90deg,#fff8dc,#fff3b0); }
+        #scoreboard tbody tr:nth-child(2) td { background:linear-gradient(90deg,#f5f7fa,#e5e7eb); }
+        #scoreboard tbody tr:nth-child(3) td { background:linear-gradient(90deg,#fff3e0,#f3d2a6); }
+
+        /* MOBILE */
+        @media (max-width:600px) {
+            #scoreboard table { font-size:0.8rem; }
+            #scoreboard th, #scoreboard td { padding:10px; }
+            #scoreboard th:first-child, #scoreboard td:first-child { width:30%; }
+            .medal-badge { width:22px; height:22px; font-size:0.7rem; }
+        }
+
+        .round-header {
+    background: #edf2f7;
+    padding: 8px 12px;
+    font-weight: bold;
+    color: #2d3748;
+    margin-top: 20px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.round-winner-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 12px;
+    border-radius:999px;
+    background:#fef3c7;
+    color:#92400e;
+    font-size:0.75rem;
+    font-weight:700;
+    white-space:nowrap;
+}
+        .fixture-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #edf2f7; background:#fff; border-radius:6px; margin-bottom:6px; box-shadow:0 1px 3px rgba(0,0,0,0.02); font-size:0.88rem; }
         .completed { background-color: #f0fff4; border-left: 4px solid #38a169; }
         .upcoming { border-left: 4px solid #ed8936; }
-        .match-date { width: 15%; font-size: 0.75rem; font-weight: bold; color: #718096; }
-        .team-left { width: 22%; text-align: right; font-weight: 600; }
-        .team-right { width: 22%; text-align: left; font-weight: 600; }
-        .score-inputs { width: 14%; text-align: center; display: flex; gap: 4px; justify-content: center; align-items: center; }
+        .match-date { width:120px; font-size:0.72rem; font-weight:700; color:#4a5568; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; background:#f7fafc; border:1px solid #e2e8f0; padding:6px 8px; border-radius:6px; }
+        .match-date::before { content:"KICKOFF"; font-size:0.55rem; letter-spacing:0.08em; color:#a0aec0; font-weight:600; }
+        .team-left { width:auto; flex:1; min-width:160px; text-align:right; font-weight:600; display:flex; justify-content:flex-end; align-items:center; gap:4px; }
+        .team-right { width:auto; flex:1; min-width:160px; text-align:left; font-weight:600; display:flex; justify-content:flex-start; align-items:center; gap:4px; }
+        .score-inputs { width:120px; display:flex; justify-content:center; align-items:center; gap:4px; }
         .score-inputs input { width: 30px; text-align: center; padding: 3px; border: 1px solid #cbd5e0; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
         .score-inputs input:disabled { background: #edf2f7; color: #4a5568; border-color: #e2e8f0; cursor: not-allowed; }
         
-        .family-h2h { width: 22%; text-align: center; font-weight: bold; color: #2b6cb0; background: #ebf8ff; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #bee3f8; }
-        .Favourite-badge { font-size: 0.7rem; background: #d69e2e; color: white; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+        .family-h2h { width:180px; display:flex; align-items:center; justify-content:center; gap:6px; font-weight:700; font-size:0.72rem; color:#1a365d; background:#edf2ff; padding:6px 10px; border-radius:999px; border-left:4px solid #3182ce; white-space:nowrap; }
+        .Favourite-badge { font-size:0.7rem; background:#d69e2e; color:white; padding:1px 6px; border-radius:3px; display:inline-flex; align-items:center; }
+        .Favourite-badge.left { order:-1; margin-right:6px; }
+        .Favourite-badge.right { margin-left:6px; }
+
+        .team-name {display: flex; align-items: center; gap: 6px;}
+        .flag-icon {width: 24px; height: 18px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 1px 3px rgba(0,0,0,0.3);}
+        .rank-pill { display:inline-block; margin-left:6px; padding:2px 7px; border-radius:999px; background:#edf2f7; color:#4a5568; font-size:0.72rem; font-weight:700; vertical-align:middle; }
+        .team-badge { margin-right:4px; }        
+        .fixture-flag { width:28px; height:20px; border-radius:3px; border:1px solid rgba(255,255,255,0.2); box-shadow:0 1px 3px rgba(0,0,0,0.3); object-fit:cover; flex-shrink:0; }   
+        .fixture-home-team { display:flex; justify-content:flex-end; align-items:center; gap:4px; width:100%; }
+        .fixture-away-team { display:inline-flex; align-items:center; gap:4px; }
 
         @media (max-width: 600px) {
-            .match-date { width: 100%; margin-bottom: 5px; }
-            .team-left { width: 38%; }
-            .score-inputs { width: 24%; }
-            .team-right { width: 38%; }
-            .family-h2h { width: 100%; text-align: center; margin-top: 8px; }
+            .fixture-row { display:flex; flex-direction:column; align-items:stretch; gap:8px; padding:12px; }
+            .match-date { width:100%; flex-direction:row; justify-content:center; gap:6px; }
+            .team-left, .team-right { width:100%; justify-content:center; min-width:0; }
+            .score-inputs { width:100%; justify-content:center; }
+            .family-h2h { width:100%; margin-top:4px; }
+            .fixture-home-team, .fixture-away-team { justify-content:center; } 
         }
-    </style>
+        #scoreboard tbody tr { transition: background-color 0.3s ease; }
+        .duel-win td { animation:winPulse 900ms ease; }
+        .duel-lose td { animation:losePulse 900ms ease; opacity:0.85; }
+        .duel-win td:first-child { transform:scale(1.02); }
+            @keyframes winPulse { 0% { background:rgba(34,197,94,0.25); } 50% { background:rgba(34,197,94,0.10); } 100% { background:transparent; } }
+            @keyframes losePulse { 0% { background:rgba(239,68,68,0.25); } 50% { background:rgba(239,68,68,0.10); } 100% { background:transparent; } }
+
+        /* rank change indicators */
+        .rank-up { color:#16a34a; font-weight:800; margin-left:6px; animation:popUp 0.4s ease; }
+        .rank-down { color:#dc2626; font-weight:800; margin-left:6px; animation:popDown 0.4s ease; }
+            @keyframes popUp { 0% { transform:translateY(6px); opacity:0; } 100% { transform:translateY(0); opacity:1; } }
+            @keyframes popDown { 0% { transform:translateY(-6px); opacity:0; } 100% { transform:translateY(0); opacity:1; } }
+            @keyframes fadeInOut { 0% { opacity:0; transform:translate(-50%,20px); } 10% { opacity:1; transform:translate(-50%,0); } 80% { opacity:1; } 100% { opacity:0; transform:translate(-50%,20px); } }
+        
+        /* RIVALRY CARDS */
+
+#rivalry-matrix {
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    padding:15px;
+    box-sizing:border-box;
+}
+
+.rivalry-header {
+    font-weight:700;
+    color:#2b6cb0;
+    font-size:1rem;
+    margin-bottom:12px;
+    padding-bottom:8px;
+    border-bottom:2px solid #e2e8f0;
+}
+
+.rivalry-cards {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:12px;
+}
+
+.rivalry-card {
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:8px;
+    padding:12px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.02);
+}
+
+.rivalry-card:hover {
+    transform:translateY(-2px);
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.rivalry-title {
+    font-weight:700;
+    color:#2d3748;
+    margin-bottom:8px;
+}
+
+.rivalry-score {
+    font-size:1.4rem;
+    font-weight:800;
+    color:#2b6cb0;
+}
+
+.rivalry-leader {
+    margin-top:6px;
+    font-size:0.8rem;
+    color:#718096;
+}
+
+.rivalry-player-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-top:12px;
+}
+
+.rivalry-player-card {
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:10px;
+    padding:14px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+.rivalry-player-name {
+    font-weight:800;
+    color:#1a365d;
+    font-size:1rem;
+    margin-bottom:10px;
+    padding-bottom:8px;
+    border-bottom:1px solid #edf2f7;
+}
+
+.rivalry-stat {
+    font-size:0.85rem;
+    margin-bottom:6px;
+    color:#2d3748;
+}
+
+.rivalry-sub {
+    font-size:0.75rem;
+    color:#718096;
+    margin-bottom:8px;
+}
+
+.rivalry-label {
+    font-size:0.82rem;
+    font-weight:700;
+    color:#2d3748;
+    margin-top:10px;
+    margin-bottom:4px;
+}
+
+.rivalry-opponent-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:0.82rem;
+    font-weight:500;
+    color:#4a5568;
+    margin-bottom:6px;
+}
+
+.rivalry-score-chip {
+    display:inline-block;
+    margin-left:6px;
+    padding:2px 8px;
+    background:#ebf8ff;
+    border-radius:999px;
+    font-size:0.72rem;
+    font-weight:700;
+    color:#1a365d;
+}
+
+</style>
 </head>
 <body>
-
+<div class="container">
 <div class="admin-bar">
     <div>Tournament Mode: <span id="admin-status-badge" class="admin-status status-viewer">Viewer Mode (Read-Only)</span></div>
     <div>
@@ -90,8 +526,45 @@
     </div>
 </div>
 
-<div class="container">
-    <h1>Family World Cup Group Stage Tournament</h1>
+<div id="hero-banner">
+
+    <div class="hero-title">
+        🏆 Family World Cup
+    </div>
+
+    <div class="hero-subtitle">
+        Group Stage Tournament Tracker
+    </div>
+
+    <div class="hero-stats">
+
+    <div class="hero-stat hero-link" onclick="jumpToLeader()">
+        <span class="hero-label">🏆 Leader</span>
+        <span id="hero-leader">-</span>
+        <small id="hero-leader-points">0 pts</small>
+    </div>
+
+    <div class="hero-stat hero-link" onclick="jumpToShockResult()">
+        <span class="hero-label">🔥 Shock Result</span>
+        <span id="hero-shock">Awaiting Shock</span>
+        <small id="hero-shock-sub">No shock result yet</small>
+    </div>
+
+    <div class="hero-stat hero-link" onclick="jumpToMatchAward()">
+        <div class="hero-label">🎯 Match</div>
+        <div id="hero-match" class="hero-value">Awaiting</div>
+        <div id="hero-match-sub" class="hero-sub">No classic yet</div>
+    </div>
+
+    <div class="hero-stat hero-link" onclick="jumpToNextFixture()">
+        <span class="hero-label">⚽ Completed</span>
+        <span id="hero-progress">0 / 72</span>
+        <small id="hero-next-match">Next fixture</small>
+    </div>
+
+    </div>
+</div>
+    
     <div id="admin-management-panel" style="display:none; background: #fffaf0; border: 2px dashed #ecc94b; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
     <h3>🛠️ Admin Management</h3>
     <button onclick="generateUpdateCode()" style="background: #38a169; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
@@ -100,9 +573,9 @@
     <h4 style="margin-top: 20px;">⚡ Quick Update (Past/Today's Matches)</h4>
     <div id="quick-update-list" style="font-size: 0.85rem;"></div>
     </div>
-</div>
 
-    <h2>Official Live Tracker & Auto-Calculator</h2>
+
+    
 
     <!-- Landing View: Choose Who You Are 
     <div class="landing-view" id="landing-section">
@@ -114,55 +587,153 @@
     </div>-->
 
 <div class="dashboard-header" id="dashboard-section">
-    <h3 id="dashboard-title">🌟 Team assignments and favourite team</h3>
+    <h3 id="dashboard-title"
+    onclick="toggleSection('team-content','team-arrow')"
+    style="cursor:pointer;">
+
+    <span id="team-arrow">▶</span>
+    🌟 Team assignments and favourite team
+</h3>
  <!--<button class="lock-btn" id="lock-button" onclick="lockCurrentPlayerTeam()" disabled>🔒 Lock Selection</button>-->
 </div>
-<div class="rules-box" style="background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #2c5282;">
+<div id="team-content" style="display:none;">
+    <div class="rules-box" style="background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #2c5282;">
     <strong style="display:block; margin-bottom: 5px;">💡 Favourite team Rules:</strong>
     <ul style="margin: 0; padding-left: 20px;">
        <!-- <li>You may select <strong>only one</strong> team to Star.</li>-->
         <li>Your Starred favourite team's goals, wins, and clean sheets are <strong>doubled</strong> (x2) in the scoreboard.</li>
         <!--<li>Once you click <strong>"Lock My Selection"</strong>, your choice is permanent for this device.</li>-->
     </ul>
-</div>
+    </div>
 
     <div class="config-grid" id="star-configurator">
         <!-- Cards generated dynamically -->
     </div>
- <div id="champion-section" style="display: none; background: #f0fff4; border: 2px solid #38a169; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
-    <h2 style="margin: 0; color: #22543d;">🏆 GROUP STAGE CHAMPION</h2>
-    <p id="champion-name" style="font-size: 1.5rem; font-weight: bold; color: #2f855a; margin: 10px 0 0 0;"></p>
+</div>    
+<div id="tournament-centre">
+
+    <h3 onclick="toggleSection('centre-content','centre-arrow')"
+    style="cursor:pointer;">
+
+    <span id="centre-arrow">▶</span>
+    🏟 Tournament Centre
+
+</h3>
+
+<div id="centre-content" style="display:none;">
+
+    <div class="centre-grid">
+
+        <div class="centre-card">
+            <div class="centre-label">🏆 Current Leader</div>
+            <div id="centre-leader" class="centre-value">-</div>
+            <div id="centre-leader-points" class="centre-sub">0 pts</div>
+        </div>
+
+        <div class="centre-card">
+            <div class="centre-label">⭐ Latest MVP</div>
+            <div id="centre-mvp" class="centre-value">-</div>
+            <div id="centre-mvp-points" class="centre-sub">-</div>
+        </div>
+
+        <div class="centre-card">
+            <div class="centre-label">⚔️ Rivalry King</div>
+            <div id="centre-rivalry" class="centre-value">Coming Soon</div>
+            <div id="centre-rivalry-sub" class="centre-sub"></div>
+        </div>
+
+        <div class="centre-card">
+            <div class="centre-label">🔥 Hottest Streak</div>
+            <div id="centre-streak" class="centre-value">-</div>
+            <div id="centre-streak-sub" class="centre-sub">-</div>
+        </div>
+
+        <div class="centre-card">
+            <div class="centre-label">📈 Biggest Climber</div>
+            <div id="centre-climber" class="centre-value">-</div>
+            <div id="centre-climber-points" class="centre-sub">-</div>
+        </div>
+
+    </div>
+
 </div>
+</div>
+<div id="tournament-awards">
+
+    <h3 onclick="toggleSection('awards-content','awards-arrow')"
+    style="cursor:pointer;">
+
+    <span id="awards-arrow">▶</span>
+    🏅 Tournament Awards
+
+</h3>
+
+<div id="awards-content" style="display:none;">
+
+    <div class="awards-grid">
+
+        <div class="award-card">
+            <div class="award-label">🔥 Shock Result</div>
+            <div id="award-upset" class="award-value">
+                Awaiting Shock
+            </div>
+            <div id="award-upset-sub" class="award-sub">
+                No ranking upset yet
+            </div>
+        </div>
+
+        <div class="award-card">
+            <div class="award-label">🎯 Match of the Tournament</div>
+            <div id="award-match" class="award-value">Awaiting Classic</div>            
+            <div id="award-match-sub" class="award-sub"></div>
+        </div>
+
+        <div class="award-card">
+            <div class="award-label">🏆 Champion</div>
+            <div id="award-champion" class="award-value">
+                Tournament Active
+            </div>
+            <div id="award-champion-sub" class="award-sub">
+                Group Stage
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</div>
+<div id="live-scoreboard">
 
 <h3>🏆 Live Scoreboard</h3>
 
-<div class="rules-box" style="background: #f0f7ff; border: 1px solid #bee3f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.85rem; color: #2c5282;">
+    <div class="rules-box" style="background: #f0f7ff; border: 1px solid #bee3f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.85rem; color: #2c5282;">
     <strong style="display:block; margin-bottom: 8px;">📊 Scoring Rules:</strong>
     <ul style="margin: 0; padding-left: 20px;">
         <li><strong>Win:</strong> 3 points | <strong>Draw:</strong> 1 point</li>
         <li><strong>Goal:</strong> 1 point | <strong>Clean Sheet:</strong> 2 points</li>
         <li><strong>Favourite (Starred Team):</strong> All points earned by your Starred team are <strong>doubled (x2)</strong>.</li>
     </ul>
+    </div>
 </div>
 
-<table id="scoreboard">
-    <thead>
-        <tr>
-            <th style="width: 35%;">Family Member</th>
-            <th style="text-align:center;">Wins</th>
-            <th style="text-align:center;">Draws</th>
-            <th style="text-align:center;">Goals</th>
-            <th style="text-align:center;">Clean Sheets</th>
-            <th style="text-align:center;">Total Points</th>
-        </tr>
-    </thead>
-    <tbody>
-        </tbody>
-</table>
-            <!-- Calculated dynamically -->
-        </tbody>
+<div class="scoreboard-wrapper">
+    <table id="scoreboard">
+        <thead>
+            <tr>
+                <th style="width:35%;">Family Member</th>
+                <th style="text-align:center;">Wins</th>
+                <th style="text-align:center;">Draws</th>
+                <th style="text-align:center;">Goals</th>
+                <th style="text-align:center;">Clean Sheets</th>
+                <th style="text-align:center;">Total Points</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
     </table>
+</div>
 
+<div id="rivalry-matrix"></div>
+<div id="fixtures-anchor"></div>
     <h3>🗓️ Full Tournament Fixtures</h3>
     <div id="fixtures-container">
         <!-- Loaded dynamically -->
@@ -170,6 +741,17 @@
 </div>
 
 <script>
+    const flagCodes = {
+    "Canada":"ca","Belgium":"be","Uzbekistan":"uz","Norway":"no","South Korea":"kr","Spain":"es",
+    "Czechia":"cz","Japan":"jp","Australia":"au","France":"fr","Tunisia":"tn","Switzerland":"ch",
+    "England":"gb-eng","Germany":"de","Haiti":"ht","Iraq":"iq","Ghana":"gh","Algeria":"dz",
+    "Uruguay":"uy","Turkey":"tr","Jordan":"jo","Iran":"ir","New Zealand":"nz","Mexico":"mx",
+    "Morocco":"ma","Egypt":"eg","Argentina":"ar","USA":"us","DR Congo":"cd","Sweden":"se",
+    "Bosnia and Herzegovina":"ba","Portugal":"pt","Paraguay":"py","Qatar":"qa","Senegal":"sn","Colombia":"co",
+    "Brazil":"br","Austria":"at","Croatia":"hr","Netherlands":"nl","Ecuador":"ec","Cape Verde":"cv",
+    "South Africa":"za","Ivory Coast":"ci","Scotland":"gb-sct","Saudi Arabia":"sa","Curacao":"cw","Panama":"pa"
+    };
+    
     const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
     let isAdmin = false;
     let activePlayer = null;
@@ -184,7 +766,486 @@
         Sue: ["Brazil", "Austria", "Croatia", "Netherlands", "Ecuador", "Cape Verde"],
         Tom: ["South Africa", "Ivory Coast", "Scotland", "Saudi Arabia", "Curacao", "Panama"]
     };
-    
+
+    const teamInfo = {
+
+
+// ===== SPECIAL TEAMS =====
+
+"Argentina": {
+    rank: 1,
+    badges: [
+        "👑 World Champions",
+        "🏆 Copa América Champions"
+    ]
+},
+
+"Spain": {
+    rank: 2,
+    badges: [
+        "🏆 European Champions"
+    ]
+},
+
+"Morocco": {
+    rank: 7,
+    badges: [
+        "🏆 African Champions"
+    ]
+},
+
+"USA": {
+    rank: 17,
+    badges: [
+        "🏠 Host Nation"
+    ]
+},
+
+"Mexico": {
+    rank: 14,
+    badges: [
+        "🏠 Host Nation"
+    ]
+},
+
+"Canada": {
+    rank: 30,
+    badges: [
+        "🏠 Host Nation"
+    ]
+},
+
+// ===== REMAINING TOURNAMENT TEAMS =====
+
+"France": { rank: 3, badges: [] },
+"England": { rank: 4, badges: [] },
+"Portugal": { rank: 5, badges: [] },
+"Brazil": { rank: 6, badges: [] },
+"Netherlands": { rank: 8, badges: [] },
+"Belgium": { rank: 9, badges: [] },
+"Germany": { rank: 10, badges: [] },
+"Croatia": { rank: 11, badges: [] },
+
+"Colombia": { rank: 13, badges: [] },
+"Senegal": { rank: 15, badges: [] },
+"Uruguay": { rank: 16, badges: [] },
+"Japan": { rank: 18, badges: [] },
+"Switzerland": { rank: 19, badges: [] },
+"Iran": { rank: 20, badges: [] },
+"Turkey": { rank: 22, badges: [] },
+"Ecuador": { rank: 23, badges: [] },
+"Austria": { rank: 24, badges: [] },
+"South Korea": { rank: 25, badges: [] },
+"Australia": { rank: 27, badges: [] },
+"Algeria": { rank: 28, badges: [] },
+"Egypt": { rank: 29, badges: [] },
+"Norway": { rank: 31, badges: [] },
+
+"Ivory Coast": { rank: 33, badges: [] },
+"Panama": { rank: 34, badges: [] },
+"Sweden": { rank: 38, badges: [] },
+"Czechia": { rank: 40, badges: [] },
+"Paraguay": { rank: 41, badges: [] },
+"Scotland": { rank: 42, badges: [] },
+"Tunisia": { rank: 45, badges: [] },
+"DR Congo": { rank: 46, badges: [] },
+"Uzbekistan": { rank: 50, badges: [] },
+
+"Qatar": { rank: 56, badges: [] },
+"Iraq": { rank: 57, badges: [] },
+"South Africa": { rank: 60, badges: [] },
+"Saudi Arabia": { rank: 61, badges: [] },
+"Jordan": { rank: 63, badges: [] },
+"Bosnia and Herzegovina": { rank: 64, badges: [] },
+"Cape Verde": { rank: 67, badges: [] },
+
+"Ghana": { rank: 73, badges: [] },
+"Curacao": { rank: 82, badges: [] },
+"Haiti": { rank: 83, badges: [] },
+"New Zealand": { rank: 85, badges: [] }
+
+
+};
+// Helpers
+function getTeamRank(team) {
+return teamInfo[team]?.rank || 999;
+}
+
+function getTeamBadges(team) {
+return teamInfo[team]?.badges || [];
+}
+
+function getPrimaryBadge(team) {
+return teamInfo[team]?.badges?.[0] || "";
+}
+
+function hasBadge(team, text) {
+    return teamInfo[team]?.badges?.some(b => b.includes(text));
+}
+
+function renderTeamAssignment(team) {
+
+    const badge = getPrimaryBadge(team);
+
+    return `
+        ${badge ? badge.split(" ")[0] + " " : ""}
+        ${team}
+        <span class="rank-pill">#${getTeamRank(team)}</span>
+    `;
+}
+function getTeamTitle(team) {
+
+    if (hasBadge(team, "World Champions"))
+        return "World Champions";
+
+    if (hasBadge(team, "European Champions"))
+        return "European Champions";
+
+    if (hasBadge(team, "African Champions"))
+        return "African Champions";
+
+    if (hasBadge(team, "Copa América Champions"))
+        return "Copa América Champions";
+
+    if (hasBadge(team, "Host Nation"))
+        return "Host Nation";
+
+    return "";
+}
+
+function calculateBiggestUpset() {
+
+    let biggest = null;
+
+    fixtures.forEach(f => {
+
+        if (f.status !== "completed") return;
+
+        const homeRank = getTeamRank(f.home);
+        const awayRank = getTeamRank(f.away);
+
+        let shock = 0;
+        let description = "";
+        let resultText = "";
+
+        // HOME WIN
+        if (f.homeScore > f.awayScore) {
+
+            shock = homeRank - awayRank;
+
+            if (shock > 0) {
+
+                const title = getTeamTitle(f.away);
+
+description =
+    `${f.home} (#${homeRank}) defeated ${
+        title ? `${title} ${f.away}` : f.away
+    } (#${awayRank})`;
+
+                resultText =
+                    `${f.home} ${f.homeScore}-${f.awayScore} ${f.away}`;
+
+            }
+
+        }
+
+        // AWAY WIN
+        else if (f.awayScore > f.homeScore) {
+
+            shock = awayRank - homeRank;
+
+            if (shock > 0) {
+
+                const title = getTeamTitle(f.home);
+
+description =
+    `${f.away} (#${awayRank}) defeated ${
+        title ? `${title} ${f.home}` : f.home
+    } (#${homeRank})`;
+
+                resultText =
+                    `${f.home} ${f.homeScore}-${f.awayScore} ${f.away}`;
+
+            }
+
+        }
+
+        // DRAW
+        else {
+
+            const underdogRank =
+                Math.max(homeRank, awayRank);
+
+            const favouriteRank =
+                Math.min(homeRank, awayRank);
+
+            shock = underdogRank - favouriteRank;
+
+            if (shock > 0) {
+
+                const underdog =
+    homeRank > awayRank ? f.home : f.away;
+
+const favourite =
+    homeRank < awayRank ? f.home : f.away;
+
+const title = getTeamTitle(favourite);
+
+description =
+    `${underdog} (#${underdogRank}) held ${
+        title ? `${title} ${favourite}` : favourite
+    } (#${favouriteRank})`;
+
+                resultText =
+                    `${f.home} ${f.homeScore}-${f.awayScore} ${f.away}`;
+
+            }
+
+        }
+
+        if (shock <= 0) return;
+
+        if (!biggest || shock > biggest.shock) {
+
+            biggest = {
+                shock,
+                description,
+                resultText
+            };
+
+        }
+
+    });
+
+    return biggest;
+}
+
+function calculateMatchOfTheTournament() {
+
+    let best = null;
+
+    fixtures.forEach(f => {
+
+        if (f.status !== "completed") return;
+
+        const homeRank = getTeamRank(f.home);
+        const awayRank = getTeamRank(f.away);
+
+        const totalGoals =
+            Number(f.homeScore) + Number(f.awayScore);
+
+        const goalDifference =
+            Math.abs(
+                Number(f.homeScore) -
+                Number(f.awayScore)
+            );
+
+        let score = 0;
+
+        // Goal-heavy matches
+        score += totalGoals * 4;
+
+        // Close matches
+        score += Math.max(0, 10 - goalDifference * 2);
+
+        // Draw bonus
+        if (goalDifference === 0)
+            score += 10;
+
+        // Both teams contribute
+        if (
+            Number(f.homeScore) >= 2 &&
+            Number(f.awayScore) >= 2
+        ) {
+            score += 12;
+        }
+
+        // Big nations
+        if (homeRank <= 10)
+            score += 4;
+
+        if (awayRank <= 10)
+            score += 4;
+
+        // Champions bonus
+        if (getTeamTitle(f.home))
+            score += 6;
+
+        if (getTeamTitle(f.away))
+            score += 6;
+
+        // Giant-killing bonus
+        const rankGap =
+            Math.abs(homeRank - awayRank);
+
+        if (rankGap >= 40)
+            score += 12;
+
+        if (!best || score > best.score) {
+
+            best = {
+                fixture: f,
+                score,
+                totalGoals,
+                goalDifference,
+                rankGap
+            };
+
+        }
+
+    });
+
+    return best;
+}
+function getMatchOfTournamentHeadline(match) {
+
+    const f = match.fixture;
+
+    const homeTitle =
+        getTeamTitle(f.home);
+
+    const awayTitle =
+        getTeamTitle(f.away);
+
+    // Champion beaten
+
+    if (
+        f.homeScore !== f.awayScore &&
+        (
+            homeTitle ||
+            awayTitle
+        )
+    ) {
+
+        const loser =
+            f.homeScore > f.awayScore
+                ? f.away
+                : f.home;
+
+        const loserTitle =
+            getTeamTitle(loser);
+
+        if (loserTitle) {
+
+            return {
+                headline:
+                    "👑 Champion Stunned",
+                subheadline:
+                    `${loserTitle} Beaten`
+            };
+
+        }
+
+    }
+
+    // Big upset
+
+    if (match.rankGap >= 40) {
+
+        return {
+            headline:
+                "🚨 Giant Killing",
+            subheadline:
+                "Underdog Defied The Odds"
+        };
+
+    }
+
+    // High-scoring thriller
+
+    if (match.totalGoals >= 6) {
+
+        return {
+            headline:
+                "⚽ Instant Classic",
+            subheadline:
+                `${match.totalGoals} Goals • End-to-End Drama`
+        };
+
+    }
+
+    // Heavyweight battle
+
+    if (
+        getTeamRank(f.home) <= 10 &&
+        getTeamRank(f.away) <= 10
+    ) {
+
+        return {
+            headline:
+                "🏆 Heavyweight Clash",
+            subheadline:
+                "Lived Up To The Billing"
+        };
+
+    }
+
+    return {
+        headline:
+            "🔥 Tournament Shock",
+        subheadline:
+            "One Of The Stories Of The Tournament"
+    };
+}
+function toggleRound(round) {
+
+    const rows =
+        document.querySelectorAll(
+            `.round-${round}`
+        );
+
+    const header =
+        document.getElementById(
+            `round-arrow-${round}`
+        );
+
+    const collapsed =
+        header.textContent === "▶";
+
+    rows.forEach(row => {
+        row.style.display =
+            collapsed ? "" : "none";
+    });
+
+    header.textContent =
+        collapsed ? "▼" : "▶";
+}
+
+function toggleSection(contentId, arrowId) {
+
+    const section =
+        document.getElementById(contentId);
+
+    const arrow =
+        document.getElementById(arrowId);
+
+    const collapsed =
+        section.style.display === "none";
+
+    section.style.display =
+        collapsed ? "" : "none";
+
+    arrow.textContent =
+        collapsed ? "▼" : "▶";
+}
+
+function toggleSection(contentId, arrowId) {
+
+    const section =
+        document.getElementById(contentId);
+
+    const arrow =
+        document.getElementById(arrowId);
+
+    const hidden =
+        section.style.display === "none";
+
+    section.style.display =
+        hidden ? "block" : "none";
+
+    arrow.textContent =
+        hidden ? "▼" : "▶";
+}
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
         "Sam": [
@@ -224,6 +1285,8 @@
         Tom: false
     };
 
+    let previousRanks = {};
+    let lastRenderOrder = [];
     let fixtures = [
     {
     "id": 1,
@@ -359,7 +1422,7 @@
     "id": 11,
     "round": 1,
     "date": "Mon 15 June",
-    "kickoff": "00:00",
+    "kickoff": "17:00",
     "home": "Ivory Coast",
     "away": "Ecuador",
     "homeUser": "Tom",
@@ -372,7 +1435,7 @@
     "id": 12,
     "round": 1,
     "date": "Mon 15 June",
-    "kickoff": "03:00",
+    "kickoff": "20:00",
     "home": "Sweden",
     "away": "Tunisia",
     "homeUser": "Lewis",
@@ -442,9 +1505,9 @@
     "away": "Senegal",
     "homeUser": "Martin",
     "awayUser": "Jenni",
-    "homeScore": "",
-    "awayScore": "",
-    "status": "upcoming"
+    "homeScore": 3,
+    "awayScore": 1,
+    "status": "completed"
 },
 {
     "id": 18,
@@ -455,9 +1518,9 @@
     "away": "Norway",
     "homeUser": "Elissa",
     "awayUser": "Sam",
-    "homeScore": "",
-    "awayScore": "",
-    "status": "upcoming"
+    "homeScore": 1,
+    "awayScore": 4,
+    "status": "completed"
 },
 {
     "id": 19,
@@ -468,9 +1531,9 @@
     "away": "Algeria",
     "homeUser": "Lewis",
     "awayUser": "Elissa",
-    "homeScore": "",
-    "awayScore": "",
-    "status": "upcoming"
+    "homeScore": 3,
+    "awayScore": 0,
+    "status": "completed"
 },
 {
     "id": 20,
@@ -481,16 +1544,16 @@
     "away": "Jordan",
     "homeUser": "Sue",
     "awayUser": "Paul",
-    "homeScore": "",
-    "awayScore": "",
-    "status": "upcoming"
+    "homeScore": 3,
+    "awayScore": 1,
+    "status": "completed"
 },
 
 {
     "id": 21,
     "round": 1,
     "date": "Wed 17 June",
-    "kickoff": "18:00",
+    "kickoff": "23:00",
     "home": "Portugal",
     "away": "DR Congo",
     "homeUser": "Jenni",
@@ -503,7 +1566,7 @@
     "id": 22,
     "round": 1,
     "date": "Wed 17 June",
-    "kickoff": "21:00",
+    "kickoff": "02:00",
     "home": "England",
     "away": "Croatia",
     "homeUser": "Elissa",
@@ -516,7 +1579,7 @@
     "id": 23,
     "round": 1,
     "date": "Thu 18 June",
-    "kickoff": "00:00",
+    "kickoff": "17:00",
     "home": "Ghana",
     "away": "Panama",
     "homeUser": "Elissa",
@@ -529,7 +1592,7 @@
     "id": 24,
     "round": 1,
     "date": "Thu 18 June",
-    "kickoff": "03:00",
+    "kickoff": "20:00",
     "home": "Uzbekistan",
     "away": "Colombia",
     "homeUser": "Sam",
@@ -633,7 +1696,7 @@
     "id": 32,
     "round": 2,
     "date": "Sat 20 June",
-    "kickoff": "04:00",
+    "kickoff": "20:00",
     "home": "Turkey",
     "away": "Paraguay",
     "homeUser": "Paul",
@@ -685,7 +1748,7 @@
     "id": 36,
     "round": 2,
     "date": "Sun 21 June",
-    "kickoff": "05:00",
+    "kickoff": "20:00",
     "home": "Tunisia",
     "away": "Japan",
     "homeUser": "Martin",
@@ -1205,7 +2268,7 @@
         
        // let lockBtn = document.getElementById("lock-button");
         if (activePlayer) {
-             document.getElementById("dashboard-section").innerText = "🌟 Team assignments and favourite teams";
+             document.getElementById("dashboard-section").innerText = "🌟 Team Assignments and Favourite teams";
       //      document.getElementById("dashboard-title").innerText = `🌟 ${activePlayer}'s Selection Screen`;
        //     lockBtn.disabled = lockedUsers[activePlayer];
        //     lockBtn.innerText = lockedUsers[activePlayer] ? "🔒 Selection Locked In" : "🔒 Lock My Selection";
@@ -1228,8 +2291,18 @@
                 
                 chip.className = `team-chip ${isStarred ? 'starred' : ''} ${(lockedUsers[user] && !isAdmin) ? 'locked-state' : ''}`;
                 chip.id = `chip-${user}-${team.replace(/[^a-zA-Z0-9]/g, '_')}`;
-                chip.innerHTML = `<span>${team}</span><span class="star-icon">${isStarred ? '★' : '☆'}</span>`;
-                
+        const flagCode = flagCodes[team]; 
+                const badge = getPrimaryBadge(team);
+
+chip.innerHTML = `
+    <span class="team-name">
+        <span class="rank-pill">#${getTeamRank(team)}</span>
+        <img class="flag-icon" src="https://flagcdn.com/${flagCode}.svg" alt="${team}">
+        ${badge ? `<span class="team-badge">${badge.split(" ")[0]}</span>` : ""}
+        ${team}
+    </span>
+    <span class="star-icon">${isStarred ? '★' : '☆'}</span>
+`;
                 chip.onclick = () => {
                     if (!isAdmin && activePlayer !== user) return;
                     if (lockedUsers[user] && !isAdmin) return; 
@@ -1321,73 +2394,701 @@
 
         renderScoreboard(scores);
 
-        // --- NEW CHAMPION LOGIC ---
-        let champSection = document.getElementById("champion-section");
-        let allFinished = fixtures.every(f => f.status === "completed");
+const completed =
+    fixtures.filter(f => f.status === "completed").length;
 
-        if (allFinished) {
-            let sorted = Object.keys(scores).map(key => ({name: key, ...scores[key]})).sort((a,b) => b.pts - a.pts);
-            document.getElementById("champion-name").innerText = `🎉 ${sorted[0].name} with ${sorted[0].pts} points! 🎉`;
-            champSection.style.display = "block";
-        } else {
-            champSection.style.display = "none";
+document.getElementById("hero-progress").innerText =
+    `${completed} / ${fixtures.length}`;
+
+const nextFixture =
+    fixtures.find(f => f.status !== "completed");
+
+if (nextFixture) {
+
+    document.getElementById("hero-next-match").innerText =
+    `Next: ${nextFixture.home} vs ${nextFixture.away}`;
+
+} else {
+
+    document.getElementById("hero-next-match").innerText =
+        "Tournament Complete";
+
+}
+
+const shock = calculateBiggestUpset();
+
+if (shock) {
+
+    document.getElementById("award-upset").innerText =
+        shock.resultText;
+
+    document.getElementById("award-upset-sub").innerText =
+        shock.description;
+
+document.getElementById("hero-shock").innerText =
+    shock.resultText;
+
+document.getElementById("hero-shock-sub").innerText =
+    "Tap for details";
+
+} else {
+
+    document.getElementById("award-upset").innerText =
+        "Awaiting Shock";
+
+    document.getElementById("award-upset-sub").innerText =
+        "No shock result yet";
+
+    document.getElementById("hero-shock").innerText =
+        "Awaiting Shock";
+
+    document.getElementById("hero-shock-sub").innerText =
+        "No shock result yet";
+}
+const matchAward =
+    calculateMatchOfTheTournament();
+
+if (matchAward) {
+
+    const editorial =
+        getMatchOfTournamentHeadline(
+            matchAward
+        );
+
+    document.getElementById("award-match").innerHTML =
+    `${editorial.headline}<br>
+    <small>
+    ${matchAward.fixture.home}
+    ${matchAward.fixture.homeScore}-${matchAward.fixture.awayScore}
+    ${matchAward.fixture.away}
+    </small>`;
+
+    document.getElementById("award-match-sub").innerText =
+        editorial.subheadline;
+
+    document.getElementById("hero-match").innerText =
+        editorial.headline;
+
+    document.getElementById("hero-match-sub").innerText =
+        editorial.subheadline;
+
+} else {
+
+    document.getElementById("award-match").innerText =
+        "Awaiting Classic";
+
+    document.getElementById("award-match-sub").innerText =
+        "No standout match yet";
+
+    document.getElementById("hero-match").innerText =
+        "Awaiting";
+
+    document.getElementById("hero-match-sub").innerText =
+        "No classic yet";
+}
+const latestMVP = calculateLatestRoundMVP();
+
+if (!latestMVP) {
+
+    document.getElementById("centre-mvp").innerText =
+        "Awaiting Winner";
+
+    document.getElementById("centre-mvp-points").innerText =
+        "Round 1 in progress";
+
+} else {
+
+    document.getElementById("centre-mvp").innerText =
+        latestMVP.player;
+
+    document.getElementById("centre-mvp-points").innerText =
+        `Won Round ${latestMVP.round} • ${latestMVP.points} pts`;
+}
+    }  
+function calculateLatestRoundMVP() {
+
+    const completedRounds = [...new Set(
+        fixtures
+            .filter(f => f.status === "completed")
+            .map(f => f.round)
+    )].sort((a,b) => a-b);
+
+    if (!completedRounds.length) return null;
+
+    const latestRound =
+        completedRounds[completedRounds.length - 1];
+
+    const winner = getRoundWinner(latestRound);
+
+    if (!winner) return null;
+console.log("Latest Round:", latestRound);
+console.log("Winner:", winner);
+    return {
+        round: latestRound,
+        player: winner.player,
+        points: winner.points
+    };
+}
+function renderScoreboard(scores) {
+
+    let tbody = document.querySelector("#scoreboard tbody"); 
+
+    let oldRows = Array.from(tbody.children);
+
+    // CAPTURE OLD POSITIONS BEFORE WIPE
+    oldRows.forEach(row => {
+        let name = row.querySelector("strong")?.innerText;
+        
+    });
+
+    let sorted = Object.keys(scores)
+        .map(key => ({ name: key, ...scores[key] }))
+        .sort((a, b) => b.pts - a.pts);
+    document.getElementById("centre-leader").innerText =
+    sorted[0].name;
+
+    document.getElementById("centre-leader-points").innerText =
+    `${sorted[0].pts} pts`;
+
+    document.getElementById("hero-leader").innerText =
+    sorted[0].name;
+
+    document.getElementById("hero-leader-points").innerText =
+    `${sorted[0].pts} pts`;
+
+    let overtakes = new Set();
+
+    let duelEvents = [];
+
+sorted.forEach((p, index) => {
+    let newRank = index + 1;
+    let oldRank = previousRanks[p.name];
+
+    p.rankChange = oldRank ? oldRank - newRank : 0;
+
+    p.duelState = "";
+
+    if (oldRank && oldRank !== newRank) {
+
+        let swappedWith = sorted.find(x => previousRanks[x.name] === newRank);
+
+        if (swappedWith && swappedWith.name !== p.name) {
+
+            if (p.rankChange > 0) {
+                p.duelState = "win";
+                duelEvents.push({
+                    winner: p.name,
+                    loser: swappedWith.name,
+                    toRank: newRank
+                });
+            } else {
+                p.duelState = "lose";
+            }
         }
     }
 
-    function renderScoreboard(scores) {
-        let sorted = Object.keys(scores).map(key => ({name: key, ...scores[key]})).sort((a,b) => b.pts - a.pts);
-        let tbody = document.querySelector("#scoreboard tbody");
-        tbody.innerHTML = "";
-        
-        sorted.forEach((p, index) => {
-            let badgeClass = "normal-rank";
-            let rankContent = index + 1;
-            
-            if (index === 0) { badgeClass = "gold-medal"; rankContent = "🥇"; }
-            else if (index === 1) { badgeClass = "silver-medal"; rankContent = "🥈"; }
-            else if (index === 2) { badgeClass = "bronze-medal"; rankContent = "🥉"; }
+    previousRanks[p.name] = newRank;
+});
 
-            tbody.innerHTML += `<tr>
-                <td>
-                    <span class="medal-badge ${badgeClass}">${rankContent}</span>
-                    <strong>${p.name}</strong>
-                </td>
-                <td style="text-align:center;">${p.wins}</td>
-                <td style="text-align:center;">${p.draws}</td>
-                <td style="text-align:center;">${p.goals}</td>
-                <td style="text-align:center;">${p.cs}</td>
-                <td style="text-align:center;" class="points-cell">${p.pts}</td>
-            </tr>`;
+    let biggestClimber = sorted
+        .filter(p => p.rankChange > 0)
+        .sort((a,b) => b.rankChange - a.rankChange)[0];
+document.getElementById("centre-climber").innerText =
+    biggestClimber?.name || "-";
+
+document.getElementById("centre-climber-points").innerText =
+    biggestClimber
+        ? `↑ ${biggestClimber.rankChange} places`
+        : "-";
+    // TOURNAMENT CENTRE
+
+document.getElementById("centre-leader").innerText =
+    sorted[0].name;
+    
+
+document.getElementById("centre-leader-points").innerText =
+    `${sorted[0].pts} points`;
+
+if (biggestClimber) {
+
+    document.getElementById("centre-climber").innerText =
+        biggestClimber.name;
+
+    document.getElementById("centre-climber-points").innerText =
+        `↑ ${biggestClimber.rankChange} places`;
+
+} else {
+
+    document.getElementById("centre-climber").innerText =
+        "No Movement";
+
+    document.getElementById("centre-climber-points").innerText =
+        "Ranks unchanged";
+}
+    lastRenderOrder = sorted.map(p => p.name);
+
+    tbody.innerHTML = "";
+    requestAnimationFrame(() => {
+
+    let rows = Array.from(tbody.children);
+    let positions = new Map();
+
+    rows.forEach(r => {
+        let name = r.querySelector("strong")?.innerText;
+        if (name) positions.set(name, r.getBoundingClientRect().top);
+    });
+
+    requestAnimationFrame(() => {
+        Array.from(tbody.children).forEach(row => {
+            let name = row.querySelector("strong")?.innerText;
+            let oldTop = positions.get(name);
+
+            if (oldTop !== undefined) {
+                let newTop = row.getBoundingClientRect().top;
+                let delta = oldTop - newTop;
+
+                if (delta) {
+                    row.style.transform = `translateY(${delta}px)`;
+
+                    requestAnimationFrame(() => {
+                        row.style.transform = "";
+                    });
+                }
+            }
         });
+    });
+
+});
+    sorted.forEach((p, index) => {
+
+        let badgeClass = "normal-rank";
+        let rankContent = index + 1;
+
+        if (index === 0) { badgeClass = "gold-medal"; rankContent = "🥇"; }
+        else if (index === 1) { badgeClass = "silver-medal"; rankContent = "🥈"; }
+        else if (index === 2) { badgeClass = "bronze-medal"; rankContent = "🥉"; }
+
+        let flashClass = p.duelState ? `duel-${p.duelState}` : "";
+
+        tbody.innerHTML += `<tr class="${flashClass}">
+            <td>
+                <span class="medal-badge ${badgeClass}">${rankContent}</span>
+                <strong>${p.name}</strong>
+                ${p.rankChange > 0 ? `<span class="rank-up">↑${p.rankChange}</span>` : ""}
+                ${p.rankChange < 0 ? `<span class="rank-down">↓${Math.abs(p.rankChange)}</span>` : ""}
+            </td>
+            <td style="text-align:center;">${p.wins}</td>
+            <td style="text-align:center;">${p.draws}</td>
+            <td style="text-align:center;">${p.goals}</td>
+            <td style="text-align:center;">${p.cs}</td>
+            <td style="text-align:center;" class="points-cell">${p.pts}</td>
+        </tr>`;
+    });
+    if (duelEvents.length) {
+        let msg = duelEvents
+            .map(d => `${d.winner} overtakes ${d.loser} into ${d.toRank}`)
+            .join(" • ");
+
+        showBroadcast(msg);
+    }
+}
+function showBroadcast(text) {
+    let el = document.getElementById("broadcast-banner");
+
+    if (!el) { el = document.createElement("div"); el.id = "broadcast-banner"; document.body.appendChild(el); }
+    el.innerText = text; el.style.cssText = `position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#111827; color:white; padding:10px 16px; border-radius:8px; font-weight:600; font-size:0.85rem; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:9999; animation:fadeInOut 2.5s ease forwards;`;
+    setTimeout(() => el.remove(), 2500); 
+}
+    function buildRivalries(fixtures) {
+    let map = {};
+
+    function init(a, b) {
+        if (!map[a]) map[a] = {};
+        if (!map[a][b]) map[a][b] = { a: 0, b: 0 };
     }
 
+    fixtures.forEach(f => {
+        if (f.status !== "completed") return;
+
+        let a = f.homeUser;
+        let b = f.awayUser;
+
+        init(a, b);
+        init(b, a);
+
+        if (f.homeScore > f.awayScore) {
+            map[a][b].a++;
+            map[b][a].b++;
+        } else if (f.awayScore > f.homeScore) {
+            map[a][b].b++;
+            map[b][a].a++;
+        }
+    });
+
+    return map;
+}
+   function renderRivalryMatrix(fixtures) {
+
+    const container = document.getElementById("rivalry-matrix");
+
+    const players = [...new Set(
+        fixtures.flatMap(f => [f.homeUser, f.awayUser])
+    )];
+
+    const map = {};
+
+    function init(a, b) {
+        if (!map[a]) map[a] = {};
+        if (!map[a][b]) map[a][b] = { wins: 0, losses: 0 };
+    }
+
+    fixtures.forEach(f => {
+
+        if (f.status !== "completed") return;
+        if (f.homeUser === f.awayUser) return;
+
+        const a = f.homeUser;
+        const b = f.awayUser;
+
+        init(a, b);
+        init(b, a);
+
+        if (parseInt(f.homeScore) > parseInt(f.awayScore)) {
+
+            map[a][b].wins++;
+            map[b][a].losses++;
+
+        } else if (parseInt(f.awayScore) > parseInt(f.homeScore)) {
+
+            map[b][a].wins++;
+            map[a][b].losses++;
+
+        }
+
+    });
+
+    const cards = players.map(player => {
+
+        let totalWins = 0;
+        let totalLosses = 0;
+        let currentStreak = 0;
+        let streakType = "";
+        let favouriteVictim = null;
+        let nemesis = null;
+
+        let bestMargin = -999;
+        let worstMargin = 999;
+
+        const playerFixtures = fixtures
+            .filter(f =>
+        f.status === "completed" &&
+        (f.homeUser === player || f.awayUser === player) &&
+        f.homeUser !== f.awayUser
+    );
+        players.forEach(opponent => {
+
+            if (player === opponent) return;
+
+            const wins = map[player]?.[opponent]?.wins || 0;
+            const losses = map[player]?.[opponent]?.losses || 0;
+
+            totalWins += wins;
+            totalLosses += losses;
+
+            const margin = wins - losses;
+
+            if (margin > bestMargin) {
+                bestMargin = margin;
+                favouriteVictim = {
+                    name: opponent,
+                    score: `${wins}-${losses}`
+                };
+                if (!favouriteVictim || bestMargin <= 0) {
+    favouriteVictim = {
+        name: "None Yet",
+        score: ""
+    };
+}
+            }
+
+            if (margin < worstMargin) {
+                worstMargin = margin;
+                nemesis = {
+                    name: opponent,
+                    score: `${wins}-${losses}`
+                };
+            if (!nemesis || worstMargin >= 0) {
+        nemesis = {
+        name: "None Yet",
+        score: ""
+    };
+}
+            }
+
+        });
+for (let i = playerFixtures.length - 1; i >= 0; i--) {
+
+    const f = playerFixtures[i];
+
+    let result = "";
+
+    if (f.homeUser === player) {
+
+        if (f.homeScore > f.awayScore) result = "W";
+        else if (f.homeScore < f.awayScore) result = "L";
+
+    } else {
+
+        if (f.awayScore > f.homeScore) result = "W";
+        else if (f.awayScore < f.homeScore) result = "L";
+
+    }
+
+    if (!result) continue;
+
+    if (!streakType) {
+        streakType = result;
+        currentStreak = 1;
+    } else if (result === streakType) {
+        currentStreak++;
+    } else {
+        break;
+    }
+}
+        const totalGames = totalWins + totalLosses;
+
+        const winRate = totalGames
+            ? Math.round((totalWins / totalGames) * 100)
+            : 0;
+
+        return {
+            player,
+            totalWins,
+            totalLosses,
+            winRate,
+            currentStreak,
+            streakType,
+            favouriteVictim,
+            nemesis
+        };
+
+    });
+
+    cards.sort((a,b) => b.winRate - a.winRate);
+    const rivalryKing = cards[0]?.player;
+    const hottestStreak = [...cards]
+    .sort((a,b) => b.currentStreak - a.currentStreak)[0];
+
+    document.getElementById("centre-streak").innerText =
+    hottestStreak?.player || "-";
+
+document.getElementById("centre-streak-sub").innerText =
+    `${hottestStreak?.streakType || ""}${hottestStreak?.currentStreak || 0}`;
+
+document.getElementById("centre-rivalry").innerText =
+    rivalryKing || "-";
+
+document.getElementById("centre-rivalry-sub").innerText =
+    `${cards[0]?.winRate || 0}% Win Rate`;
+
+    container.innerHTML = `
+    <div class="rivalry-header"
+         onclick="toggleSection('rivalry-content','rivalry-arrow')"
+         style="cursor:pointer;">
+
+        <span id="rivalry-arrow">▶</span>
+        ⚔️ Family Rivalries
+
+    </div>
+
+    <div id="rivalry-content" style="display:none;">
+
+        <div class="rivalry-player-grid">
+
+
+            ${cards.map(card => `
+
+                <div class="rivalry-player-card">
+
+                    <div class="rivalry-player-name">
+                        ${card.player === rivalryKing ? "👑" : "⚔️"} ${card.player}
+                    </div>
+
+                    <div class="rivalry-stat">
+                        ⚔️ Record:
+                        <strong>${card.totalWins}W - ${card.totalLosses}L</strong>
+                    </div>
+
+                    <div class="rivalry-stat">
+                        🎯 Win Rate:
+                        <strong>${card.winRate}%</strong>
+                    </div>
+<div class="rivalry-stat">
+    🔥 Streak:
+    <strong>
+        ${card.streakType || "-"}${card.currentStreak || ""}
+    </strong>
+</div>
+                    <div class="rivalry-label">
+    🔥 Favourite Victim
+</div>
+
+<div class="rivalry-opponent-row">
+    ${card.favouriteVictim?.name || "-"}
+    <span class="rivalry-score-chip">
+        ${card.favouriteVictim?.score || ""}
+    </span>
+</div>
+
+<div class="rivalry-label">
+    😈 Nemesis
+</div>
+
+<div class="rivalry-opponent-row">
+    ${card.nemesis?.name || "-"}
+    <span class="rivalry-score-chip">
+        ${card.nemesis?.score || ""}
+    </span>
+</div>
+
+                </div>
+
+            `).join("")}
+
+                </div>
+
+    </div>
+    `;
+}
+function getRoundWinner(roundNumber) {
+
+    const roundFixtures = fixtures.filter(f => f.round === roundNumber);
+
+    const allComplete = roundFixtures.every(f => f.status === "completed");
+
+    if (!allComplete) return null;
+
+    const roundScores = {};
+
+    roundFixtures.forEach(f => {
+
+        const hG = parseInt(f.homeScore);
+        const aG = parseInt(f.awayScore);
+
+        const homeMult =
+            starredTeams[f.homeUser]?.includes(f.home) ? 2 : 1;
+
+        const awayMult =
+            starredTeams[f.awayUser]?.includes(f.away) ? 2 : 1;
+
+        roundScores[f.homeUser] = roundScores[f.homeUser] || 0;
+        roundScores[f.awayUser] = roundScores[f.awayUser] || 0;
+
+        roundScores[f.homeUser] += hG * homeMult;
+        roundScores[f.awayUser] += aG * awayMult;
+
+        if (hG > aG) {
+            roundScores[f.homeUser] += 3 * homeMult;
+        } else if (aG > hG) {
+            roundScores[f.awayUser] += 3 * awayMult;
+        } else {
+            roundScores[f.homeUser] += 1 * homeMult;
+
+            if (f.homeUser !== f.awayUser) {
+                roundScores[f.awayUser] += 1 * awayMult;
+            }
+        }
+
+        if (aG === 0) roundScores[f.homeUser] += 2 * homeMult;
+        if (hG === 0) roundScores[f.awayUser] += 2 * awayMult;
+    });
+
+    const winner = Object.entries(roundScores)
+        .sort((a,b) => b[1] - a[1])[0];
+
+    return {
+        player: winner[0],
+        points: winner[1]
+    };
+}
     function renderFixtures() {
         let container = document.getElementById("fixtures-container");
         container.innerHTML = "";
         let currentRound = 0;
 
         fixtures.forEach(f => {
-            if (f.round !== currentRound) {
-                currentRound = f.round;
-                let roundDiv = document.createElement("div");
-                roundDiv.className = "round-header";
-                roundDiv.innerText = `• ROUND ${currentRound} FIXTURES`;
-                container.appendChild(roundDiv);
-            }
+           if (f.round !== currentRound) {
+
+    currentRound = f.round;
+
+    const winner = getRoundWinner(currentRound);
+
+    let roundDiv = document.createElement("div");
+
+roundDiv.className = "round-header";
+
+roundDiv.innerHTML = `
+    <span onclick="toggleRound(${currentRound})"
+          style="cursor:pointer;">
+        <span id="round-arrow-${currentRound}">
+            ${currentRound === 1 ? "▼" : "▶"}
+        </span>
+        ROUND ${currentRound} FIXTURES
+    </span>
+
+    ${
+        winner
+        ? `<span class="round-winner-badge">
+             🏆 ${winner.player} • ${winner.points} pts
+           </span>`
+        : ""
+    }
+`;
+
+    container.appendChild(roundDiv);
+}
 
             let homeIsStarred = starredTeams[f.homeUser] && starredTeams[f.homeUser].includes(f.home);
             let awayIsStarred = starredTeams[f.awayUser] && starredTeams[f.awayUser].includes(f.away);
 
-            let homeDisplay = f.home + (homeIsStarred ? " 🌟" : "");
-            let awayDisplay = f.away + (awayIsStarred ? " 🌟" : "");
+            const homeFlag = flagCodes[f.home];
+            const awayFlag = flagCodes[f.away];
 
-            let h2hText = f.homeUser === f.awayUser ? `${f.homeUser} (Internal)` : `${f.homeUser} vs ${f.awayUser}`;
+            let homeBadge = getPrimaryBadge(f.home);
+let awayBadge = getPrimaryBadge(f.away);
+
+let homeDisplay = `<span class="fixture-home-team">
+    ${homeIsStarred ? "🌟 " : ""}
+    ${homeBadge ?`<span class="team-badge">${homeBadge.split(" ")[0]}</span>` : ""}     <span>${f.home}</span>     <span class="rank-pill">#${getTeamRank(f.home)}</span>     <img class="fixture-flag" src="https://flagcdn.com/${homeFlag}.svg" alt="${f.home}"> </span>`;
+
+let awayDisplay = `<span class="fixture-away-team">     <img class="fixture-flag" src="https://flagcdn.com/${awayFlag}.svg" alt="${f.away}">
+    ${awayBadge ?`<span class="team-badge">${awayBadge.split(" ")[0]}</span>` : ""}     <span>${f.away}</span>     <span class="rank-pill">#${getTeamRank(f.away)}</span>
+    ${awayIsStarred ? " 🌟" : ""} </span>`;
+
+            let h2hText = f.homeUser === f.awayUser
+                ? `${f.homeUser} (Internal)`
+                : `${f.homeUser} vs ${f.awayUser}`;
+
+            let favBadge = "";
             if (homeIsStarred || awayIsStarred) {
-                h2hText += ` <span class="Favourite-badge">Favourite x2</span>`;
+                if (homeIsStarred && !awayIsStarred) {
+                    favBadge = `<span class="Favourite-badge left">Favourite x2</span>`;
+                } else if (!homeIsStarred && awayIsStarred) {
+                    favBadge = `<span class="Favourite-badge right">Favourite x2</span>`;
+                } else {
+                    favBadge = `<span class="Favourite-badge">Favourite x2</span>`;
+                }
             }
+
+            h2hText = `<span class="h2h-wrap">${h2hText}</span>` + favBadge;
             
-            let row = document.createElement("div");
-            row.className = `fixture-row ${f.status}`;
+           let row = document.createElement("div");
+row.className =
+    `fixture-row ${f.status} round-${f.round}`;
+row.id = `fixture-${f.id}`;
+if (f.round > 1) {
+    row.style.display = "none";
+}
             
             // Only unlock standard input field fields if global admin flag is true
             let inputState = isAdmin ? "" : "disabled";
@@ -1452,12 +3153,14 @@
     btn.onclick = () => renderAll();
     list.appendChild(btn);
 }
+    renderRivalryMatrix(fixtures);
 
     function renderAll() {
         renderDashboard();
         renderFixtures();
         renderQuickUpdate();
         calculateScores();
+        renderRivalryMatrix(fixtures);
       //  let landingSection = document.getElementById("landing-section");
         //let dashboardHeader = document.getElementById("dashboard-section")
         let adminPanel = document.getElementById("admin-management-panel");
@@ -1490,6 +3193,50 @@
     }
 
    // initLandingPage();
+    function jumpToLeader() {
+
+    document.getElementById("live-scoreboard")
+        ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+}
+
+function jumpToShockResult() {
+
+    document.getElementById("tournament-awards")
+        ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+}
+
+function jumpToMatchAward() {
+
+    document
+        .getElementById("tournament-awards")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+}
+
+function jumpToNextFixture() {
+
+    const target =
+        fixtures.find(f => f.status !== "completed");
+
+    if (!target) return;
+
+    document.getElementById(`fixture-${target.id}`)
+        ?.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+}
     renderAll();
 
 </script>
