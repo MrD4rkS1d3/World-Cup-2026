@@ -1246,7 +1246,7 @@ function calculateMatchOfTheTournament() {
             Math.abs(homeRank - awayRank);
 
         if (rankGap >= 40)
-            score += 12;
+            score += 8;
 
         if (!best || score > best.score) {
 
@@ -1305,18 +1305,36 @@ function getMatchOfTournamentHeadline(match) {
 
     }
 
-    // Big upset
+   // Giant killing (underdog WON)
 
-    if (match.rankGap >= 40) {
+if (match.rankGap >= 40) {
+
+    const homeRank = getTeamRank(f.home);
+    const awayRank = getTeamRank(f.away);
+
+    const underdogWon =
+        (homeRank > awayRank && f.homeScore > f.awayScore) ||
+        (awayRank > homeRank && f.awayScore > f.homeScore);
+
+    if (underdogWon) {
 
         return {
-            headline:
-                "🚨 Giant Killing",
-            subheadline:
-                "Underdog Defied The Odds"
+            headline: "🚨 Giant Killing",
+            subheadline: "Underdog Defied The Odds"
         };
 
     }
+
+    if (f.homeScore === f.awayScore) {
+
+        return {
+            headline: "🛡️ Heroic Draw",
+            subheadline: "Rankings Counted For Nothing"
+        };
+
+    }
+
+}
 
     // High-scoring thriller
 
