@@ -268,7 +268,15 @@
     font-size:.85rem;
     color:#718096;
 }
+.rules-box-header {
+    font-weight:700;
+    color:#2c5282;
+    user-select:none;
+}
 
+.rules-box-header:hover {
+    opacity:0.85;
+}
         /* SCOREBOARD WRAPPER */
         #scoreboard { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
         .scoreboard-wrapper {
@@ -279,10 +287,23 @@
         #scoreboard th, #scoreboard td { padding:12px 14px; border-bottom:1px solid #edf2f7; }
 
         /* HEADER STYLE */
-        #scoreboard th { background:linear-gradient(135deg,#2b6cb0,#2c5282); color:white; text-transform:uppercase; font-size:0.75rem; letter-spacing:0.6px; }
+        #scoreboard th {
+    background:linear-gradient(135deg,#2b6cb0,#2c5282);
+    color:white;
+    text-transform:uppercase;
+    font-size:0.75rem;
+    letter-spacing:0.6px;
+
+    position:sticky;
+    top:0;
+    z-index:10;
+}
 
         /* ROW HOVER */
-        #scoreboard tr:hover td { background:#f7fafc; transition:background 0.15s ease; }
+        #scoreboard tbody tr:hover td {
+    background:rgba(43,108,176,0.04);
+    transition:background 0.15s ease;
+}
 
         /* COLUMN STRUCTURE */
 #scoreboard th:nth-child(1),
@@ -296,10 +317,55 @@
 }
 
         /* NAME CELL (medal + name alignment) */
-        #scoreboard th:first-child, #scoreboard td:first-child { width:22%; }
+        #scoreboard th:first-child,
+#scoreboard td:first-child {
+    width:20%;
+}
 
         /* POINTS CHIP */
-        .points-cell { font-weight:800; color:#1a365d; background:#ebf8ff; padding:4px 10px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; min-width:44px; }
+        .points-cell {
+    font-weight:800;
+    color:#1a365d;
+
+}.points-chip {
+    background:#ebf8ff;
+    padding:4px 8px;
+    border-radius:999px;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    min-width:42px;
+
+    font-weight:800;
+    color:#1a365d;
+    font-size:0.9rem;
+}
+
+/* FAVOURITE BONUS */
+
+.bonus-cell {
+    font-weight:700;
+    color:#16a34a;
+}
+
+.bonus-chip {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:4px 8px;
+    border-radius:999px;
+
+    background:#f0fff4;
+    border:1px solid #bbf7d0;
+
+    min-width:42px;
+    font-size:0.9rem;
+    font-weight:700;
+    color:#15803d;
+}
 
         /* PODIUM MEDALS */
         .medal-badge { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; font-weight:700; font-size:0.8rem; margin-right:8px; }
@@ -307,11 +373,38 @@
         .silver-medal { background:linear-gradient(135deg,#d6d6d6,#bfbfbf); color:#4a4a4a; box-shadow:0 2px 6px rgba(192,192,192,0.25); }
         .bronze-medal { background:linear-gradient(135deg,#cd7f32,#b87333); color:#fff; box-shadow:0 2px 6px rgba(205,127,50,0.25); }
         .normal-rank { background:#edf2f7; color:#4a5568; }
+        .podium-status {
+    margin-top:6px;
+    font-size:0.75rem;
+    color:#718096;
+    font-weight:600;
+}
+        .podium-gold {
+    background: linear-gradient(
+        135deg,
+        rgba(255,215,0,0.18),
+        rgba(255,243,176,0.35)
+    );
+    border: 1px solid rgba(255,215,0,0.25);
+}
 
-        /* TOP 3 EMPHASIS */
-        #scoreboard tbody tr:nth-child(1) td { background:linear-gradient(90deg,#fff8dc,#fff3b0); }
-        #scoreboard tbody tr:nth-child(2) td { background:linear-gradient(90deg,#f5f7fa,#e5e7eb); }
-        #scoreboard tbody tr:nth-child(3) td { background:linear-gradient(90deg,#fff3e0,#f3d2a6); }
+.podium-silver {
+    background: linear-gradient(
+        135deg,
+        rgba(214,214,214,0.20),
+        rgba(229,231,235,0.40)
+    );
+    border: 1px solid rgba(192,192,192,0.25);
+}
+
+.podium-bronze {
+    background: linear-gradient(
+        135deg,
+        rgba(205,127,50,0.18),
+        rgba(243,210,166,0.35)
+    );
+    border: 1px solid rgba(205,127,50,0.25);
+}
 
         /* MOBILE */
         @media (max-width:600px) {
@@ -379,7 +472,9 @@
             .family-h2h { width:100%; margin-top:4px; }
             .fixture-home-team, .fixture-away-team { justify-content:center; } 
         }
-        #scoreboard tbody tr { transition: background-color 0.3s ease; }
+        #scoreboard tbody tr:nth-child(even) td {
+    background:rgba(0,0,0,0.015);
+}
         .duel-win td { animation:winPulse 900ms ease; }
         .duel-lose td { animation:losePulse 900ms ease; opacity:0.85; }
         .duel-win td:first-child { transform:scale(1.02); }
@@ -387,12 +482,66 @@
             @keyframes losePulse { 0% { background:rgba(239,68,68,0.25); } 50% { background:rgba(239,68,68,0.10); } 100% { background:transparent; } }
 
         /* rank change indicators */
-        .rank-up { color:#16a34a; font-weight:800; margin-left:6px; animation:popUp 0.4s ease; }
-        .rank-down { color:#dc2626; font-weight:800; margin-left:6px; animation:popDown 0.4s ease; }
+        .rank-up {
+    background:#dcfce7;
+    color:#15803d;
+    padding:2px 7px;
+    border-radius:999px;
+    font-weight:700;
+    margin-left:6px;
+    display:inline-block;
+}
+
+.rank-down {
+    background:#fee2e2;
+    color:#b91c1c;
+    padding:2px 7px;
+    border-radius:999px;
+    font-weight:700;
+    margin-left:6px;
+    display:inline-block;
+}
             @keyframes popUp { 0% { transform:translateY(6px); opacity:0; } 100% { transform:translateY(0); opacity:1; } }
             @keyframes popDown { 0% { transform:translateY(-6px); opacity:0; } 100% { transform:translateY(0); opacity:1; } }
             @keyframes fadeInOut { 0% { opacity:0; transform:translate(-50%,20px); } 10% { opacity:1; transform:translate(-50%,0); } 80% { opacity:1; } 100% { opacity:0; transform:translate(-50%,20px); } }
         
+
+            .leaderboard-strip {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.podium-card {
+    background:white;
+    border-radius:12px;
+    padding:14px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+
+.podium-place {
+    font-size:1.4rem;
+    margin-bottom:4px;
+}
+
+.podium-name {
+    font-weight:700;
+    color:#1a365d;
+}
+
+.podium-points {
+    color:#718096;
+    font-size:.85rem;
+    margin-top:4px;
+}
+
+.podium-gap {
+    font-size:.75rem;
+    color:#38a169;
+    margin-top:4px;
+}
         /* RIVALRY CARDS */
 
 #rivalry-matrix {
@@ -706,26 +855,44 @@
 
 <h3>🏆 Live Scoreboard</h3>
 
-    <div class="rules-box" style="background: #f0f7ff; border: 1px solid #bee3f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.85rem; color: #2c5282;">
-    <strong style="display:block; margin-bottom: 8px;">📊 Scoring Rules:</strong>
-    <ul style="margin: 0; padding-left: 20px;">
+<div class="rules-box-header"
+     onclick="toggleSection('score-rules','score-rules-arrow')"
+     style="cursor:pointer; margin-bottom:10px;">
+
+    <span id="score-rules-arrow">▶</span>
+    📊 Scoring Rules
+
+</div>
+
+<div id="score-rules"
+     class="rules-box"
+     style="display:none; background:#f0f7ff; border:1px solid #bee3f8; padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.85rem; color:#2c5282;">
+
+    <strong style="display:block; margin-bottom:8px;">
+        📊 Scoring Rules:
+    </strong>
+
+    <ul style="margin:0; padding-left:20px;">
         <li><strong>Win:</strong> 3 points | <strong>Draw:</strong> 1 point</li>
         <li><strong>Goal:</strong> 1 point | <strong>Clean Sheet:</strong> 2 points</li>
         <li><strong>Favourite (Starred Team):</strong> All points earned by your Starred team are <strong>doubled (x2)</strong>.</li>
     </ul>
-    </div>
+
 </div>
 
+</div>
+<div id="leaderboard-strip" class="leaderboard-strip"></div>
 <div class="scoreboard-wrapper">
     <table id="scoreboard">
         <thead>
             <tr>
-                <th style="width:35%;">Family Member</th>
-                <th style="text-align:center;">Wins</th>
-                <th style="text-align:center;">Draws</th>
-                <th style="text-align:center;">Goals</th>
-                <th style="text-align:center;">Clean Sheets</th>
-                <th style="text-align:center;">Total Points</th>
+                <th style="width:35%;">👤 Player</th>
+                <th style="text-align:center;">🏆 Wins</th>
+                <th style="text-align:center;">🤝 Draws</th>
+                <th style="text-align:center;">⚽ Goals</th>
+                <th style="text-align:center;">🧤 CS</th>
+                <th style="text-align:center;">🌟 Bonus</th>
+                <th style="text-align:center;">⭐ Points</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -1246,6 +1413,31 @@ function toggleSection(contentId, arrowId) {
     arrow.textContent =
         hidden ? "▼" : "▶";
 }
+
+function expandAndScroll(sectionId, contentId, arrowId) {
+
+    const content =
+        document.getElementById(contentId);
+
+    const arrow =
+        document.getElementById(arrowId);
+
+    if (content && content.style.display === "none") {
+
+        content.style.display = "block";
+
+        if (arrow) {
+            arrow.textContent = "▼";
+        }
+    }
+
+    document
+        .getElementById(sectionId)
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+}
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
         "Sam": [
@@ -1553,7 +1745,7 @@ function toggleSection(contentId, arrowId) {
     "id": 21,
     "round": 1,
     "date": "Wed 17 June",
-    "kickoff": "23:00",
+    "kickoff": "18:00",
     "home": "Portugal",
     "away": "DR Congo",
     "homeUser": "Jenni",
@@ -1566,7 +1758,7 @@ function toggleSection(contentId, arrowId) {
     "id": 22,
     "round": 1,
     "date": "Wed 17 June",
-    "kickoff": "02:00",
+    "kickoff": "21:00",
     "home": "England",
     "away": "Croatia",
     "homeUser": "Elissa",
@@ -1579,7 +1771,7 @@ function toggleSection(contentId, arrowId) {
     "id": 23,
     "round": 1,
     "date": "Thu 18 June",
-    "kickoff": "17:00",
+    "kickoff": "00:00",
     "home": "Ghana",
     "away": "Panama",
     "homeUser": "Elissa",
@@ -1592,7 +1784,7 @@ function toggleSection(contentId, arrowId) {
     "id": 24,
     "round": 1,
     "date": "Thu 18 June",
-    "kickoff": "20:00",
+    "kickoff": "03:00",
     "home": "Uzbekistan",
     "away": "Colombia",
     "homeUser": "Sam",
@@ -1696,7 +1888,7 @@ function toggleSection(contentId, arrowId) {
     "id": 32,
     "round": 2,
     "date": "Sat 20 June",
-    "kickoff": "20:00",
+    "kickoff": "04:00",
     "home": "Turkey",
     "away": "Paraguay",
     "homeUser": "Paul",
@@ -1748,7 +1940,7 @@ function toggleSection(contentId, arrowId) {
     "id": 36,
     "round": 2,
     "date": "Sun 21 June",
-    "kickoff": "20:00",
+    "kickoff": "05:00",
     "home": "Tunisia",
     "away": "Japan",
     "homeUser": "Martin",
@@ -2348,16 +2540,16 @@ chip.innerHTML = `
    //    renderDashboard(); 
    // }
     function calculateScores() {
-        let scores = { 
-            Sam: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Martin: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Elissa: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Paul: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Lewis: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Jenni: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Sue: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 },
-            Tom: { wins: 0, draws: 0, goals: 0, cs: 0, pts: 0 }
-        };
+        let scores = {
+    Sam:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+    Martin: { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+    Elissa: { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+    Paul:   { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+    Lewis:  { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+    Jenni:  { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+    Sue:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+    Tom:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 }
+};
     fixtures.forEach(f => {
             if (f.status === "completed" && f.homeScore !== "" && f.awayScore !== "") {
                 let hG = parseInt(f.homeScore);
@@ -2365,32 +2557,76 @@ chip.innerHTML = `
                 
                 let homeMult = starredTeams[f.homeUser] && starredTeams[f.homeUser].includes(f.home) ? 2 : 1;
                 let awayMult = starredTeams[f.awayUser] && starredTeams[f.awayUser].includes(f.away) ? 2 : 1;
+                let homeBasePoints = 0;
+                let awayBasePoints = 0;
 
-                if(scores[f.homeUser]) scores[f.homeUser].goals += (hG * homeMult);
-                if(scores[f.awayUser]) scores[f.awayUser].goals += (aG * awayMult);
+                if(scores[f.homeUser]) scores[f.homeUser].goals += hG;
+if(scores[f.awayUser]) scores[f.awayUser].goals += aG;
+
+homeBasePoints += hG;
+awayBasePoints += aG;
                 
-                if (f.homeUser !== f.awayUser) {
-                    if (hG === 0 && scores[f.awayUser]) scores[f.awayUser].cs += (1 * awayMult);
-                    if (aG === 0 && scores[f.homeUser]) scores[f.homeUser].cs += (1 * homeMult);
-                }
+                if (hG === 0 && scores[f.awayUser]) {
+    scores[f.awayUser].cs += 1;
+    awayBasePoints += 2;
+}
 
+if (aG === 0 && scores[f.homeUser]) {
+    scores[f.homeUser].cs += 1;
+    homeBasePoints += 2;
+}
                 if (hG > aG) {
-                    if(scores[f.homeUser]) scores[f.homeUser].wins += (1 * homeMult);
-                } else if (aG > hG) {
-                    if(scores[f.awayUser]) scores[f.awayUser].wins += (1 * awayMult);
-                } else {
-                    if(f.homeUser === f.awayUser) {
-                        if(scores[f.homeUser]) scores[f.homeUser].draws += (1 * homeMult); 
-                    } else {
-                        if(scores[f.homeUser]) scores[f.homeUser].draws += (1 * homeMult);
-                        if(scores[f.awayUser]) scores[f.awayUser].draws += (1 * awayMult);
-                    }
-                }
+
+    if (scores[f.homeUser]) {
+        scores[f.homeUser].wins += 1;
+        homeBasePoints += 3;
+    }
+
+} else if (aG > hG) {
+
+    if (scores[f.awayUser]) {
+        scores[f.awayUser].wins += 1;
+        awayBasePoints += 3;
+    }
+
+} else {
+
+    if (f.homeUser === f.awayUser) {
+
+        if (scores[f.homeUser]) {
+            scores[f.homeUser].draws += 1;
+            homeBasePoints += 1;
+        }
+
+    } else {
+
+        if (scores[f.homeUser]) {
+            scores[f.homeUser].draws += 1;
+            homeBasePoints += 1;
+        }
+
+        if (scores[f.awayUser]) {
+            scores[f.awayUser].draws += 1;
+            awayBasePoints += 1;
+        }
+    }
+}
+if (homeMult === 2 && scores[f.homeUser]) {
+    scores[f.homeUser].bonus += homeBasePoints;
+}
+
+if (awayMult === 2 && scores[f.awayUser]) {
+    scores[f.awayUser].bonus += awayBasePoints;
+}
             }
         });
         Object.keys(scores).forEach(p => {
-            scores[p].pts = (scores[p].wins * 3) + (scores[p].draws * 1) + scores[p].goals + (scores[p].cs * 2);
-        });
+            scores[p].pts =
+    (scores[p].wins * 3) +
+    scores[p].draws +
+    scores[p].goals +
+    (scores[p].cs * 2) +
+    scores[p].bonus;});
 
         renderScoreboard(scores);
 
@@ -2543,10 +2779,8 @@ function renderScoreboard(scores) {
 
     let sorted = Object.keys(scores)
         .map(key => ({ name: key, ...scores[key] }))
-        .sort((a, b) => b.pts - a.pts);
-    document.getElementById("centre-leader").innerText =
-    sorted[0].name;
-
+        .sort((a, b) => b.pts - a.pts);        
+    
     document.getElementById("centre-leader-points").innerText =
     `${sorted[0].pts} pts`;
 
@@ -2589,7 +2823,53 @@ sorted.forEach((p, index) => {
 
     previousRanks[p.name] = newRank;
 });
+const podium =
+    document.getElementById("leaderboard-strip");
 
+if (podium && sorted.length >= 3) {
+
+    podium.innerHTML = `
+        <div class="podium-card podium-gold">
+    <div class="podium-place">🥇</div>
+    <div class="podium-name">${sorted[0].name}</div>
+    <div class="podium-points">${sorted[0].pts} pts</div>
+
+    <div class="podium-gap">
+        (🌟 +${sorted[0].bonus} Included) • Leads by ${sorted[0].pts - sorted[1].pts} pts
+    </div>
+</div>
+
+        <div class="podium-card podium-silver">
+    <div class="podium-place">🥈</div>
+    <div class="podium-name">${sorted[1].name}</div>
+    <div class="podium-points">${sorted[1].pts} pts</div>
+
+    <div class="podium-gap">
+        (🌟 +${sorted[1].bonus} Included) •
+        ${sorted[1].rankChange > 0
+            ? `▲${sorted[1].rankChange} Place`
+            : sorted[1].rankChange < 0
+                ? `▼${Math.abs(sorted[1].rankChange)} Place`
+                : `▬ Holding Position`}
+    </div>
+</div>
+
+        <div class="podium-card podium-bronze">
+    <div class="podium-place">🥉</div>
+    <div class="podium-name">${sorted[2].name}</div>
+    <div class="podium-points">${sorted[2].pts} pts</div>
+
+    <div class="podium-gap">
+        (🌟 +${sorted[2].bonus} Included) •
+        ${sorted[2].rankChange > 0
+            ? `▲${sorted[2].rankChange} Place`
+            : sorted[2].rankChange < 0
+                ? `▼${Math.abs(sorted[2].rankChange)} Place`
+                : `▬ Holding Position`}
+    </div>
+</div>
+    `;
+}
     let biggestClimber = sorted
         .filter(p => p.rankChange > 0)
         .sort((a,b) => b.rankChange - a.rankChange)[0];
@@ -2681,7 +2961,8 @@ if (biggestClimber) {
             <td style="text-align:center;">${p.draws}</td>
             <td style="text-align:center;">${p.goals}</td>
             <td style="text-align:center;">${p.cs}</td>
-            <td style="text-align:center;" class="points-cell">${p.pts}</td>
+            <td style="text-align:center;"><span class="bonus-chip">+${p.bonus}</span></td>
+            <td style="text-align:center;"><span class="points-chip">${p.pts}</span></td>
         </tr>`;
     });
     if (duelEvents.length) {
@@ -3193,33 +3474,33 @@ if (f.round > 1) {
     }
 
    // initLandingPage();
-    function jumpToLeader() {
+function jumpToLeader() {
 
-    document.getElementById("live-scoreboard")
-        ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+    expandAndScroll(
+        "tournament-centre",
+        "centre-content",
+        "centre-arrow"
+    );
 
 }
 
 function jumpToShockResult() {
 
-    document.getElementById("tournament-awards")
-        ?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+    expandAndScroll(
+        "tournament-awards",
+        "awards-content",
+        "awards-arrow"
+    );
 
 }
 
 function jumpToMatchAward() {
 
-    document
-        .getElementById("tournament-awards")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+    expandAndScroll(
+        "tournament-awards",
+        "awards-content",
+        "awards-arrow"
+    );
 
 }
 
@@ -3229,6 +3510,24 @@ function jumpToNextFixture() {
         fixtures.find(f => f.status !== "completed");
 
     if (!target) return;
+
+    const roundRows =
+        document.querySelectorAll(
+            `.round-${target.round}`
+        );
+
+    roundRows.forEach(row => {
+        row.style.display = "";
+    });
+
+    const arrow =
+        document.getElementById(
+            `round-arrow-${target.round}`
+        );
+
+    if (arrow) {
+        arrow.textContent = "▼";
+    }
 
     document.getElementById(`fixture-${target.id}`)
         ?.scrollIntoView({
