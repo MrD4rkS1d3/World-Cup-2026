@@ -803,6 +803,17 @@
             <div id="centre-climber-points" class="centre-sub">-</div>
         </div>
 
+        <div class="centre-card">
+            <div class="centre-label">📉 Biggest Faller</div>
+            <div id="centre-faller" class="centre-value">-</div>
+            <div id="centre-faller-points" class="centre-sub">-</div>
+        </div>
+
+        <div class="centre-card">
+            <div class="centre-label">🔥 Matchday Shake-Up</div>
+            <div id="centre-shakeup" class="centre-value">Awaiting Action</div>
+            <div id="centre-shakeup-sub" class="centre-sub">No movement yet</div>
+        </div>
     </div>
 
 </div>
@@ -1385,7 +1396,7 @@ function toggleRound(round) {
         );
 
     const collapsed =
-        header.textContent === "▶";
+    header.textContent.trim() === "▶";
 
     rows.forEach(row => {
         row.style.display =
@@ -2557,6 +2568,110 @@ chip.innerHTML = `
       // initLandingPage(); 
    //    renderDashboard(); 
    // }
+function buildScoresFromFixtures(fixturesList) {
+
+    let scores = {
+        Sam:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+        Martin: { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+        Elissa: { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+        Paul:   { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+        Lewis:  { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+        Jenni:  { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+        Sue:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
+        Tom:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 }
+    };
+
+    fixturesList.forEach(f => {
+
+        if (f.status === "completed" && f.homeScore !== "" && f.awayScore !== "") {
+
+            let hG = parseInt(f.homeScore);
+            let aG = parseInt(f.awayScore);
+
+            let homeMult = starredTeams[f.homeUser] &&
+                starredTeams[f.homeUser].includes(f.home) ? 2 : 1;
+
+            let awayMult = starredTeams[f.awayUser] &&
+                starredTeams[f.awayUser].includes(f.away) ? 2 : 1;
+
+            let homeBasePoints = 0;
+            let awayBasePoints = 0;
+
+            if(scores[f.homeUser]) scores[f.homeUser].goals += hG;
+            if(scores[f.awayUser]) scores[f.awayUser].goals += aG;
+
+            homeBasePoints += hG;
+            awayBasePoints += aG;
+
+            if (hG === 0 && scores[f.awayUser]) {
+                scores[f.awayUser].cs += 1;
+                awayBasePoints += 2;
+            }
+
+            if (aG === 0 && scores[f.homeUser]) {
+                scores[f.homeUser].cs += 1;
+                homeBasePoints += 2;
+            }
+
+            if (hG > aG) {
+
+                if (scores[f.homeUser]) {
+                    scores[f.homeUser].wins += 1;
+                    homeBasePoints += 3;
+                }
+
+            } else if (aG > hG) {
+
+                if (scores[f.awayUser]) {
+                    scores[f.awayUser].wins += 1;
+                    awayBasePoints += 3;
+                }
+
+            } else {
+
+                if (f.homeUser === f.awayUser) {
+
+                    if (scores[f.homeUser]) {
+                        scores[f.homeUser].draws += 1;
+                        homeBasePoints += 1;
+                    }
+
+                } else {
+
+                    if (scores[f.homeUser]) {
+                        scores[f.homeUser].draws += 1;
+                        homeBasePoints += 1;
+                    }
+
+                    if (scores[f.awayUser]) {
+                        scores[f.awayUser].draws += 1;
+                        awayBasePoints += 1;
+                    }
+                }
+            }
+
+            if (homeMult === 2 && scores[f.homeUser]) {
+                scores[f.homeUser].bonus += homeBasePoints;
+            }
+
+            if (awayMult === 2 && scores[f.awayUser]) {
+                scores[f.awayUser].bonus += awayBasePoints;
+            }
+        }
+    });
+
+    Object.keys(scores).forEach(p => {
+        scores[p].pts =
+            (scores[p].wins * 3) +
+            scores[p].draws +
+            scores[p].goals +
+            (scores[p].cs * 2) +
+            scores[p].bonus;
+    });
+
+    return scores;
+}
+
     function calculateScores() {
         let scores = {
     Sam:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
@@ -2798,6 +2913,15 @@ function getRankPositions(scores) {
     return positions;
 }
 
+function getLatestCompletedFixture(fixtures) {
+
+    const completed = fixtures
+        .filter(f => f.status === "completed")
+        .sort((a, b) => b.id - a.id);
+
+    return completed[0] || null;
+}
+
 function renderScoreboard(scores) {
 
     let tbody = document.querySelector("#scoreboard tbody"); 
@@ -2827,12 +2951,46 @@ function renderScoreboard(scores) {
 
     let duelEvents = [];
     const currentPositions = getRankPositions(scores);
+const completedFixtures =
+    fixtures.filter(f => f.status === "completed");
 
+const latestCompletedDate =
+    completedFixtures[completedFixtures.length - 1]?.date;
+
+console.log(
+    "Latest completed date:",
+    latestCompletedDate
+);
+
+const fixturesBeforeLatestDate =
+    fixtures.filter(f =>
+        !(
+            f.status === "completed" &&
+            f.date === latestCompletedDate
+        )
+    );
+
+const previousScores =
+    buildScoresFromFixtures(
+        fixturesBeforeLatestDate
+    );
+
+const previousPositions =
+    getRankPositions(previousScores);
+
+console.log(
+    "PREVIOUS POSITIONS",
+    previousPositions
+);
 sorted.forEach((p, index) => {
     let newRank = index + 1;
-    let oldRank = null;
+    let oldRank =
+    previousPositions[p.name];
 
-    p.rankChange = oldRank ? oldRank - newRank : 0;
+    p.rankChange =
+    oldRank !== undefined
+        ? oldRank - newRank
+        : 0;
 
     p.duelState = "";
 
@@ -2909,12 +3067,57 @@ if (podium && sorted.length >= 3) {
     let biggestClimber = sorted
         .filter(p => p.rankChange > 0)
         .sort((a,b) => b.rankChange - a.rankChange)[0];
+    let biggestFaller = sorted
+    .filter(p => p.rankChange < 0)
+    .sort((a,b) => a.rankChange - b.rankChange)[0];
+    let shakeUpHeadline = "🧱 No Shake-Up";
+let shakeUpSub = "Standings unchanged";
+
+const movers =
+    sorted.filter(p => p.rankChange !== 0);
+
+if (
+    biggestClimber &&
+    biggestClimber.rankChange >= 2
+) {
+
+    shakeUpHeadline = "🚀 Rapid Rise";
+
+    shakeUpSub =
+        `${biggestClimber.name} climbs ${biggestClimber.rankChange} places`;
+
+}
+
+else if (
+    biggestClimber &&
+    biggestFaller &&
+    movers.length >= 4
+) {
+
+    shakeUpHeadline = "🔥 Leaderboard Reshuffle";
+
+    shakeUpSub =
+        `${movers.length} players changed position`;
+
+}
+
+else if (
+    biggestClimber &&
+    biggestFaller
+) {
+
+    shakeUpHeadline = "⚔️ Places Traded";
+
+    shakeUpSub =
+        `${biggestClimber.name} overtakes ${biggestFaller.name}`;
+
+}
 document.getElementById("centre-climber").innerText =
     biggestClimber?.name || "-";
 
 document.getElementById("centre-climber-points").innerText =
     biggestClimber
-        ? `↑ ${biggestClimber.rankChange} places`
+        ? `▲${biggestClimber.rankChange} This Matchday`
         : "-";
     // TOURNAMENT CENTRE
 
@@ -2931,7 +3134,7 @@ if (biggestClimber) {
         biggestClimber.name;
 
     document.getElementById("centre-climber-points").innerText =
-        `↑ ${biggestClimber.rankChange} places`;
+        `▲${biggestClimber.rankChange} This Matchday`;
 
 } else {
 
@@ -2941,6 +3144,31 @@ if (biggestClimber) {
     document.getElementById("centre-climber-points").innerText =
         "Ranks unchanged";
 }
+
+if (biggestFaller) {
+
+    document.getElementById("centre-faller").innerText =
+        biggestFaller.name;
+
+    document.getElementById("centre-faller-points").innerText =
+        `▼${Math.abs(biggestFaller.rankChange)} This Matchday`;
+
+} else {
+
+    document.getElementById("centre-faller").innerText =
+        "No Fallers";
+
+    document.getElementById("centre-faller-points").innerText =
+        "No positions lost";
+
+}
+
+document.getElementById("centre-shakeup").innerText =
+    shakeUpHeadline;
+
+document.getElementById("centre-shakeup-sub").innerText =
+    shakeUpSub;
+
     lastRenderOrder = sorted.map(p => p.name);
 
     tbody.innerHTML = "";
@@ -3391,7 +3619,12 @@ function getRoundWinner(roundNumber) {
         let container = document.getElementById("fixtures-container");
         container.innerHTML = "";
         let currentRound = 0;
-
+        const activeRound =
+        [...new Set(
+        fixtures
+            .filter(f => f.status !== "completed")
+            .map(f => f.round)
+            )][0] || 1;
         fixtures.forEach(f => {
            if (f.round !== currentRound) {
 
@@ -3407,7 +3640,7 @@ roundDiv.innerHTML = `
     <span onclick="toggleRound(${currentRound})"
           style="cursor:pointer;">
         <span id="round-arrow-${currentRound}">
-            ${currentRound === 1 ? "▼" : "▶"}
+            ${currentRound === activeRound ? "▼" : "▶"}
         </span>
         ROUND ${currentRound} FIXTURES
     </span>
@@ -3462,7 +3695,7 @@ let awayDisplay = `<span class="fixture-away-team">     <img class="fixture-flag
 row.className =
     `fixture-row ${f.status} round-${f.round}`;
 row.id = `fixture-${f.id}`;
-if (f.round > 1) {
+if (f.round !== activeRound) {
     row.style.display = "none";
 }
             
