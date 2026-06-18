@@ -156,8 +156,48 @@
 
         /* Star Selector Dashboard Layout */
         
-        .dashboard-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 35px; }
-        .dashboard-header h3 { border-bottom: none; margin: 0; padding: 0; }
+        .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px 16px;
+    margin-top: 20px;
+
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.dashboard-header:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+}
+
+.dashboard-header h3 {
+    border-bottom: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.section-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.section-title-row span:last-child {
+    font-weight: 700;
+    min-width: 20px;
+    text-align: center;
+}
+        
         .lock-btn { background-color: #e53e3e; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
         .lock-btn:hover { background-color: #c53030; }
         .lock-btn:disabled { background-color: #a0aec0; cursor: not-allowed; }
@@ -428,6 +468,28 @@
     align-items:center;
 }
 
+.round-header-inner {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    width:100%;
+    cursor:pointer;
+}
+
+.round-right {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.round-arrow {
+    font-size:1rem;
+    font-weight:700;
+    min-width:20px;
+    text-align:center;
+}
+
 .round-winner-badge {
     display:inline-flex;
     align-items:center;
@@ -545,20 +607,11 @@
         /* RIVALRY CARDS */
 
 #rivalry-matrix {
-    background:#fff;
-    border-radius:10px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.05);
-    padding:15px;
     box-sizing:border-box;
 }
 
 .rivalry-header {
-    font-weight:700;
-    color:#2b6cb0;
-    font-size:1rem;
     margin-bottom:12px;
-    padding-bottom:8px;
-    border-bottom:2px solid #e2e8f0;
 }
 
 .rivalry-cards {
@@ -723,7 +776,7 @@
     <div id="quick-update-list" style="font-size: 0.85rem;"></div>
     </div>
 
-
+<div id="leaderboard-strip" class="leaderboard-strip"></div>
     
 
     <!-- Landing View: Choose Who You Are 
@@ -735,13 +788,21 @@
         </div>
     </div>-->
 
-<div class="dashboard-header" id="dashboard-section">
-    <h3 id="dashboard-title"
+<div class="dashboard-header" 
+    id="dashboard-section"    
     onclick="toggleSection('team-content','team-arrow')"
     style="cursor:pointer;">
+    <h3 id="dashboard-title"
+    class="section-title-row">
 
-    <span id="team-arrow">▶</span>
-    🌟 Team assignments and favourite team
+    <span>
+        📋 Team Assignments & Favourites
+    </span>
+
+    <span id="team-arrow">
+        ▶
+    </span>
+
 </h3>
  <!--<button class="lock-btn" id="lock-button" onclick="lockCurrentPlayerTeam()" disabled>🔒 Lock Selection</button>-->
 </div>
@@ -761,13 +822,22 @@
 </div>    
 <div id="tournament-centre">
 
-    <h3 onclick="toggleSection('centre-content','centre-arrow')"
-    style="cursor:pointer;">
+    <div class="dashboard-header"
+         onclick="toggleSection('centre-content','centre-arrow')">
 
-    <span id="centre-arrow">▶</span>
-    🏟 Tournament Centre
+        <h3 class="section-title-row">
 
-</h3>
+            <span>
+                🏟️ Tournament Centre
+            </span>
+
+            <span id="centre-arrow">
+                ▶
+            </span>
+
+        </h3>
+
+    </div>
 
 <div id="centre-content" style="display:none;">
 
@@ -820,13 +890,22 @@
 </div>
 <div id="tournament-awards">
 
-    <h3 onclick="toggleSection('awards-content','awards-arrow')"
-    style="cursor:pointer;">
+    <div class="dashboard-header"
+         onclick="toggleSection('awards-content','awards-arrow')">
 
-    <span id="awards-arrow">▶</span>
-    🏅 Tournament Awards
+        <h3 class="section-title-row">
 
-</h3>
+            <span>
+                🏅 Tournament Awards
+            </span>
+
+            <span id="awards-arrow">
+                ▶
+            </span>
+
+        </h3>
+
+    </div>
 
 <div id="awards-content" style="display:none;">
 
@@ -892,7 +971,7 @@
 </div>
 
 </div>
-<div id="leaderboard-strip" class="leaderboard-strip"></div>
+
 <div class="scoreboard-wrapper">
     <table id="scoreboard">
         <thead>
@@ -3497,14 +3576,22 @@ document.getElementById("centre-rivalry-sub").innerText =
     `${cards[0]?.winRate || 0}% Win Rate`;
 
     container.innerHTML = `
-    <div class="rivalry-header"
-         onclick="toggleSection('rivalry-content','rivalry-arrow')"
-         style="cursor:pointer;">
+    <div class="rivalry-header dashboard-header"
+     onclick="toggleSection('rivalry-content','rivalry-arrow')">
 
-        <span id="rivalry-arrow">▶</span>
-        ⚔️ Family Rivalries
+    <h3 class="section-title-row">
 
-    </div>
+        <span>
+            ⚔️ Family Rivalries
+        </span>
+
+        <span id="rivalry-arrow">
+            ▶
+        </span>
+
+    </h3>
+
+</div>
 
     <div id="rivalry-content" style="display:none;">
 
@@ -3637,21 +3724,31 @@ function getRoundWinner(roundNumber) {
 roundDiv.className = "round-header";
 
 roundDiv.innerHTML = `
-    <span onclick="toggleRound(${currentRound})"
-          style="cursor:pointer;">
-        <span id="round-arrow-${currentRound}">
-            ${currentRound === activeRound ? "▼" : "▶"}
-        </span>
-        ROUND ${currentRound} FIXTURES
-    </span>
+    <div class="round-header-inner"
+         onclick="toggleRound(${currentRound})">
 
-    ${
-        winner
-        ? `<span class="round-winner-badge">
-             🏆 ${winner.player} • ${winner.points} pts
-           </span>`
-        : ""
-    }
+        <div class="round-title">
+            ROUND ${currentRound} FIXTURES
+        </div>
+
+        <div class="round-right">
+
+            ${
+                winner
+                ? `<span class="round-winner-badge">
+                     🏆 ${winner.player} • ${winner.points} pts
+                   </span>`
+                : ""
+            }
+
+            <span id="round-arrow-${currentRound}"
+                  class="round-arrow">
+                ${currentRound === activeRound ? "▼" : "▶"}
+            </span>
+
+        </div>
+
+    </div>
 `;
 
     container.appendChild(roundDiv);
