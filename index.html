@@ -1468,7 +1468,7 @@ function expandAndScroll(sectionId, contentId, arrowId) {
             "England"
         ],
         "Paul": [
-            "Mexico"
+            "Uruguay"
         ],
         "Lewis": [
             "Argentina"
@@ -1495,7 +1495,7 @@ function expandAndScroll(sectionId, contentId, arrowId) {
         Tom: false
     };
 
-    let previousRanks = {};
+    //let previousRanks = {};
     let lastRenderOrder = [];
     let fixtures = [
     {
@@ -2783,6 +2783,21 @@ console.log("Winner:", winner);
         points: winner.points
     };
 }
+function getRankPositions(scores) {
+
+    let sorted = Object.keys(scores)
+        .map(key => ({ name: key, ...scores[key] }))
+        .sort((a, b) => b.pts - a.pts);
+
+    let positions = {};
+
+    sorted.forEach((player, index) => {
+        positions[player.name] = index + 1;
+    });
+
+    return positions;
+}
+
 function renderScoreboard(scores) {
 
     let tbody = document.querySelector("#scoreboard tbody"); 
@@ -2811,10 +2826,11 @@ function renderScoreboard(scores) {
     let overtakes = new Set();
 
     let duelEvents = [];
+    const currentPositions = getRankPositions(scores);
 
 sorted.forEach((p, index) => {
     let newRank = index + 1;
-    let oldRank = previousRanks[p.name];
+    let oldRank = null;
 
     p.rankChange = oldRank ? oldRank - newRank : 0;
 
@@ -2822,7 +2838,9 @@ sorted.forEach((p, index) => {
 
     if (oldRank && oldRank !== newRank) {
 
-        let swappedWith = sorted.find(x => previousRanks[x.name] === newRank);
+        let swappedWith = null;
+        
+        //sorted.find(x => previousRanks[x.name] === newRank);
 
         if (swappedWith && swappedWith.name !== p.name) {
 
@@ -2839,7 +2857,7 @@ sorted.forEach((p, index) => {
         }
     }
 
-    previousRanks[p.name] = newRank;
+    //previousRanks[p.name] = newRank;
 });
 const podium =
     document.getElementById("leaderboard-strip");
@@ -3038,7 +3056,13 @@ function showBroadcast(text) {
 
     function init(a, b) {
         if (!map[a]) map[a] = {};
-        if (!map[a][b]) map[a][b] = { wins: 0, losses: 0 };
+        if (!map[a][b]) {
+    map[a][b] = {
+        wins: 0,
+        draws: 0,
+        losses: 0
+    };
+}
     }
 
     fixtures.forEach(f => {
@@ -3054,77 +3078,127 @@ function showBroadcast(text) {
 
         if (parseInt(f.homeScore) > parseInt(f.awayScore)) {
 
-            map[a][b].wins++;
-            map[b][a].losses++;
+    map[a][b].wins++;
+    map[b][a].losses++;
 
-        } else if (parseInt(f.awayScore) > parseInt(f.homeScore)) {
+}
+else if (parseInt(f.awayScore) > parseInt(f.homeScore)) {
 
-            map[b][a].wins++;
-            map[a][b].losses++;
+    map[b][a].wins++;
+    map[a][b].losses++;
 
-        }
+}
+else {
+
+    map[a][b].draws++;
+    map[b][a].draws++;
+
+}
 
     });
 
     const cards = players.map(player => {
 
         let totalWins = 0;
+        let totalDraws = 0;
         let totalLosses = 0;
         let currentStreak = 0;
         let streakType = "";
-        let favouriteVictim = null;
-        let nemesis = null;
+        let biggestRival = null;
+        let toughestRival = null;
 
         let bestMargin = -999;
         let worstMargin = 999;
 
         const playerFixtures = fixtures
-            .filter(f =>
+    .filter(f =>
         f.status === "completed" &&
         (f.homeUser === player || f.awayUser === player) &&
         f.homeUser !== f.awayUser
-    );
+    )
+    .sort((a, b) => a.id - b.id);
+
         players.forEach(opponent => {
 
-            if (player === opponent) return;
+    if (player === opponent) return;
 
-            const wins = map[player]?.[opponent]?.wins || 0;
-            const losses = map[player]?.[opponent]?.losses || 0;
+    const wins =
+    map[player]?.[opponent]?.wins || 0;
 
-            totalWins += wins;
-            totalLosses += losses;
+const draws =
+    map[player]?.[opponent]?.draws || 0;
 
-            const margin = wins - losses;
+const losses =
+    map[player]?.[opponent]?.losses || 0;
 
-            if (margin > bestMargin) {
-                bestMargin = margin;
-                favouriteVictim = {
-                    name: opponent,
-                    score: `${wins}-${losses}`
-                };
-                if (!favouriteVictim || bestMargin <= 0) {
-    favouriteVictim = {
+totalWins += wins;
+totalDraws += draws;
+totalLosses += losses;
+
+const played =
+    wins + draws + losses;
+
+if (!played) return;
+
+const intensity =
+    (played * 10) -
+    Math.abs(wins - losses);
+
+const record =
+    `${wins}W ${draws}D ${losses}L`;
+
+if (
+    !biggestRival ||
+    intensity > biggestRival.intensity
+) {
+
+    biggestRival = {
+        name: opponent,
+        score: record,
+        intensity
+    };
+
+}
+
+if (
+    !toughestRival ||
+    losses > toughestRival.losses ||
+    (
+        losses === toughestRival.losses &&
+        played > toughestRival.played
+    )
+) {
+
+    toughestRival = {
+        name: opponent,
+        score: record,
+        losses,
+        played
+    };
+
+}
+
+});
+
+// Defaults if no positive/negative rival exists
+
+if (!biggestRival) {
+
+    biggestRival = {
+        name: "No Clear Rival Yet",
+        score: ""
+    };
+
+}
+
+if (!toughestRival) {
+
+    toughestRival = {
         name: "None Yet",
         score: ""
     };
-}
-            }
 
-            if (margin < worstMargin) {
-                worstMargin = margin;
-                nemesis = {
-                    name: opponent,
-                    score: `${wins}-${losses}`
-                };
-            if (!nemesis || worstMargin >= 0) {
-        nemesis = {
-        name: "None Yet",
-        score: ""
-    };
 }
-            }
-
-        });
 for (let i = playerFixtures.length - 1; i >= 0; i--) {
 
     const f = playerFixtures[i];
@@ -3154,7 +3228,10 @@ for (let i = playerFixtures.length - 1; i >= 0; i--) {
         break;
     }
 }
-        const totalGames = totalWins + totalLosses;
+        const totalGames =
+    totalWins +
+    totalDraws +
+    totalLosses;
 
         const winRate = totalGames
             ? Math.round((totalWins / totalGames) * 100)
@@ -3163,12 +3240,13 @@ for (let i = playerFixtures.length - 1; i >= 0; i--) {
         return {
             player,
             totalWins,
+            totalDraws,
             totalLosses,
             winRate,
             currentStreak,
             streakType,
-            favouriteVictim,
-            nemesis
+            biggestRival,
+            toughestRival
         };
 
     });
@@ -3214,8 +3292,7 @@ document.getElementById("centre-rivalry-sub").innerText =
                     </div>
 
                     <div class="rivalry-stat">
-                        ⚔️ Record:
-                        <strong>${card.totalWins}W - ${card.totalLosses}L</strong>
+                        ⚔️ Record:<strong>${card.totalWins}W ${card.totalDraws}D ${card.totalLosses}L</strong>
                     </div>
 
                     <div class="rivalry-stat">
@@ -3228,25 +3305,25 @@ document.getElementById("centre-rivalry-sub").innerText =
         ${card.streakType || "-"}${card.currentStreak || ""}
     </strong>
 </div>
-                    <div class="rivalry-label">
-    🔥 Favourite Victim
+    <div class="rivalry-label">
+    ⚔️ Biggest Rival
 </div>
 
 <div class="rivalry-opponent-row">
-    ${card.favouriteVictim?.name || "-"}
+    ${card.biggestRival?.name || "-"}
     <span class="rivalry-score-chip">
-        ${card.favouriteVictim?.score || ""}
+        ${card.biggestRival?.score || ""}
     </span>
 </div>
 
 <div class="rivalry-label">
-    😈 Nemesis
+    😈 Toughest Rival
 </div>
 
 <div class="rivalry-opponent-row">
-    ${card.nemesis?.name || "-"}
+    ${card.toughestRival?.name || "-"}
     <span class="rivalry-score-chip">
-        ${card.nemesis?.score || ""}
+        ${card.toughestRival?.score || ""}
     </span>
 </div>
 
