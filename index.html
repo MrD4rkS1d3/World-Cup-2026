@@ -457,38 +457,8 @@
         .silver-medal { background:linear-gradient(135deg,#d6d6d6,#bfbfbf); color:#4a4a4a; box-shadow:0 2px 6px rgba(192,192,192,0.25); }
         .bronze-medal { background:linear-gradient(135deg,#cd7f32,#b87333); color:#fff; box-shadow:0 2px 6px rgba(205,127,50,0.25); }
         .normal-rank { background:#edf2f7; color:#4a5568; }
-        .podium-status {
-    margin-top:6px;
-    font-size:0.75rem;
-    color:#718096;
-    font-weight:600;
-}
-        .podium-gold {
-    background: linear-gradient(
-        135deg,
-        rgba(255,215,0,0.18),
-        rgba(255,243,176,0.35)
-    );
-    border: 1px solid rgba(255,215,0,0.25);
-}
-
-.podium-silver {
-    background: linear-gradient(
-        135deg,
-        rgba(214,214,214,0.20),
-        rgba(229,231,235,0.40)
-    );
-    border: 1px solid rgba(192,192,192,0.25);
-}
-
-.podium-bronze {
-    background: linear-gradient(
-        135deg,
-        rgba(205,127,50,0.18),
-        rgba(243,210,166,0.35)
-    );
-    border: 1px solid rgba(205,127,50,0.25);
-}
+        
+        
 
         /* MOBILE */
         @media (max-width:600px) {
@@ -499,17 +469,25 @@
         }
 
         .round-header {
-    background: #edf2f7;
-    padding: 8px 12px;
-    font-weight: bold;
-    color: #2d3748;
-    margin-top: 20px;
-    border-radius: 6px;
-    font-size: 0.95rem;
+    background:#f8fafc;
+    border-left:4px solid #4299e1;
+
+    padding:10px 14px;
+
+    font-weight:700;
+    color:#2b6cb0;
+
+    margin-top:16px;
+
+    border-radius:8px;
+
+    font-size:0.95rem;
 
     display:flex;
     justify-content:space-between;
     align-items:center;
+
+    transition:all 0.2s ease;
 }
 
 .round-header-inner {
@@ -549,8 +527,38 @@
         .fixture-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #edf2f7; background:#fff; border-radius:6px; margin-bottom:6px; box-shadow:0 1px 3px rgba(0,0,0,0.02); font-size:0.88rem; }
         .completed { background-color: #f0fff4; border-left: 4px solid #38a169; }
         .upcoming { border-left: 4px solid #ed8936; }
-        .match-date { width:120px; font-size:0.72rem; font-weight:700; color:#4a5568; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; background:#f7fafc; border:1px solid #e2e8f0; padding:6px 8px; border-radius:6px; }
-        .match-date::before { content:"KICKOFF"; font-size:0.55rem; letter-spacing:0.08em; color:#a0aec0; font-weight:600; }
+        .match-date {
+    width:120px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:3px;
+
+    background:#f8fafc;
+
+    border:1px solid #e2e8f0;
+    border-left:2px solid #93c5fd;
+
+    padding:8px 10px;
+
+    border-radius:10px;
+
+    box-shadow:0 1px 3px rgba(0,0,0,0.03);
+
+    font-size:0.72rem;
+    font-weight:700;
+    color:#475569;
+}
+        .match-date::before {
+    content:"KICKOFF";
+    font-size:0.55rem;
+    letter-spacing:0.08em;
+    color:#94a3b8;
+    font-weight:700;
+}
         .team-left { width:auto; flex:1; min-width:160px; text-align:right; font-weight:600; display:flex; justify-content:flex-end; align-items:center; gap:4px; }
         .team-right { width:auto; flex:1; min-width:160px; text-align:left; font-weight:600; display:flex; justify-content:flex-start; align-items:center; gap:4px; }
         .score-inputs { width:120px; display:flex; justify-content:center; align-items:center; gap:4px; }
@@ -620,7 +628,6 @@
 }
 
 .podium-card {
-    background:white;
     border-radius:12px;
     padding:14px;
     text-align:center;
@@ -628,8 +635,8 @@
 }
 
 .podium-place {
-    font-size:1.4rem;
-    margin-bottom:4px;
+    font-size:1.9rem;
+    
 }
 
 .podium-name {
@@ -647,6 +654,36 @@
     font-size:.75rem;
     color:#38a169;
     margin-top:4px;
+}
+
+.podium-gold {
+    background: linear-gradient(
+        135deg,
+        rgba(255,215,0,0.18),
+        rgba(255,243,176,0.35)
+    );
+    border:1px solid rgba(255,215,0,0.45);
+
+    box-shadow:
+        0 4px 14px rgba(255,215,0,0.18);
+}
+
+.podium-silver {
+    background: linear-gradient(
+        135deg,
+        rgba(214,214,214,0.20),
+        rgba(229,231,235,0.40)
+    );
+    border: 1px solid rgba(192,192,192,0.25);
+}
+
+.podium-bronze {
+    background: linear-gradient(
+        135deg,
+        rgba(205,127,50,0.18),
+        rgba(243,210,166,0.35)
+    );
+    border: 1px solid rgba(205,127,50,0.25);
 }
         /* RIVALRY CARDS */
 
@@ -1051,11 +1088,34 @@
 </div>
 
 <div id="rivalry-matrix"></div>
+
 <div id="fixtures-anchor"></div>
-    <h3>🗓️ Full Tournament Fixtures</h3>
+
+<div class="dashboard-header"
+     onclick="toggleSection('fixtures-content','fixtures-arrow')">
+
+    <h3 class="section-title-row">
+
+        <span>
+            🗓️ Full Tournament Fixtures
+        </span>
+
+        <span id="fixtures-arrow">
+            ▼
+        </span>
+
+    </h3>
+
+</div>
+
+<div id="fixtures-content">
+
     <div id="fixtures-container">
-        <!-- Loaded dynamically -->
-    </div>
+    <!-- Loaded dynamically -->
+</div>
+
+</div> <!-- fixtures-content -->
+
 </div>
 
 <script>
@@ -3789,7 +3849,7 @@ roundDiv.innerHTML = `
          onclick="toggleRound(${currentRound})">
 
         <div class="round-title">
-            ROUND ${currentRound} FIXTURES
+            📅 Round ${currentRound} Fixtures
         </div>
 
         <div class="round-right">
