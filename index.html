@@ -726,6 +726,22 @@
     color:#b45309;
     font-weight:700;
 }
+
+/*ONE TO WATCH*/
+.watch-card {
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+}
+
+.watch-card .centre-label {
+    color:#1d4ed8;
+}
+
+.watch-card .centre-sub {
+    color:#2563eb;
+    font-weight:700;
+}
+
         /* RIVALRY CARDS */
 
 #rivalry-matrix {
@@ -990,21 +1006,27 @@
         </div>
 
         <div class="centre-card climber-card">
-    <div class="centre-label">📈 Biggest Climber</div>
-    <div id="centre-climber" class="centre-value">-</div>
-    <div id="centre-climber-points" class="centre-sub">-</div>
-</div>
+            <div class="centre-label">📈 Biggest Climber</div>
+            <div id="centre-climber" class="centre-value">-</div>
+            <div id="centre-climber-points" class="centre-sub">-</div>
+        </div>
 
-<div class="centre-card faller-card">
-    <div class="centre-label">📉 Biggest Faller</div>
-    <div id="centre-faller" class="centre-value">-</div>
-    <div id="centre-faller-points" class="centre-sub">-</div>
-</div>
+        <div class="centre-card faller-card">
+            <div class="centre-label">📉 Biggest Faller</div>
+            <div id="centre-faller" class="centre-value">-</div>
+            <div id="centre-faller-points" class="centre-sub">-</div>
+        </div>
 
         <div class="centre-card">
             <div class="centre-label">🔥 Matchday Shake-Up</div>
             <div id="centre-shakeup" class="centre-value">Awaiting Action</div>
             <div id="centre-shakeup-sub" class="centre-sub">No movement yet</div>
+        </div>
+
+        <div class="centre-card watch-card">
+            <div class="centre-label">👀 One To Watch</div>
+            <div id="centre-watch" class="centre-value">-</div>
+            <div id="centre-watch-sub" class="centre-sub">-</div>
         </div>
     </div>
 
@@ -1286,6 +1308,65 @@
 
 };
 // Helpers
+
+function getOneToWatch() {
+
+    const upcoming =
+        fixtures.filter(f =>
+            f.status !== "completed"
+        );
+
+    if (!upcoming.length) {
+
+        return {
+            headline: "Tournament Complete",
+            subheadline: "No Fixtures Remaining"
+        };
+
+    }
+
+    const fixture = upcoming[0];
+
+    if (
+        fixture.owner &&
+        fixture.owner.includes("(Internal)")
+    ) {
+
+        return {
+            headline:
+                `${fixture.home} vs ${fixture.away}`,
+            subheadline:
+                "⚠️ Internal Conflict"
+        };
+
+    }
+
+    const favouriteOwner =
+        Object.keys(starredTeams)
+            .find(player =>
+                starredTeams[player].includes(fixture.home) ||
+                starredTeams[player].includes(fixture.away)
+            );
+
+    if (favouriteOwner) {
+
+        return {
+            headline:
+                `${fixture.home} vs ${fixture.away}`,
+            subheadline:
+    `<strong>${favouriteOwner.toUpperCase()}'s</strong> Favourite Team Chases Bonus Points`
+        };
+
+    }
+
+    return {
+        headline:
+            `${fixture.home} vs ${fixture.away}`,
+        subheadline:
+            "Next Match Scheduled"
+    };
+
+}
 function getRankChangeText(player) {
 
     if (player.rankChange > 0) {
@@ -3586,6 +3667,15 @@ document.getElementById("centre-climber").innerText =
     biggestClimber?.name || "-";
 
     // TOURNAMENT CENTRE
+
+    const watch =
+    getOneToWatch();
+
+document.getElementById("centre-watch").innerText =
+    watch.headline;
+
+document.getElementById("centre-watch-sub").innerHTML =
+    watch.subheadline;
 
 document.getElementById("centre-leader").innerText =
     sorted[0].name;
