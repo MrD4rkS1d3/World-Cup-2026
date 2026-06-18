@@ -309,27 +309,64 @@
     color:#718096;
 }
 .rules-box-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin:10px 0 15px 20px;
+
+    padding:10px 14px;
+
+    max-width:280px;
+
+    background:#f8fafc;
+    border-left:4px solid #4299e1;
+    border-radius:8px;
+
+    font-size:0.95rem;
     font-weight:700;
-    color:#2c5282;
-    user-select:none;
+
+    color:#2b6cb0;
+
+    cursor:pointer;
+
+    transition:all 0.2s ease;
+}
+
+.rules-box-header:hover {
+    background:#edf2f7;
 }
 
 .rules-box-header:hover {
     opacity:0.85;
+    color:#2b6cb0;
 }
         /* SCOREBOARD WRAPPER */
-        #scoreboard { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+        #scoreboard { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
         .scoreboard-wrapper {
     margin-bottom:20px;
 }
 
         /* HEADER + CELLS */
-        #scoreboard th, #scoreboard td { padding:12px 14px; border-bottom:1px solid #edf2f7; }
+        #scoreboard th,
+#scoreboard td {
+    padding:14px 14px;
+    border-bottom:1px solid #edf2f7;
+}
 
         /* HEADER STYLE */
-        #scoreboard th {
+        #scoreboard thead {
     background:linear-gradient(135deg,#2b6cb0,#2c5282);
+}
+
+#scoreboard tbody tr:first-child td {
+    background:#fff8dc;
+}
+
+#scoreboard th {
+    background:transparent;
     color:white;
+
     text-transform:uppercase;
     font-size:0.75rem;
     letter-spacing:0.6px;
@@ -339,10 +376,17 @@
     z-index:10;
 }
 
+#scoreboard tbody tr:nth-child(even) td {
+    background:#fafcff;
+}
+
         /* ROW HOVER */
-        #scoreboard tbody tr:hover td {
-    background:rgba(43,108,176,0.04);
-    transition:background 0.15s ease;
+       #scoreboard tbody tr {
+    transition:all 0.15s ease;
+}
+
+#scoreboard tbody tr:hover td {
+    background:#f8fbff;
 }
 
         /* COLUMN STRUCTURE */
@@ -943,14 +987,32 @@
 </div>
 <div id="live-scoreboard">
 
-<h3>🏆 Live Scoreboard</h3>
+    <div class="dashboard-header"
+         onclick="toggleSection('scoreboard-content','scoreboard-arrow')">
 
-<div class="rules-box-header"
+        <h3 class="section-title-row">
+
+            <span>
+                🏆 Live Scoreboard
+            </span>
+
+            <span id="scoreboard-arrow">
+                ▼
+            </span>
+
+        </h3>
+
+    </div>
+
+    <div id="scoreboard-content">
+
+<div class="rules-box-header section-title-row"
      onclick="toggleSection('score-rules','score-rules-arrow')"
      style="cursor:pointer; margin-bottom:10px;">
 
-    <span id="score-rules-arrow">▶</span>
-    📊 Scoring Rules
+    <span>📊 Scoring Rules</span>
+
+<span id="score-rules-arrow">▶</span>
 
 </div>
 
@@ -970,9 +1032,7 @@
 
 </div>
 
-</div>
-
-<div class="scoreboard-wrapper">
+    <div class="scoreboard-wrapper">
     <table id="scoreboard">
         <thead>
             <tr>
@@ -987,6 +1047,7 @@
         </thead>
         <tbody></tbody>
     </table>
+    </div>
 </div>
 
 <div id="rivalry-matrix"></div>
