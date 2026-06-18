@@ -710,6 +710,22 @@
     background:#fef2f2;
     border:1px solid #fecaca;
 }
+
+/*MVP*/
+
+.mvp-card {
+    background:#fffbeb;
+    border:1px solid #fde68a;
+}
+
+.mvp-card .centre-label {
+    color:#92400e;
+}
+
+.mvp-card .centre-sub {
+    color:#b45309;
+    font-weight:700;
+}
         /* RIVALRY CARDS */
 
 #rivalry-matrix {
@@ -955,7 +971,7 @@
             <div id="centre-leader-points" class="centre-sub">0 pts</div>
         </div>
 
-        <div class="centre-card">
+        <div class="centre-card mvp-card">
             <div class="centre-label">⭐ Latest MVP</div>
             <div id="centre-mvp" class="centre-value">-</div>
             <div id="centre-mvp-points" class="centre-sub">-</div>
@@ -973,17 +989,17 @@
             <div id="centre-streak-sub" class="centre-sub">-</div>
         </div>
 
-        <div class="centre-card">
-            <div class="centre-label">📈 Biggest Climber</div>
-            <div id="centre-climber" class="centre-value">-</div>
-            <div id="centre-climber-points" class="centre-sub">-</div>
-        </div>
+        <div class="centre-card climber-card">
+    <div class="centre-label">📈 Biggest Climber</div>
+    <div id="centre-climber" class="centre-value">-</div>
+    <div id="centre-climber-points" class="centre-sub">-</div>
+</div>
 
-        <div class="centre-card">
-            <div class="centre-label">📉 Biggest Faller</div>
-            <div id="centre-faller" class="centre-value">-</div>
-            <div id="centre-faller-points" class="centre-sub">-</div>
-        </div>
+<div class="centre-card faller-card">
+    <div class="centre-label">📉 Biggest Faller</div>
+    <div id="centre-faller" class="centre-value">-</div>
+    <div id="centre-faller-points" class="centre-sub">-</div>
+</div>
 
         <div class="centre-card">
             <div class="centre-label">🔥 Matchday Shake-Up</div>
@@ -1281,6 +1297,24 @@ function getRankChangeText(player) {
     }
 
     return `<span class="podium-hold">▬ Holding Position</span>`;
+}
+
+function getMovementText(change) {
+
+    const places =
+        Math.abs(change) === 1
+            ? "Place"
+            : "Places";
+
+    if (change > 0) {
+        return `<span class="podium-up">▲${change} ${places} This Matchday</span>`;
+    }
+
+    if (change < 0) {
+        return `<span class="podium-down">▼${Math.abs(change)} ${places} This Matchday</span>`;
+    }
+
+    return `<span class="podium-hold">▬ No Movement</span>`;
 }
 
 function highlightPlayer(player, text) {
@@ -3551,10 +3585,6 @@ const shakeUpSub =
 document.getElementById("centre-climber").innerText =
     biggestClimber?.name || "-";
 
-document.getElementById("centre-climber-points").innerText =
-    biggestClimber
-        ? `▲${biggestClimber.rankChange} This Matchday`
-        : "-";
     // TOURNAMENT CENTRE
 
 document.getElementById("centre-leader").innerText =
@@ -3569,8 +3599,8 @@ if (biggestClimber) {
     document.getElementById("centre-climber").innerText =
         biggestClimber.name;
 
-    document.getElementById("centre-climber-points").innerText =
-        `▲${biggestClimber.rankChange} This Matchday`;
+    document.getElementById("centre-climber-points").innerHTML =
+    getMovementText(biggestClimber.rankChange);
 
 } else {
 
@@ -3586,8 +3616,8 @@ if (biggestFaller) {
     document.getElementById("centre-faller").innerText =
         biggestFaller.name;
 
-    document.getElementById("centre-faller-points").innerText =
-        `▼${Math.abs(biggestFaller.rankChange)} This Matchday`;
+    document.getElementById("centre-faller-points").innerHTML =
+    getMovementText(biggestFaller.rankChange);
 
 } else {
 
