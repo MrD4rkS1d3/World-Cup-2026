@@ -3459,22 +3459,38 @@ if (!latestMVP) {
     }  
 function calculateLatestRoundMVP() {
 
-    const completedRounds = [...new Set(
-        fixtures
-            .filter(f => f.status === "completed")
-            .map(f => f.round)
-    )].sort((a,b) => a-b);
+    const rounds =
+        [...new Set(fixtures.map(f => f.round))]
+            .sort((a,b) => a - b);
 
-    if (!completedRounds.length) return null;
+    const completedRounds =
+        rounds.filter(round => {
+
+            const roundFixtures =
+                fixtures.filter(
+                    f => f.round === round
+                );
+
+            return roundFixtures.every(
+                f => f.status === "completed"
+            );
+
+        });
+
+    if (!completedRounds.length)
+        return null;
 
     const latestRound =
-        completedRounds[completedRounds.length - 1];
+        completedRounds[
+            completedRounds.length - 1
+        ];
 
-    const winner = getRoundWinner(latestRound);
+    const winner =
+        getRoundWinner(latestRound);
 
-    if (!winner) return null;
-console.log("Latest Round:", latestRound);
-console.log("Winner:", winner);
+    if (!winner)
+        return null;
+
     return {
         round: latestRound,
         player: winner.player,
@@ -3888,8 +3904,8 @@ else {
         let totalLosses = 0;
         let currentStreak = 0;
         let streakType = "";
-        let biggestRival = null;
-        let toughestRival = null;
+        let victim = null;
+        let nemesis = null;
 
         let bestMargin = -999;
         let worstMargin = 999;
@@ -3932,11 +3948,11 @@ const record =
     `${wins}W ${draws}D ${losses}L`;
 
 if (
-    !biggestRival ||
-    intensity > biggestRival.intensity
+    !victim ||
+    intensity > victim.intensity
 ) {
 
-    biggestRival = {
+    victim = {
         name: opponent,
         score: record,
         intensity
@@ -3945,15 +3961,15 @@ if (
 }
 
 if (
-    !toughestRival ||
-    losses > toughestRival.losses ||
+    !nemesis ||
+    losses > nemesis.losses ||
     (
-        losses === toughestRival.losses &&
-        played > toughestRival.played
+        losses === nemesis.losses &&
+        played > nemesis.played
     )
 ) {
 
-    toughestRival = {
+    nemesis = {
         name: opponent,
         score: record,
         losses,
@@ -3966,18 +3982,18 @@ if (
 
 // Defaults if no positive/negative rival exists
 
-if (!biggestRival) {
+if (!victim) {
 
-    biggestRival = {
+    victim = {
         name: "No Clear Rival Yet",
         score: ""
     };
 
 }
 
-if (!toughestRival) {
+if (!nemesis) {
 
-    toughestRival = {
+    nemesis = {
         name: "None Yet",
         score: ""
     };
@@ -4029,8 +4045,8 @@ for (let i = playerFixtures.length - 1; i >= 0; i--) {
             winRate,
             currentStreak,
             streakType,
-            biggestRival,
-            toughestRival
+            victim,
+            nemesis
         };
 
     });
@@ -4084,38 +4100,38 @@ document.getElementById("centre-rivalry-sub").innerText =
                     </div>
 
                     <div class="rivalry-stat">
-                        ⚔️ Record:<strong>${card.totalWins}W ${card.totalDraws}D ${card.totalLosses}L</strong>
+                        🥊 Battle Record:<strong>${card.totalWins}W ${card.totalDraws}D ${card.totalLosses}L</strong>
                     </div>
 
                     <div class="rivalry-stat">
-                        🎯 Win Rate:
+                        ⚔️ Duel Success:
                         <strong>${card.winRate}%</strong>
                     </div>
 <div class="rivalry-stat">
-    🔥 Streak:
+    🔥 Form:
     <strong>
         ${card.streakType || "-"}${card.currentStreak || ""}
     </strong>
 </div>
     <div class="rivalry-label">
-    ⚔️ Biggest Rival
+    🎯 Favourite Victim
 </div>
 
 <div class="rivalry-opponent-row">
-    ${card.biggestRival?.name || "-"}
+    ${card.victim?.name || "-"}
     <span class="rivalry-score-chip">
-        ${card.biggestRival?.score || ""}
+        ${card.victim?.score || ""}
     </span>
 </div>
 
 <div class="rivalry-label">
-    😈 Toughest Rival
+    😈 Nemesis
 </div>
 
 <div class="rivalry-opponent-row">
-    ${card.toughestRival?.name || "-"}
+    ${card.nemesis?.name || "-"}
     <span class="rivalry-score-chip">
-        ${card.toughestRival?.score || ""}
+        ${card.nemesis?.score || ""}
     </span>
 </div>
 
