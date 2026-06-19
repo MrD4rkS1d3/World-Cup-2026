@@ -854,6 +854,33 @@
     color:#1a365d;
 }
 
+.story-event{
+    background:#f8fafc;
+    border-left:4px solid #2563eb;
+    border-radius:10px;
+    padding:12px;
+    margin-bottom:10px;
+    display:none;
+}
+
+.story-headline{
+    font-weight:700;
+    color:#163d77;
+    font-size:15px;
+    display:none;
+}
+
+.story-description{
+    margin-top:4px;
+    color:#6b7280;
+    font-size:13px;
+    display:none;
+}
+
+#tournament-story{
+    display:none;
+}
+
 </style>
 </head>
 <body>
@@ -1151,6 +1178,13 @@
 </div>
 
 <div id="rivalry-matrix"></div>
+<!--
+<div class="card">    
+
+    <div id="tournament-story">
+        <h2>📖 Tournament Story</h2>
+    </div>
+</div>-->
 
 <div id="fixtures-anchor"></div>
 
@@ -1309,7 +1343,31 @@
 };
 // Helpers
 
-function getOneToWatch() {
+function getPlayerPosition(player, scores) {
+
+    const positions =
+        getRankPositions(scores);
+
+    return positions[player];
+
+}
+
+function getCurrentLeader(scores) {
+
+    const positions =
+        getRankPositions(scores);
+
+    return Object.keys(positions)
+        .find(
+            player =>
+                positions[player] === 1
+        );
+
+}
+
+function getOneToWatch(
+    currentPositions
+) {
 
     const upcoming =
         fixtures.filter(f =>
@@ -1325,21 +1383,71 @@ function getOneToWatch() {
 
     }
 
-    const fixture = upcoming[0];
+    const stories =
+    upcoming.map(f =>
+        getFixtureStory(
+            f,
+            currentPositions
+        )
+    );
+
+    stories.sort(
+        (a,b) => b.score - a.score
+    );
+
+    const best =
+        stories[0];
+
+    if (best.score === 0) {
+
+        return {
+            headline:
+                `${upcoming[0].home} vs ${upcoming[0].away}`,
+            subheadline:
+                "Next Match Scheduled"
+        };
+
+    }
+
+    best.reasons.sort(
+        (a,b) => b.priority - a.priority
+    );
+console.log("ONE TO WATCH", best);
+    return {
+        headline:
+            `${best.fixture.home} vs ${best.fixture.away}`,
+        subheadline:
+            best.reasons[0].text
+    };
+
+}
+
+function getFixtureStory(
+    fixture,
+    currentPositions
+) {
+
+    let score = 0;
+
+    const reasons = [];
+
+// Internal Conflict
 
     if (
         fixture.owner &&
         fixture.owner.includes("(Internal)")
     ) {
 
-        return {
-            headline:
-                `${fixture.home} vs ${fixture.away}`,
-            subheadline:
-                "⚠️ Internal Conflict"
-        };
+        score += 100;
+
+        reasons.push({
+            priority: 100,
+            text: "⚠️ Internal Conflict"
+        });
 
     }
+
+// Favourite Bonus
 
     const favouriteOwner =
         Object.keys(starredTeams)
@@ -1350,20 +1458,95 @@ function getOneToWatch() {
 
     if (favouriteOwner) {
 
-        return {
-            headline:
-                `${fixture.home} vs ${fixture.away}`,
-            subheadline:
-    `<strong>${favouriteOwner.toUpperCase()}'s</strong> Favourite Team Chases Bonus Points`
-        };
+        score += 50;
 
-    }
+        reasons.push({
+            priority: 50,
+            text:
+                `<strong>${favouriteOwner.toUpperCase()}</strong>'s Favourite Team Chases Bonus Points`
+        });
 
+    }    
+
+// Host Nation //
+
+   if (
+    hasBadge(fixture.home, "Host Nation") ||
+    hasBadge(fixture.away, "Host Nation")
+) {
+
+    score += 40;
+
+    reasons.push({
+        priority: 40,
+        text: "🏠 Host Nation In Action"
+    });
+
+}
+
+// World Champions //
+
+if (
+    hasBadge(fixture.home, "World Champions") ||
+    hasBadge(fixture.away, "World Champions")
+) {
+
+    score += 40;
+
+    reasons.push({
+        priority: 40,
+        text: "🏆 World Champions In Action"
+    });
+
+}
+
+// Continental Champions
+
+if (
+    hasBadge(fixture.home, "European Champions") ||
+    hasBadge(fixture.away, "European Champions") ||
+    hasBadge(fixture.home, "Copa América Champions") ||
+    hasBadge(fixture.away, "Copa América Champions") ||
+    hasBadge(fixture.home, "African Champions") ||
+    hasBadge(fixture.away, "African Champions")
+) {
+
+    score += 40;
+
+    reasons.push({
+        priority: 40,
+        text: "🏆 Continental Champions In Action"
+    });
+
+}
+
+// Heavyweight Clash //
+
+if (
+    getTeamRank(fixture.home) <= 10 &&
+    getTeamRank(fixture.away) <= 10
+) {
+
+    score += 35;
+
+    reasons.push({
+        priority: 35,
+        text: "🔥 Heavyweight Clash"
+    });
+
+}
+
+// Debug //
+console.log(
+    fixture.home,
+    fixture.away,
+    score,
+    reasons
+);
     return {
-        headline:
-            `${fixture.home} vs ${fixture.away}`,
-        subheadline:
-            "Next Match Scheduled"
+        fixture,
+        score,
+        reasons
     };
 
 }
@@ -1865,6 +2048,20 @@ const currentLeader =
     Object.keys(currentPositions)
         .find(p => currentPositions[p] === 1);
 
+if (
+    previousLeader &&
+    currentLeader &&
+    previousLeader !== currentLeader
+) {
+
+    addTournamentEvent(
+        `leader-${currentLeader}`,
+        `👑 ${currentLeader} Takes The Lead`,
+        `Overtakes ${previousLeader} at the top of the standings`
+    );
+
+}
+
     // Historic Events
 const leaderCollapse = changes.find(c =>
     c.previous === 1 &&
@@ -2050,6 +2247,191 @@ return {
     subheadline: "Leaderboard Remains Stable"
 };
 }
+let tournamentLog = [];
+
+function addTournamentEvent(
+    id,
+    headline,
+    description
+) {
+
+    if (
+        tournamentLog.some(
+            e => e.id === id
+        )
+    ) return;
+
+    tournamentLog.unshift({
+        id,
+        headline,
+        description
+    });
+
+}
+
+function getLeaderFromPositions(
+    positions
+) {
+
+    return Object.keys(positions)
+        .find(
+            player =>
+                positions[player] === 1
+        );
+
+}
+
+function replayTournamentHistory() {
+
+    const completedFixtures =
+        fixtures
+            .filter(f => f.status === "completed")
+            .sort((a,b) => a.id - b.id);
+
+    const snapshots = [];
+
+    completedFixtures.forEach(fixture => {
+
+        const fixturesSoFar =
+            completedFixtures.filter(
+                f => f.id <= fixture.id
+            );
+
+        const scores =
+            buildScoresFromFixtures(
+                fixturesSoFar
+            );
+
+        const positions =
+            getRankPositions(scores);
+
+        snapshots.push({
+            fixtureId: fixture.id,
+            round: fixture.round,
+            positions
+        });
+
+    });
+
+    return snapshots;
+
+}
+function getLeadershipReigns() {
+
+    const history =
+        replayTournamentHistory();
+
+    let reigns = [];
+
+    let reignStart =
+        history[0]?.fixtureId;
+
+    let previousLeader = null;
+
+    history.forEach(snapshot => {
+
+        const leader =
+            getLeaderFromPositions(
+                snapshot.positions
+            );
+
+        if (
+            previousLeader &&
+            leader !== previousLeader
+        ) {
+
+            reigns.push({
+                player: previousLeader,
+                start: reignStart,
+                end: snapshot.fixtureId - 1
+            });
+
+            reignStart =
+                snapshot.fixtureId;
+
+        }
+
+        previousLeader = leader;
+
+    });
+
+    if (
+        previousLeader &&
+        reignStart
+    ) {
+
+        reigns.push({
+            player: previousLeader,
+            start: reignStart,
+            end:
+                history[
+                    history.length - 1
+                ].fixtureId
+        });
+
+    }
+
+    return reigns;
+
+}
+function getLeadershipStats() {
+
+    const reigns =
+        getLeadershipReigns();
+
+    let longestReign =
+        reigns[0];
+
+    reigns.forEach(reign => {
+
+        const length =
+            reign.end -
+            reign.start +
+            1;
+
+        const longestLength =
+            longestReign.end -
+            longestReign.start +
+            1;
+
+        if (
+            length >
+            longestLength
+        ) {
+
+            longestReign =
+                reign;
+
+        }
+
+    });
+
+    return {
+    player: longestReign.player,
+    start: longestReign.start,
+    end: longestReign.end,
+    length:
+        longestReign.end -
+        longestReign.start +
+        1
+};
+
+}
+
+function getPlayerPositionHistory(player) {
+
+    const history =
+        replayTournamentHistory();
+
+    return history.map(snapshot => ({
+        fixtureId: snapshot.fixtureId,
+        position:
+            snapshot.positions[player]
+    }));
+
+}
+
+//Helper End//
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
         "Sam": [
@@ -3685,7 +4067,9 @@ document.getElementById("centre-climber").innerText =
     // TOURNAMENT CENTRE
 
     const watch =
-    getOneToWatch();
+    getOneToWatch(
+        currentPositions
+    );
 
 document.getElementById("centre-watch").innerText =
     watch.headline;
@@ -4360,6 +4744,9 @@ if (f.round !== activeRound) {
         renderQuickUpdate();
         calculateScores();
         renderRivalryMatrix(fixtures);
+        rebuildChronicle();
+        renderTournamentLog();
+        
       //  let landingSection = document.getElementById("landing-section");
         //let dashboardHeader = document.getElementById("dashboard-section")
         let adminPanel = document.getElementById("admin-management-panel");
@@ -4367,14 +4754,18 @@ if (f.round !== activeRound) {
         if (adminPanel) {
             adminPanel.style.display = isAdmin ? "block" : "none";
         }
+
+
        // if (dashboardHeader) {
        //     dashboardHeader.style.display = isAdmin ? "block" : "none";
        // }
       //  if (landingSection) {
       //      landingSection.style.display = isAdmin ? "none" : "block";
       //  }
-    }
 
+     
+
+}
     function generateUpdateCode() { 
         // Create a master object containing everything 
         let masterData = { 
@@ -4454,7 +4845,132 @@ function jumpToNextFixture() {
         });
 
 }
-    renderAll();
+function renderTournamentLog() {
+
+    const container =
+        document.getElementById(
+            "tournament-story"
+        );
+
+    if (!container) return;
+
+    container.innerHTML =
+        tournamentLog
+            .slice(0, 20)
+            .map(event => `
+                <div class="story-event">
+                    <div class="story-headline">
+                        ${event.headline}
+                    </div>
+
+                    <div class="story-description">
+                        ${event.description}
+                    </div>
+                </div>
+            `)
+            .join("");
+
+}
+
+
+// Replay TESTs //
+
+function rebuildChronicle() {
+
+    tournamentLog = [];
+
+    const history =
+        replayTournamentHistory();
+
+    let previousLeader = null;
+
+    history.forEach(snapshot => {
+
+        const leader =
+            getLeaderFromPositions(
+                snapshot.positions
+            );
+
+        if (leader !== previousLeader) {
+
+            if (!previousLeader) {
+
+    addTournamentEvent(
+        `first-leader-${leader}`,
+        `👑 ${leader} Becomes The Tournament's First Leader`,
+        `After Fixture ${snapshot.fixtureId}`
+    );
+
+} else {
+
+    addTournamentEvent(
+        `leader-${snapshot.fixtureId}`,
+        `👑 ${leader} Takes The Lead`,
+        `After Fixture ${snapshot.fixtureId}`
+    );
+
+}
+
+            previousLeader = leader;
+
+        }
+
+    });
+
+    
+// Future:
+// Detect genuine podium entries by comparing
+// previous snapshot vs current snapshot.
+/*
+    let podiumPlayers =
+        new Set();
+
+    history.forEach(snapshot => {
+
+        Object.entries(
+            snapshot.positions
+        ).forEach(
+            ([player, position]) => {
+
+                if (
+                    position <= 3 &&
+                    !podiumPlayers.has(player)
+                ) {
+
+                    addTournamentEvent(
+                        `podium-${player}`,
+                        `🥉 ${player} Reaches The Podium`,
+                        `First Top 3 appearance`
+                    );
+
+                    podiumPlayers.add(
+                        player
+                    );
+
+                }
+
+            }
+        );
+
+    });
+    */
+
+     const latestMVP =
+    calculateLatestRoundMVP();
+
+    if (latestMVP) {
+
+    addTournamentEvent(
+        `round-${latestMVP.round}-mvp`,
+        `🏆 ${latestMVP.player} Wins Round ${latestMVP.round}`,
+        `${latestMVP.points} points scored`
+    );
+
+    }
+
+}
+
+renderAll();
 
 </script>
 </body>
