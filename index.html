@@ -98,16 +98,16 @@
 .hero-link:hover {
     transform: translateY(-2px);
 }
-
+/*
 .hero-link::after {
-    content: "↘";
+    content: "▶";
     position: absolute;
     top: 8px;
     right: 10px;
     opacity: 0.5;
     font-size: 0.8rem;
 }
-
+*/
 .hero-link:hover::after {
     opacity: 1;
 }
@@ -129,8 +129,9 @@
     font-weight: 700;
 }
 #hero-progress,
-#hero-match,
-#hero-leader {
+#hero-story,
+#hero-rivalry,
+#hero-infamy {
     display:block;
     font-weight:700;
 }
@@ -139,12 +140,32 @@
     margin-top: 4px;
 }
 #hero-next-match,
-#hero-match-sub,
-#hero-leader-points {
+#hero-story-sub,
+#hero-rivalry-sub,
+#hero-infamy-sub {
     display:block;
     margin-top:3px;
     font-size:0.7rem;
     opacity:0.8;
+}
+
+.hero-progress-card {
+    margin-top:16px;
+    background:rgba(255,255,255,0.15);
+    border-radius:12px;
+    padding:14px;
+    text-align:center;
+}
+
+.hero-progress-title {
+    font-size:0.8rem;
+    text-transform:uppercase;
+    opacity:0.8;
+    margin-bottom:6px;
+}
+
+.hero-progress-card.hero-link:hover {
+    transform:translateY(-2px);
 }
 
         /* Landing View Profile Selection */
@@ -998,40 +1019,56 @@ border:1px solid #f5c2c7;
 <div id="hero-banner">
 
     <div class="hero-title">
-        🏆 Family World Cup
+        🏆 World Cup 2026 - Sweepstake Tournament 🏆
     </div>
 
     <div class="hero-subtitle">
-        Group Stage Tournament Tracker
+        Live Scores • Rivalries • Records • Stories • And a bit of Banter 😂
     </div>
 
     <div class="hero-stats">
 
-    <div class="hero-stat hero-link" onclick="jumpToLeader()">
-        <span class="hero-label">🏆 Leader</span>
-        <span id="hero-leader">-</span>
-        <small id="hero-leader-points">0 pts</small>
+    <div class="hero-stat hero-link" onclick="jumpToChronicle()">
+    <span class="hero-label">📖 Story ▶</span>
+    <span id="hero-story">Tournament Active</span>
+    <small id="hero-story-sub">Chronicle Coming Soon</small>
+</div>
+
+<div class="hero-stat hero-link" onclick="jumpToShockResult()">
+    <span class="hero-label">💥 Shock Result ▶</span>
+    <span id="hero-shock">Awaiting Shock</span>
+    <small id="hero-shock-sub">No shock result yet</small>
+</div>
+
+<div class="hero-stat hero-link" onclick="jumpToRivalries()">
+    <span class="hero-label">⚔️ Rivalry King ▶</span>
+    <span id="hero-rivalry">-</span>
+    <small id="hero-rivalry-sub">0 Rivalry Score</small>
+</div>
+
+<div class="hero-stat hero-link" onclick="jumpToHallOfInfamy()">
+    <span class="hero-label">😂 Hall of Infamy ▶</span>
+    <span id="hero-infamy">Awaiting Chaos</span>
+    <small id="hero-infamy-sub">No red cards yet</small>
+</div>
+
+    </div>
+   <div class="hero-progress-card hero-link"
+     onclick="jumpToNextFixture()">
+
+    <div class="hero-progress-title">
+        ⚽ Tournament Progress ▶
     </div>
 
-    <div class="hero-stat hero-link" onclick="jumpToShockResult()">
-        <span class="hero-label">🔥 Shock Result</span>
-        <span id="hero-shock">Awaiting Shock</span>
-        <small id="hero-shock-sub">No shock result yet</small>
+    <div id="hero-progress">
+        0 / 72 Completed
     </div>
 
-    <div class="hero-stat hero-link" onclick="jumpToMatchAward()">
-        <div class="hero-label">🎯 Match</div>
-        <div id="hero-match" class="hero-value">Awaiting</div>
-        <div id="hero-match-sub" class="hero-sub">No classic yet</div>
+    <div id="hero-next-match">
+        Next Fixture
     </div>
 
-    <div class="hero-stat hero-link" onclick="jumpToNextFixture()">
-        <span class="hero-label">⚽ Completed</span>
-        <span id="hero-progress">0 / 72</span>
-        <small id="hero-next-match">Next fixture</small>
-    </div>
-
-    </div>
+</div> 
 </div>
     
     <div id="admin-management-panel" style="display:none; background: #fffaf0; border: 2px dashed #ecc94b; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
@@ -1543,7 +1580,7 @@ function getOneToWatch(
             currentPositions
         )
     );
-
+console.log("STORIES", stories);
     stories.sort(
         (a,b) => b.score - a.score
     );
@@ -1565,7 +1602,9 @@ function getOneToWatch(
     best.reasons.sort(
         (a,b) => b.priority - a.priority
     );
+    /*
 console.log("ONE TO WATCH", best);
+*/
     return {
         headline:
             `${best.fixture.home} vs ${best.fixture.away}`,
@@ -1690,12 +1729,13 @@ if (
 }
 
 // Debug //
-console.log(
+/*console.log(
     fixture.home,
     fixture.away,
     score,
     reasons
 );
+*/
     return {
         fixture,
         score,
@@ -2644,6 +2684,153 @@ function getRedCardStandings() {
 
 }
 
+function generateCurrentStory(
+    sorted,
+    currentPositions,
+    previousPositions
+) {
+
+    const leader = sorted[0];
+    const second = sorted[1];
+
+    const gap =
+        leader.pts - second.pts;
+
+    const uniqueLeaders =
+        new Set(
+            tournamentLog
+                .filter(e =>
+                    e.headline.includes("Takes The Lead") ||
+                    e.headline.includes("First Leader")
+                )
+                .map(e =>
+                    e.headline
+                        .replace("👑 ","")
+                        .split(" ")[0]
+                )
+        ).size;
+
+    // Tournament chaos
+
+    if (uniqueLeaders >= 4) {
+
+        return {
+            headline:
+                "🔥 Leadership Carousel",
+            subheadline:
+                `${uniqueLeaders} different players have led the tournament`
+        };
+
+    }
+
+    // Dominating
+
+if (gap >= 15) {
+
+    return {
+        headline:
+            `👑 ${leader.name} Dominating`,
+        subheadline:
+            `${gap} point lead at the summit`
+    };
+
+}
+
+// Pulling Away
+
+if (gap >= 8) {
+
+    return {
+        headline:
+            `🏆 ${leader.name} Pulling Away`,
+        subheadline:
+            `${gap} point lead at the summit`
+    };
+
+}
+
+// Building Momentum
+
+if (gap >= 5) {
+
+    return {
+        headline:
+            `📈 ${leader.name} Building Momentum`,
+        subheadline:
+            `${gap} point advantage`
+    };
+
+}
+
+    // Tight title race
+
+    if (gap <= 2) {
+
+        return {
+            headline:
+                "⚔️ Title Race Alive",
+            subheadline:
+                `${gap} point gap between 1st and 2nd`
+        };
+
+    }
+
+    // Default
+
+    return {
+        headline:
+            `👑 ${leader.name} Leads`,
+        subheadline:
+            `${gap} point advantage`
+    };
+
+}
+
+function getHallOfInfamyHeadline() {
+
+    const candidates = [];
+
+    const redCards =
+        getRedCardStandings();
+
+    if (
+        redCards.length &&
+        redCards[0].redCards > 0
+    ) {
+
+        candidates.push({
+
+            score:
+                redCards[0].redCards * 10,
+
+            headline:
+                redCards[0].player,
+
+            subheadline:
+                `${redCards[0].redCards} Red Card${
+                    redCards[0].redCards === 1
+                        ? ""
+                        : "s"
+                }`
+
+        });
+
+    }
+
+    if (!candidates.length) {
+
+        return {
+            headline: "Awaiting Chaos",
+            subheadline: "No scandals yet"
+        };
+
+    }
+
+    return candidates.sort(
+        (a,b) => b.score - a.score
+    )[0];
+
+}
 //Helper End//
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
@@ -4300,13 +4487,13 @@ if (matchAward) {
 
     document.getElementById("award-match-sub").innerText =
         editorial.subheadline;
+/*
+    document.getElementById("hero-story").innerText =
+    editorial.headline;
 
-    document.getElementById("hero-match").innerText =
-        editorial.headline;
-
-    document.getElementById("hero-match-sub").innerText =
-        editorial.subheadline;
-
+    document.getElementById("hero-story-sub").innerText =
+    editorial.subheadline;
+*/
 } else {
 
     document.getElementById("award-match").innerText =
@@ -4314,13 +4501,15 @@ if (matchAward) {
 
     document.getElementById("award-match-sub").innerText =
         "No standout match yet";
+/*
+   document.getElementById("hero-story").innerText =
+    "Story Developing";
 
-    document.getElementById("hero-match").innerText =
-        "Awaiting";
-
-    document.getElementById("hero-match-sub").innerText =
-        "No classic yet";
+document.getElementById("hero-story-sub").innerText =
+    "Check Back After The Next Matchday";
+    */
 }
+    
 const latestMVP = calculateLatestRoundMVP();
 
 if (!latestMVP) {
@@ -4423,11 +4612,6 @@ function renderScoreboard(scores) {
     document.getElementById("centre-leader-points").innerText =
     `${sorted[0].pts} pts`;
 
-    document.getElementById("hero-leader").innerText =
-    sorted[0].name;
-
-    document.getElementById("hero-leader-points").innerText =
-    `${sorted[0].pts} pts`;
 
     let overtakes = new Set();
 
@@ -4438,12 +4622,12 @@ const completedFixtures =
 
 const latestCompletedDate =
     completedFixtures[completedFixtures.length - 1]?.date;
-
+/*
 console.log(
     "Latest completed date:",
     latestCompletedDate
 );
-
+*/
 const fixturesBeforeLatestDate =
     fixtures.filter(f =>
         !(
@@ -4460,17 +4644,33 @@ const previousScores =
 const previousPositions =
     getRankPositions(previousScores);
 
+    
+/*   
 console.log(
     "PREVIOUS POSITIONS",
     previousPositions
 );
+*/
+    const currentStory =
+    generateCurrentStory(
+        sorted,
+        currentPositions,
+        previousPositions
+    );
 
+document.getElementById("hero-story").innerText =
+    currentStory.headline;
+
+document.getElementById("hero-story-sub").innerText =
+    currentStory.subheadline;
+/*
 console.log(
     getMatchdayShakeUpHeadline(
         currentPositions,
         previousPositions
     )
 );
+*/
 sorted.forEach((p, index) => {
     let newRank = index + 1;
     let oldRank =
@@ -4973,7 +5173,13 @@ const winRate = totalGames
         (rivalryPoints / maxPoints) * 100
     )
     : 0;
+
+    const rivalryScore =
+    (totalWins * 3) +
+    totalDraws -
+    totalLosses;
 //Test//
+/*
 console.log(
     player,
     "VICTIM:",
@@ -4981,13 +5187,14 @@ console.log(
     "NEMESIS:",
     nemesis
 );
-
+*/
 return {
     player,
     totalWins,
     totalDraws,
     totalLosses,
     winRate,
+    rivalryScore,
     recentForm,
     victim,
     nemesis,
@@ -5002,23 +5209,80 @@ return {
 
     });
 
-    cards.sort((a,b) => b.winRate - a.winRate);
-    const rivalryKing = cards[0]?.player;
+    const rivalryKing =
+    [...cards]
+        .sort(
+            (a,b) =>
+                b.rivalryScore -
+                a.rivalryScore
+        )[0]?.player;
     const hottestStreak = [...cards]
-    .sort((a,b) => b.currentStreak - a.currentStreak)[0];
+    .sort((a,b) => {
+
+        const aWins =
+            (a.recentForm.match(/W/g) || []).length;
+
+        const bWins =
+            (b.recentForm.match(/W/g) || []).length;
+
+        return bWins - aWins;
+
+    })[0];
 
     document.getElementById("centre-streak").innerText =
     hottestStreak?.player || "-";
 
 document.getElementById("centre-streak-sub").innerText =
-    `${hottestStreak?.streakType || ""}${hottestStreak?.currentStreak || 0}`;
+    hottestStreak?.recentForm
+        ?.replace(/<[^>]*>/g, "")
+    || "-";
 
 document.getElementById("centre-rivalry").innerText =
     rivalryKing || "-";
 
-document.getElementById("centre-rivalry-sub").innerText =
-    `${cards[0]?.winRate || 0}% Win Rate`;
+const rivalryLeader =
+    [...cards]
+        .sort(
+            (a,b) =>
+                b.rivalryScore -
+                a.rivalryScore
+        )[0];
 
+document.getElementById("centre-rivalry-sub").innerText =
+    `${rivalryLeader?.rivalryScore || 0} Rivalry Score`;
+
+document.getElementById("hero-rivalry").innerText =
+    rivalryKing || "-";
+
+document.getElementById("hero-rivalry-sub").innerText =
+    `${rivalryLeader?.rivalryScore || 0} Rivalry Score`;
+
+const infamyStory =
+    getHallOfInfamyHeadline();
+
+    console.log("INFAMY", infamyStory);
+
+document.getElementById("hero-infamy").innerText =
+    infamyStory.headline;
+
+document.getElementById("hero-infamy-sub").innerText =
+    infamyStory.subheadline;
+/*
+console.log(
+    "RIVALRY KING",
+    rivalryKing,
+    rivalryLeader
+);
+*/
+console.table(
+    cards.map(card => ({
+        player: card.player,
+        rivalryScore: card.rivalryScore,
+        winRate: card.winRate,
+        record:
+            `${card.totalWins}W ${card.totalDraws}D ${card.totalLosses}L`
+    }))
+);
     container.innerHTML = `
     <div class="rivalry-header dashboard-header"
      onclick="toggleSection('rivalry-content','rivalry-arrow')">
@@ -5445,6 +5709,43 @@ function renderTournamentLog() {
 
 }
 
+function jumpToChronicle() {
+
+    expandAndScroll(
+        "tournament-centre",
+        "centre-content",
+        "centre-arrow"
+    );
+
+}
+/*
+    expandAndScroll(
+        "tournament-chronicle",
+        "chronicle-content",
+        "chronicle-arrow"
+    );
+
+}
+*/
+function jumpToRivalries() {
+
+    expandAndScroll(
+        "rivalry-matrix",
+        "rivalry-content",
+        "rivalry-arrow"
+    );
+
+}
+
+function jumpToHallOfInfamy() {
+
+    expandAndScroll(
+        "hall-of-infamy",
+        "infamy-content",
+        "infamy-arrow"
+    );
+
+}
 
 // Replay TESTs //
 
@@ -5540,7 +5841,7 @@ function rebuildChronicle() {
     );
 
     }
-
+console.log(tournamentLog);
 }
 
 function renderHallOfInfamy() {
