@@ -5247,6 +5247,37 @@ const rivalryLeader =
                 b.rivalryScore -
                 a.rivalryScore
         )[0];
+cards.sort(
+    (a,b) => {
+
+        if (
+            b.rivalryScore !==
+            a.rivalryScore
+        ) {
+
+            return (
+                b.rivalryScore -
+                a.rivalryScore
+            );
+
+        }
+
+        return (
+            b.winRate -
+            a.winRate
+        );
+
+    }
+);
+
+const rivalryGold =
+    cards[0]?.player;
+
+const rivalrySilver =
+    cards[1]?.player;
+
+const rivalryBronze =
+    cards[2]?.player;
 
 document.getElementById("centre-rivalry-sub").innerText =
     `${rivalryLeader?.rivalryScore || 0} Rivalry Score`;
@@ -5313,8 +5344,17 @@ console.table(
     ${card.player === rivalryKing ? "rivalry-king" : ""}">
 
                     <div class="rivalry-player-name">
-                        ${card.player === rivalryKing ? "👑" : "⚔️"} ${card.player}
-                    </div>
+    ${
+        card.player === rivalryGold
+            ? "🥇"
+        : card.player === rivalrySilver
+            ? "🥈"
+        : card.player === rivalryBronze
+            ? "🥉"
+        : "⚔️"
+    }
+    ${card.player}
+</div>
 
                     <div class="rivalry-stat">
                         🥊 Battle Record:<strong>${card.totalWins}W ${card.totalDraws}D ${card.totalLosses}L</strong>
