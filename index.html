@@ -854,6 +854,61 @@
     color:#1a365d;
 }
 
+.rivalry-player-card.positive {
+    background:#f7fff9;
+    border:1px solid #9ae6b4;
+}
+
+.rivalry-player-card.negative {
+   background:#fffdfd;
+border:1px solid #f5c2c7;
+}
+
+.rivalry-player-card.neutral {
+    background:#ffffff;
+    border:1px solid #cbd5e0;
+}
+
+.rivalry-player-card.rivalry-king {
+    background:#fffdf5;
+    border:1px solid #f6d365;
+}
+
+.victim-chip {
+    background:#e6ffed;
+    color:#2f855a;
+}
+
+.nemesis-chip {
+    background:#faf5ff;
+    color:#6b46c1;
+}
+
+.form-win,
+.form-draw,
+.form-loss {
+    display:inline-block;
+    margin-right:3px;
+}
+
+.form-win {
+    color:#38a169;
+    font-weight:800;
+    text-shadow:0 0 0.01px currentColor;
+}
+
+.form-draw {
+    color:#d69e2e;
+    font-weight:800;
+    text-shadow:0 0 0.01px currentColor;
+}
+
+.form-loss {
+    color:#e53e3e;
+    font-weight:800;
+    text-shadow:0 0 0.01px currentColor;
+}
+
 .story-event{
     background:#f8fafc;
     border-left:4px solid #2563eb;
@@ -4646,10 +4701,10 @@ function showBroadcast(text) {
     el.innerText = text; el.style.cssText = `position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#111827; color:white; padding:10px 16px; border-radius:8px; font-weight:600; font-size:0.85rem; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:9999; animation:fadeInOut 2.5s ease forwards;`;
     setTimeout(() => el.remove(), 2500); 
 }
-    function buildRivalries(fixtures) {
+function buildRivalries(fixtures) {
     let map = {};
 
-    function init(a, b) {
+function init(a, b) {
         if (!map[a]) map[a] = {};
         if (!map[a][b]) map[a][b] = { a: 0, b: 0 };
     }
@@ -4674,7 +4729,7 @@ function showBroadcast(text) {
 
     return map;
 }
-   function renderRivalryMatrix(fixtures) {
+function renderRivalryMatrix(fixtures) {
 
     const container = document.getElementById("rivalry-matrix");
 
@@ -4732,8 +4787,7 @@ else {
         let totalWins = 0;
         let totalDraws = 0;
         let totalLosses = 0;
-        let currentStreak = 0;
-        let streakType = "";
+        let recentForm = [];
         let victim = null;
         let nemesis = null;
 
@@ -4770,41 +4824,65 @@ const played =
 
 if (!played) return;
 
-const intensity =
-    (played * 10) -
-    Math.abs(wins - losses);
+const qualifiesForRivalry =
+    played >= 2;
 
 const record =
     `${wins}W ${draws}D ${losses}L`;
 
-if (
-    !victim ||
-    intensity > victim.intensity
-) {
+if (qualifiesForRivalry) {
 
-    victim = {
-        name: opponent,
-        score: record,
-        intensity
-    };
+    const domination =
+        wins - losses;
+
+    if (
+        domination > 0 &&
+        (
+            !victim ||
+            domination > victim.domination ||
+            (
+                domination === victim.domination &&
+                played > victim.played
+            )
+        )
+    ) {
+
+        victim = {
+            name: opponent,
+            score: record,
+            domination,
+            played
+        };
+
+    }
 
 }
 
-if (
-    !nemesis ||
-    losses > nemesis.losses ||
-    (
-        losses === nemesis.losses &&
-        played > nemesis.played
-    )
-) {
+if (qualifiesForRivalry) {
 
-    nemesis = {
-        name: opponent,
-        score: record,
-        losses,
-        played
-    };
+    const pain =
+        losses - wins;
+
+    if (
+        pain > 0 &&
+        (
+            !nemesis ||
+            pain > nemesis.pain ||
+            (
+                pain === nemesis.pain &&
+                played > nemesis.played
+            )
+        )
+    ) {
+
+        nemesis = {
+            name: opponent,
+            score: record,
+            pain,
+            played
+        };
+
+    }
 
 }
 
@@ -4815,7 +4893,7 @@ if (
 if (!victim) {
 
     victim = {
-        name: "No Clear Rival Yet",
+        name: "No Clear Victim",
         score: ""
     };
 
@@ -4823,17 +4901,26 @@ if (!victim) {
 
 if (!nemesis) {
 
-    nemesis = {
-        name: "None Yet",
-        score: ""
-    };
+    if (totalLosses === 0) {
+
+        nemesis = {
+            name: "Undefeated",
+            score: ""
+        };
+
+    } else {
+
+        nemesis = {
+            name: "No Clear Nemesis",
+            score: ""
+        };
+
+    }
 
 }
-for (let i = playerFixtures.length - 1; i >= 0; i--) {
+playerFixtures.forEach(f => {
 
-    const f = playerFixtures[i];
-
-    let result = "";
+    let result = "D";
 
     if (f.homeUser === player) {
 
@@ -4847,37 +4934,71 @@ for (let i = playerFixtures.length - 1; i >= 0; i--) {
 
     }
 
-    if (!result) continue;
+    recentForm.push(result);
 
-    if (!streakType) {
-        streakType = result;
-        currentStreak = 1;
-    } else if (result === streakType) {
-        currentStreak++;
-    } else {
-        break;
-    }
-}
-        const totalGames =
+});
+
+recentForm =
+    recentForm
+        .slice(-5)
+        .map(result => {
+
+            if (result === "W") {
+                return '<span class="form-win">W</span>';
+            }
+
+            if (result === "D") {
+                return '<span class="form-draw">D</span>';
+            }
+
+            return '<span class="form-loss">L</span>';
+
+        })
+        .join("");
+
+const totalGames =
     totalWins +
     totalDraws +
     totalLosses;
 
-        const winRate = totalGames
-            ? Math.round((totalWins / totalGames) * 100)
-            : 0;
+        const rivalryPoints =
+    (totalWins * 3) +
+    totalDraws;
 
-        return {
-            player,
-            totalWins,
-            totalDraws,
-            totalLosses,
-            winRate,
-            currentStreak,
-            streakType,
-            victim,
-            nemesis
-        };
+const maxPoints =
+    totalGames * 3;
+
+const winRate = totalGames
+    ? Math.round(
+        (rivalryPoints / maxPoints) * 100
+    )
+    : 0;
+//Test//
+console.log(
+    player,
+    "VICTIM:",
+    victim,
+    "NEMESIS:",
+    nemesis
+);
+
+return {
+    player,
+    totalWins,
+    totalDraws,
+    totalLosses,
+    winRate,
+    recentForm,
+    victim,
+    nemesis,
+
+    recordType:
+        totalWins > totalLosses
+            ? "positive"
+            : totalLosses > totalWins
+                ? "negative"
+                : "neutral"
+};
 
     });
 
@@ -4923,7 +5044,9 @@ document.getElementById("centre-rivalry-sub").innerText =
 
             ${cards.map(card => `
 
-                <div class="rivalry-player-card">
+                <div class="rivalry-player-card
+    ${card.recordType}
+    ${card.player === rivalryKing ? "rivalry-king" : ""}">
 
                     <div class="rivalry-player-name">
                         ${card.player === rivalryKing ? "👑" : "⚔️"} ${card.player}
@@ -4934,13 +5057,16 @@ document.getElementById("centre-rivalry-sub").innerText =
                     </div>
 
                     <div class="rivalry-stat">
-                        ⚔️ Duel Success:
-                        <strong>${card.winRate}%</strong>
-                    </div>
+    ⚔️ Duel Success:
+    <strong>
+        ${card.winRate}% (${(card.totalWins * 3) + card.totalDraws}/${(card.totalWins + card.totalDraws + card.totalLosses) * 3} pts)
+    </strong>
+</div>
+
 <div class="rivalry-stat">
     🔥 Form:
     <strong>
-        ${card.streakType || "-"}${card.currentStreak || ""}
+        ${card.recentForm || "-"}
     </strong>
 </div>
     <div class="rivalry-label">
@@ -4949,7 +5075,7 @@ document.getElementById("centre-rivalry-sub").innerText =
 
 <div class="rivalry-opponent-row">
     ${card.victim?.name || "-"}
-    <span class="rivalry-score-chip">
+    <span class="rivalry-score-chip victim-chip">
         ${card.victim?.score || ""}
     </span>
 </div>
@@ -4960,7 +5086,7 @@ document.getElementById("centre-rivalry-sub").innerText =
 
 <div class="rivalry-opponent-row">
     ${card.nemesis?.name || "-"}
-    <span class="rivalry-score-chip">
+    <span class="rivalry-score-chip nemesis-chip">
         ${card.nemesis?.score || ""}
     </span>
 </div>
