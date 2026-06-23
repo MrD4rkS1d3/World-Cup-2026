@@ -641,7 +641,7 @@
             @keyframes fadeInOut { 0% { opacity:0; transform:translate(-50%,20px); } 10% { opacity:1; transform:translate(-50%,0); } 80% { opacity:1; } 100% { opacity:0; transform:translate(-50%,20px); } }
         
 
-            .leaderboard-strip {
+.leaderboard-strip {
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:12px;
@@ -900,6 +900,11 @@ border:1px solid #f5c2c7;
     color:#2f855a;
 }
 
+.rivalry-card {
+    background: #f7f2ff;
+    border: 1px solid #cdb8ff;
+}
+
 .nemesis-chip {
     background:#faf5ff;
     color:#6b46c1;
@@ -1002,6 +1007,149 @@ border:1px solid #f5c2c7;
     margin-top: 10px;
     font-size: 13px;
     color: #666;
+}
+
+/* CURRENT LEADER */
+
+.leader-card {
+    background:#fff9e8;
+    border:1px solid #f0d36b;
+}
+
+.leader-card .centre-label {
+    color:#92400e;
+}
+
+/* RIVALRY KING */
+
+.rivalry-centre-card {
+    background:#f7f2ff;
+    border:1px solid #cdb8ff;
+}
+
+.rivalry-centre-card .centre-label {
+    color:#6b46c1;
+}
+
+.rivalry-centre-card .centre-sub {
+    color:#7c3aed;
+}
+
+/* HOTTEST STREAK / FORM */
+
+.form-card {
+    background:#fff7ed;
+    border:1px solid #fdba74;
+}
+
+.form-card .centre-label {
+    color:#c2410c;
+}
+
+.form-card .centre-sub {
+    color:#ea580c;
+}
+
+/* MATCHDAY SHAKE-UP */
+
+.shakeup-card {
+    background:#eef5ff;
+    border:1px solid #a9c7ff;
+}
+
+.shakeup-card .centre-label {
+    color:#2563eb;
+}
+
+.shakeup-card .centre-sub {
+    color:#2563eb;
+    font-weight:700;
+}
+
+/* SHOCK RESULT */
+
+.shock-award {
+    background:#fff7ed;
+    border:1px solid #fdba74;
+}
+
+.shock-award .award-label {
+    color:#c2410c;
+}
+
+.shock-award .award-sub {
+    color:#9a3412;
+}
+
+/* MATCH OF THE TOURNAMENT */
+
+.match-award {
+    background:#eff6ff;
+    border:1px solid #93c5fd;
+}
+
+.match-award .award-label {
+    color:#2563eb;
+}
+
+.match-award .award-sub {
+    color:#1d4ed8;
+}
+
+/* HONOURS BOARD */
+
+.honours-award {
+    background:#fff9e8;
+    border:1px solid #f0d36b;
+}
+
+.honours-award .award-label {
+    color:#92400e;
+}
+
+.honours-award .award-sub {
+    color:#92400e;
+}
+
+.honours-award .award-sub {
+    line-height:1.4;
+}
+
+.honours-list {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+
+    margin-top:18px;
+    margin-bottom:8px;
+}
+
+.honours-chip {
+    padding:7px 12px;
+    border-radius:999px;
+    font-size:0.85rem;
+    font-weight:700;
+}
+
+.honours-chip.round {
+    background:#fff3c4;
+    color:#92400e;
+}
+
+.honours-chip.live {
+    background:#eef5ff;
+    color:#2563eb;
+}
+
+.honours-chip.group {
+    background:#e8f7ee;
+    color:#15803d;
+}
+
+.honours-chip.champion {
+    background:#f7f2ff;
+    color:#6b46c1;
 }
 
 </style>
@@ -1147,7 +1295,7 @@ border:1px solid #f5c2c7;
 
     <div class="centre-grid">
 
-        <div class="centre-card">
+        <div class="centre-card leader-card">
             <div class="centre-label">🏆 Current Leader</div>
             <div id="centre-leader" class="centre-value">-</div>
             <div id="centre-leader-points" class="centre-sub">0 pts</div>
@@ -1159,13 +1307,13 @@ border:1px solid #f5c2c7;
             <div id="centre-mvp-points" class="centre-sub">-</div>
         </div>
 
-        <div class="centre-card">
+        <div class="centre-card rivalry-centre-card">
             <div class="centre-label">⚔️ Rivalry King</div>
             <div id="centre-rivalry" class="centre-value">Coming Soon</div>
             <div id="centre-rivalry-sub" class="centre-sub"></div>
         </div>
 
-        <div class="centre-card">
+        <div class="centre-card form-card">
             <div class="centre-label">🔥 Hottest Streak</div>
             <div id="centre-streak" class="centre-value">-</div>
             <div id="centre-streak-sub" class="centre-sub">-</div>
@@ -1183,7 +1331,7 @@ border:1px solid #f5c2c7;
             <div id="centre-faller-points" class="centre-sub">-</div>
         </div>
 
-        <div class="centre-card">
+        <div class="centre-card shakeup-card">
             <div class="centre-label">🔥 Matchday Shake-Up</div>
             <div id="centre-shakeup" class="centre-value">Awaiting Action</div>
             <div id="centre-shakeup-sub" class="centre-sub">No movement yet</div>
@@ -1297,7 +1445,7 @@ border:1px solid #f5c2c7;
 
     <div class="awards-grid">
 
-        <div class="award-card">
+        <div class="award-card shock-award">
             <div class="award-label">🔥 Shock Result</div>
             <div id="award-upset" class="award-value">
                 Awaiting Shock
@@ -1307,20 +1455,16 @@ border:1px solid #f5c2c7;
             </div>
         </div>
 
-        <div class="award-card">
+        <div class="award-card match-award">
             <div class="award-label">🎯 Match of the Tournament</div>
             <div id="award-match" class="award-value">Awaiting Classic</div>            
             <div id="award-match-sub" class="award-sub"></div>
         </div>
 
-        <div class="award-card">
-            <div class="award-label">🏆 Champion</div>
-            <div id="award-champion" class="award-value">
-                Tournament Active
-            </div>
-            <div id="award-champion-sub" class="award-sub">
-                Group Stage
-            </div>
+        <div class="award-card honours-award">
+            <div class="award-label">🏆 HONOURS BOARD</div>
+            <div id="award-honours-list"
+                class="honours-list"></div>
         </div>
 
     </div>
@@ -1581,13 +1725,19 @@ function getCurrentLeader(scores) {
 }
 
 function getOneToWatch(
-    currentPositions
+    currentPositions,
+    sorted
 ) {
 
     const upcoming =
         fixtures.filter(f =>
             f.status !== "completed"
         );
+
+        const nextMatchday =
+    upcoming.filter(f =>
+        f.date === upcoming[0]?.date
+    );
 
     if (!upcoming.length) {
 
@@ -1599,11 +1749,12 @@ function getOneToWatch(
     }
 
     const stories =
-    upcoming.map(f =>
+    nextMatchday.map(f =>
         getFixtureStory(
-            f,
-            currentPositions
-        )
+    f,
+    currentPositions,
+    sorted
+)
     );
 console.log("STORIES", stories);
     stories.sort(
@@ -1641,12 +1792,119 @@ console.log("ONE TO WATCH", best);
 
 function getFixtureStory(
     fixture,
-    currentPositions
+    currentPositions,
+    sorted
 ) {
 
     let score = 0;
 
     const reasons = [];
+
+    const homePosition =
+    currentPositions[
+        fixture.homeUser
+    ];
+
+const awayPosition =
+    currentPositions[
+        fixture.awayUser
+    ];
+
+    const homePlayer =
+    sorted.find(
+        p => p.name === fixture.homeUser
+    );
+
+const awayPlayer =
+    sorted.find(
+        p => p.name === fixture.awayUser
+    );
+
+if (
+    homePosition === 1 ||
+    awayPosition === 1
+) {
+
+    score += 100;
+
+    const leaderPlayer =
+        homePosition === 1
+            ? fixture.homeUser
+            : fixture.awayUser;
+
+    reasons.push({
+        priority: 100,
+        text: `👑 ${leaderPlayer} Defends The Lead`
+    });
+
+}
+
+if (
+    homePosition <= 3 ||
+    awayPosition <= 3
+) {
+
+    score += 80;
+
+ const gapBetweenPlayers =
+    Math.abs(
+        homePlayer.pts -
+        awayPlayer.pts
+    );
+
+if (gapBetweenPlayers <= 3) {
+
+    reasons.push({
+        priority: 90,
+        text:
+            `⚔️ ${fixture.homeUser} & ${fixture.awayUser} Battle For Position`
+    });
+
+}
+else if (
+    homePosition <= 3 ||
+    awayPosition <= 3
+) {
+
+    const podiumPlayer =
+        homePosition <= awayPosition
+            ? fixture.homeUser
+            : fixture.awayUser;
+
+    reasons.push({
+        priority: 80,
+        text:
+            `🥉 ${podiumPlayer} Defends Podium Spot`
+    });
+
+}
+}
+
+const maxPosition =
+    Math.max(
+        ...Object.values(
+            currentPositions
+        )
+    );
+
+if (
+    homePosition === maxPosition ||
+    awayPosition === maxPosition
+) {
+
+    score += 70;
+
+    const bottomPlayer =
+        homePosition === maxPosition
+            ? fixture.homeUser
+            : fixture.awayUser;
+
+    reasons.push({
+        priority: 70,
+        text: `🚨 ${bottomPlayer} Tries To Escape Last`
+    });
+
+}
 
 // Internal Conflict
 
@@ -1692,7 +1950,7 @@ function getFixtureStory(
     hasBadge(fixture.away, "Host Nation")
 ) {
 
-    score += 40;
+    score += 10;
 
     reasons.push({
         priority: 40,
@@ -1708,7 +1966,7 @@ if (
     hasBadge(fixture.away, "World Champions")
 ) {
 
-    score += 40;
+    score += 10;
 
     reasons.push({
         priority: 40,
@@ -1744,7 +2002,7 @@ if (
     getTeamRank(fixture.away) <= 10
 ) {
 
-    score += 35;
+    score += 5;
 
     reasons.push({
         priority: 35,
@@ -2928,6 +3186,54 @@ function getOwnGoalStandings() {
 
 }
 
+function getHonoursBoard() {
+
+    const honours = [];
+
+    const round1 =
+        calculateLatestRoundMVP();
+
+    if (round1) {
+
+        honours.push({
+            code: `R${round1.round}`,
+            winner: round1.player
+        });
+
+    }
+
+    return honours;
+
+}
+function buildHonoursChips() {
+
+    const honours =
+        getHonoursBoard();
+
+    const grouped = {};
+
+    honours.forEach(h => {
+
+        if (!grouped[h.winner]) {
+
+            grouped[h.winner] = [];
+
+        }
+
+        grouped[h.winner].push(
+            h.code
+        );
+
+    });
+
+    return Object.entries(grouped)
+        .map(([winner, awards]) =>
+            `<span class="honours-chip round">
+                🥇 ${awards.join(" • ")} ${winner}
+            </span>`
+        );
+
+}
 
 //Helper End//
     // Tracks starred selections globally, loads from local device storage if previously saved
@@ -4607,6 +4913,26 @@ document.getElementById("hero-story-sub").innerText =
     "Check Back After The Next Matchday";
     */
 }
+
+const chips =
+    buildHonoursChips();
+
+chips.push(
+    `<span class="honours-chip live">
+        ⚔️ R2 Live
+    </span>`
+);
+
+chips.push(
+    `<span class="honours-chip group">
+        🏆 GS Open
+    </span>`
+);
+
+document.getElementById(
+    "award-honours-list"
+).innerHTML =
+    chips.join("");
     
 const latestMVP = calculateLatestRoundMVP();
 
@@ -4867,7 +5193,8 @@ document.getElementById("centre-climber").innerText =
 
     const watch =
     getOneToWatch(
-        currentPositions
+        currentPositions,
+        sorted
     );
 
 document.getElementById("centre-watch").innerText =
