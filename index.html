@@ -1326,16 +1326,20 @@ border:1px solid #f5c2c7;
         </div>
 
         <div class="centre-card climber-card">
-            <div class="centre-label">📈 Biggest Climber</div>
-            <div id="centre-climber" class="centre-value">-</div>
-            <div id="centre-climber-points" class="centre-sub">-</div>
-        </div>
+    <div class="centre-label">📈 Biggest Climber</div>
+    <div id="centre-climber" class="centre-value">-</div>
+    <div id="centre-climber-points" class="centre-sub">-</div>
+    <div id="centre-climber-story"
+         class="centre-sub centre-family-sub">-</div>
+</div>
 
-        <div class="centre-card faller-card">
-            <div class="centre-label">📉 Biggest Faller</div>
-            <div id="centre-faller" class="centre-value">-</div>
-            <div id="centre-faller-points" class="centre-sub">-</div>
-        </div>
+<div class="centre-card faller-card">
+    <div class="centre-label">📉 Biggest Faller</div>
+    <div id="centre-faller" class="centre-value">-</div>
+    <div id="centre-faller-points" class="centre-sub">-</div>
+    <div id="centre-faller-story"
+         class="centre-sub centre-family-sub">-</div>
+</div>
 
         <div class="centre-card shakeup-card">
             <div class="centre-label">🔥 Matchday Shake-Up</div>
@@ -3324,6 +3328,16 @@ function buildHonoursChips() {
 
 }
 
+function ordinal(n) {
+
+    if (n === 1) return "1st";
+    if (n === 2) return "2nd";
+    if (n === 3) return "3rd";
+
+    return `${n}th`;
+
+}
+
 //Helper End//
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
@@ -4126,13 +4140,13 @@ function buildHonoursChips() {
     "away": "Uzbekistan",
     "homeUser": "Jenni",
     "awayUser": "Sam",
-    "homeScore": "",
-    "awayScore": "",
+    "homeScore": 5,
+    "awayScore": 0,
     "homeRedCards": 0,
 "awayRedCards": 0,
 "homeOwnGoals": 0,
-"awayOwnGoals": 0,
-"status": "upcoming"
+"awayOwnGoals": 1,
+"status": "completed"
 },
 {
     "id": 46,
@@ -5120,7 +5134,7 @@ function renderScoreboard(scores) {
 
     let sorted = Object.keys(scores)
         .map(key => ({ name: key, ...scores[key] }))
-        .sort((a, b) => b.pts - a.pts);        
+        .sort((a, b) => b.pts - a.pts);           
     
     document.getElementById("centre-leader-points").innerText =
     `${sorted[0].pts} pts`;
@@ -5157,7 +5171,15 @@ const previousScores =
 const previousPositions =
     getRankPositions(previousScores);
 
-    
+sorted.forEach(p => {
+
+    const previousPts =
+        previousScores[p.name]?.pts || 0;
+
+    p.matchdayPoints =
+        p.pts - previousPts;
+
+});    
 /*   
 console.log(
     "PREVIOUS POSITIONS",
@@ -5185,7 +5207,7 @@ console.log(
 );
 */
 sorted.forEach((p, index) => {
-    let newRank = index + 1;
+    let newRank = index + 1; p.position = newRank;
     let oldRank =
     previousPositions[p.name];
 
@@ -5308,7 +5330,29 @@ if (biggestClimber) {
         biggestClimber.name;
 
     document.getElementById("centre-climber-points").innerHTML =
-    getMovementText(biggestClimber.rankChange);
+        getMovementText(biggestClimber.rankChange);
+
+    if (biggestClimber.rankChange === 1) {
+
+        document.getElementById("centre-climber-story").innerText =
+            `🚀 +${biggestClimber.matchdayPoints} pts Powered The Rise`;
+
+    } else if (biggestClimber.rankChange === 2) {
+
+        document.getElementById("centre-climber-story").innerText =
+            "🚀 Two-Place Surge";
+
+    } else if (biggestClimber.rankChange === 3) {
+
+        document.getElementById("centre-climber-story").innerText =
+            "🔥 Charging Through The Field";
+
+    } else {
+
+        document.getElementById("centre-climber-story").innerText =
+            "🚀 Rocketing Up The Standings";
+
+    }
 
 } else {
 
@@ -5317,6 +5361,10 @@ if (biggestClimber) {
 
     document.getElementById("centre-climber-points").innerText =
         "Ranks unchanged";
+
+    document.getElementById("centre-climber-story").innerText =
+        "";
+
 }
 
 if (biggestFaller) {
@@ -5325,7 +5373,37 @@ if (biggestFaller) {
         biggestFaller.name;
 
     document.getElementById("centre-faller-points").innerHTML =
-    getMovementText(biggestFaller.rankChange);
+        getMovementText(biggestFaller.rankChange);
+
+    const fall =
+        Math.abs(biggestFaller.rankChange);
+
+    if (fall === 1) {
+
+        document.getElementById("centre-faller-story").innerText =
+            "📉 Lost Ground This Matchday";
+
+    } else if (fall === 2) {
+
+        document.getElementById("centre-faller-story").innerText =
+            "📉 Double Overtake Shock";
+
+    } else if (fall === 3) {
+
+        const previousRank =
+            previousPositions[biggestFaller.name];
+
+        document.getElementById("centre-faller-story").innerText =
+            previousRank <= 3
+                ? "🚨 Podium Collapse"
+                : "📉 Falls Three Places";
+
+    } else {
+
+        document.getElementById("centre-faller-story").innerText =
+            "💥 Freefall Down The Standings";
+
+    }
 
 } else {
 
@@ -5334,6 +5412,9 @@ if (biggestFaller) {
 
     document.getElementById("centre-faller-points").innerText =
         "No positions lost";
+
+    document.getElementById("centre-faller-story").innerText =
+        "";
 
 }
 
