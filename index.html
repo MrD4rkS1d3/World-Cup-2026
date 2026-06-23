@@ -1244,6 +1244,31 @@ border:1px solid #f5c2c7;
 
     </div>
 
+    <div class="centre-card infamy-card">
+
+        <div class="centre-label">
+            ⚽ OWN GOAL KING
+        </div>
+
+        <div id="own-goal-holder"
+             class="centre-value">
+            -
+        </div>
+
+        <div id="own-goal-total"
+             class="centre-sub">
+            No Own Goals
+        </div>
+
+        <div id="own-goal-runners"
+             class="centre-sub">
+            -
+        </div>
+
+    </div>
+
+
+
 </div>
 
     </div>
@@ -2816,6 +2841,32 @@ function getHallOfInfamyHeadline() {
         });
 
     }
+    const ownGoals =
+    getOwnGoalStandings();
+
+if (
+    ownGoals.length &&
+    ownGoals[0].ownGoals > 0
+) {
+
+    candidates.push({
+
+        score:
+            ownGoals[0].ownGoals * 8,
+
+        headline:
+            ownGoals[0].player,
+
+        subheadline:
+            `${ownGoals[0].ownGoals} Own Goal${
+                ownGoals[0].ownGoals === 1
+                    ? ""
+                    : "s"
+            }`
+
+    });
+
+}
 
     if (!candidates.length) {
 
@@ -2831,6 +2882,53 @@ function getHallOfInfamyHeadline() {
     )[0];
 
 }
+
+function getOwnGoalStandings() {
+
+    const totals = {};
+
+    fixtures.forEach(f => {
+
+        if (f.status !== "completed") return;
+
+        const homeOwnGoals =
+            parseInt(f.homeOwnGoals || 0);
+
+        const awayOwnGoals =
+            parseInt(f.awayOwnGoals || 0);
+
+        if (homeOwnGoals > 0) {
+
+            totals[f.homeUser] =
+                (totals[f.homeUser] || 0) +
+                homeOwnGoals;
+
+        }
+
+        if (awayOwnGoals > 0) {
+
+            totals[f.awayUser] =
+                (totals[f.awayUser] || 0) +
+                awayOwnGoals;
+
+        }
+
+    });
+
+    return Object.entries(totals)
+        .map(([player, ownGoals]) => ({
+            player,
+            ownGoals
+        }))
+        .sort(
+            (a,b) =>
+                b.ownGoals -
+                a.ownGoals
+        );
+
+}
+
+
 //Helper End//
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
@@ -5889,27 +5987,135 @@ function renderHallOfInfamy() {
     const standings =
         getRedCardStandings();
 
-    if (!standings.length) return;
-
     const leader =
         standings[0];
 
-    document.getElementById("red-card-holder").innerHTML =
-    `👑 ${leader.player}`;
+console.log(
+    "OWN GOALS",
+    getOwnGoalStandings()
+);
 
-document.getElementById("red-card-total").innerHTML =
-    `${leader.redCards} Red Cards`;
+    const ownGoals =
+        getOwnGoalStandings();
+
+    const ownGoalLeader =
+        ownGoals[0];
+
+    // Red Cards
+
+    document.getElementById("red-card-holder").innerHTML =
+        leader
+            ? `👑 ${leader.player}`
+            : "-";
+
+    document.getElementById("red-card-total").innerHTML =
+        leader
+            ? `${leader.redCards} Red Cards`
+            : "No Red Cards";
+
+    const runners =
+    standings.filter(
+        p => p.redCards < leader.redCards
+    );
+
+const secondScore =
+    runners[0]?.redCards;
+
+const secondPlace =
+    runners.filter(
+        p => p.redCards === secondScore
+    );
+
+const thirdScore =
+    runners.find(
+        p => p.redCards < secondScore
+    )?.redCards;
+
+const thirdPlace =
+    runners.filter(
+        p => p.redCards === thirdScore
+    );
+
+document.getElementById(
+    "red-card-runners"
+).innerHTML = [
+
+    secondPlace.length
+        ? `🥈 ${secondPlace
+            .map(p =>
+                `${p.player} (${p.redCards})`
+            )
+            .join(" • ")}`
+        : "",
+
+    thirdPlace.length
+        ? `🥉 ${thirdPlace
+            .map(p =>
+                `${p.player} (${p.redCards})`
+            )
+            .join(" • ")}`
+        : ""
+
+].filter(Boolean).join(" • ");
+
+    // Own Goals
+
+    document.getElementById("own-goal-holder").innerHTML =
+        ownGoalLeader
+            ? `👑 ${ownGoalLeader.player}`
+            : "-";
+
+    document.getElementById("own-goal-total").innerHTML =
+        ownGoalLeader
+            ? `${ownGoalLeader.ownGoals} Own Goal${ownGoalLeader.ownGoals === 1 ? "" : "s"}`
+            : "No Own Goals";
+
+            {
+    const runners =
+        ownGoals.filter(
+            p => p.ownGoals < ownGoalLeader.ownGoals
+        );
+
+    const secondScore =
+        runners[0]?.ownGoals;
+
+    const secondPlace =
+        runners.filter(
+            p => p.ownGoals === secondScore
+        );
+
+    const thirdScore =
+        runners.find(
+            p => p.ownGoals < secondScore
+        )?.ownGoals;
+
+    const thirdPlace =
+        runners.filter(
+            p => p.ownGoals === thirdScore
+        );
 
     document.getElementById(
-        "red-card-runners"
-    ).innerHTML =
-        standings
-            .slice(1, 3)
-            .map((p, i) =>
-                `${i === 0 ? "🥈" : "🥉"} ${p.player} (${p.redCards})`
-            )
-            .join(" • ");
+        "own-goal-runners"
+    ).innerHTML = [
 
+        secondPlace.length
+            ? `🥈 ${secondPlace
+                .map(p =>
+                    `${p.player} (${p.ownGoals})`
+                )
+                .join(" • ")}`
+            : "",
+
+        thirdPlace.length
+            ? `🥉 ${thirdPlace
+                .map(p =>
+                    `${p.player} (${p.ownGoals})`
+                )
+                .join(" • ")}`
+            : ""
+
+    ].filter(Boolean).join(" • ");
+}
 }
 
 renderAll();
