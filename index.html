@@ -279,6 +279,12 @@
     color:#718096;
 }
 
+.centre-family-sub {
+    margin-top:4px;
+    font-size:0.78rem;
+    color:#718096;
+}
+
 @media (max-width:900px) {
     .centre-grid {
         grid-template-columns:repeat(2,1fr);
@@ -1341,6 +1347,7 @@ border:1px solid #f5c2c7;
             <div class="centre-label">👀 One To Watch</div>
             <div id="centre-watch" class="centre-value">-</div>
             <div id="centre-watch-sub" class="centre-sub">-</div>
+            <div id="centre-watch-family" class="centre-sub centre-family-sub"></div>
         </div>
     </div>
 
@@ -1756,7 +1763,12 @@ function getOneToWatch(
     sorted
 )
     );
-console.log("STORIES", stories);
+
+console.log(
+    "BEST STORY",
+    stories[0]
+);
+
     stories.sort(
         (a,b) => b.score - a.score
     );
@@ -1778,15 +1790,36 @@ console.log("STORIES", stories);
     best.reasons.sort(
         (a,b) => b.priority - a.priority
     );
-    /*
-console.log("ONE TO WATCH", best);
-*/
-    return {
-        headline:
-            `${best.fixture.home} vs ${best.fixture.away}`,
-        subheadline:
-            best.reasons[0].text
-    };
+
+    const storyReason =
+    best.reasons.find(
+        r => r.type !== "family"
+    );
+
+const familyReason =
+    best.reasons.find(
+        r => r.type === "family"
+    );
+
+    //Test//
+ console.log(
+    "ONE TO WATCH",
+    best.fixture.home,
+    best.fixture.away,
+    best.reasons
+);
+
+
+   return {
+    headline:
+        `${best.fixture.home} vs ${best.fixture.away}`,
+
+    subheadline:
+        storyReason?.text || "",
+
+    familyNarrative:
+        familyReason?.text || ""
+};
 
 }
 
@@ -2011,6 +2044,56 @@ if (
 
 }
 
+// Favourite Team Survival
+
+const favouritePlayer =
+    Object.keys(starredTeams)
+        .find(player =>
+            starredTeams[player].includes(fixture.home) ||
+            starredTeams[player].includes(fixture.away)
+        );
+
+if (favouritePlayer) {
+
+    score += 60;
+
+    reasons.push({
+        priority: 60,
+        text:
+            `⭐ ${favouritePlayer}'s Favourite Team In Action`
+    });
+
+}
+
+// Favourite Team Under Pressure
+
+if (
+    fixture.home === "Portugal" ||
+    fixture.away === "Portugal"
+) {
+
+    console.log(
+        "PORTUGAL TRIGGERED",
+        fixture.home,
+        fixture.away
+    );
+
+    score += 90;
+
+    reasons.push({
+    type: "story",
+    priority: 90,
+    text: "⚠️ Portugal's Fate In The Balance"
+});
+
+reasons.push({
+    type: "family",
+    priority: 60,
+    text: "⭐ Sue Watches On Nervously"
+});
+
+}
+
 // Debug //
 /*console.log(
     fixture.home,
@@ -2019,6 +2102,12 @@ if (
     reasons
 );
 */
+console.log(
+    "CHECKING",
+    fixture.home,
+    fixture.away
+);
+
     return {
         fixture,
         score,
@@ -5202,6 +5291,9 @@ document.getElementById("centre-watch").innerText =
 
 document.getElementById("centre-watch-sub").innerHTML =
     watch.subheadline;
+
+    document.getElementById("centre-watch-family").innerHTML =
+    watch.familyNarrative || "";
 
 document.getElementById("centre-leader").innerText =
     sorted[0].name;
