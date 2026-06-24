@@ -1857,12 +1857,21 @@ const awayPlayer =
         p => p.name === fixture.awayUser
     );
 
+    const gapBetweenPlayers =
+    Math.abs(
+        homePlayer.pts -
+        awayPlayer.pts
+    );
+
+// Leader Story
+
 if (
-    homePosition === 1 ||
-    awayPosition === 1
+    (homePosition === 1 ||
+     awayPosition === 1) &&
+    gapBetweenPlayers <= 5
 ) {
 
-    score += 100;
+    score += 40;
 
     const leaderPlayer =
         homePosition === 1
@@ -1870,38 +1879,32 @@ if (
             : fixture.awayUser;
 
     reasons.push({
-        priority: 100,
-        text: `👑 ${leaderPlayer} Defends The Lead`
+        priority: 45,
+        text:
+            `👑 ${leaderPlayer} Under Pressure`
     });
 
 }
 
-if (
-    homePosition <= 3 ||
-    awayPosition <= 3
-) {
-
-    score += 80;
-
- const gapBetweenPlayers =
-    Math.abs(
-        homePlayer.pts -
-        awayPlayer.pts
-    );
-
 if (gapBetweenPlayers <= 3) {
+    score += 60;
 
     reasons.push({
-        priority: 90,
+        priority: 80,
         text:
             `⚔️ ${fixture.homeUser} & ${fixture.awayUser} Battle For Position`
     });
-
 }
-else if (
-    homePosition <= 3 ||
-    awayPosition <= 3
+
+// Top 3 Story
+
+if (
+    (homePosition <= 3 ||
+     awayPosition <= 3) &&
+    gapBetweenPlayers > 3
 ) {
+
+    score += 30;
 
     const podiumPlayer =
         homePosition <= awayPosition
@@ -1909,13 +1912,14 @@ else if (
             : fixture.awayUser;
 
     reasons.push({
-        priority: 80,
+        priority: 35,
         text:
             `🥉 ${podiumPlayer} Defends Podium Spot`
     });
 
 }
-}
+
+//Last Place
 
 const maxPosition =
     Math.max(
@@ -1929,7 +1933,7 @@ if (
     awayPosition === maxPosition
 ) {
 
-    score += 70;
+    score += 25;
 
     const bottomPlayer =
         homePosition === maxPosition
@@ -1937,7 +1941,7 @@ if (
             : fixture.awayUser;
 
     reasons.push({
-        priority: 70,
+        priority: 55,
         text: `🚨 ${bottomPlayer} Tries To Escape Last`
     });
 
@@ -1950,36 +1954,15 @@ if (
         fixture.owner.includes("(Internal)")
     ) {
 
-        score += 100;
+        score += 80;
 
         reasons.push({
-            priority: 100,
+            priority: 90,
             text: "⚠️ Internal Conflict"
         });
 
-    }
-
-// Favourite Bonus
-
-    const favouriteOwner =
-        Object.keys(starredTeams)
-            .find(player =>
-                starredTeams[player].includes(fixture.home) ||
-                starredTeams[player].includes(fixture.away)
-            );
-
-    if (favouriteOwner) {
-
-        score += 50;
-
-        reasons.push({
-            priority: 50,
-            text:
-                `<strong>${favouriteOwner.toUpperCase()}</strong>'s Favourite Team Chases Bonus Points`
-        });
-
-    }    
-
+    } 
+/*
 // Host Nation //
 
    if (
@@ -2031,7 +2014,7 @@ if (
     });
 
 }
-
+*/
 // Heavyweight Clash //
 
 if (
@@ -2039,16 +2022,16 @@ if (
     getTeamRank(fixture.away) <= 10
 ) {
 
-    score += 5;
+    score += 20;
 
     reasons.push({
-        priority: 35,
+        priority: 50,
         text: "🔥 Heavyweight Clash"
     });
 
 }
 
-// Favourite Team Survival
+// Favourite Team In Action
 
 const favouritePlayer =
     Object.keys(starredTeams)
@@ -2059,42 +2042,13 @@ const favouritePlayer =
 
 if (favouritePlayer) {
 
-    score += 60;
+    score += 15;
 
     reasons.push({
-        priority: 60,
+        priority: 40,
         text:
             `⭐ ${favouritePlayer}'s Favourite Team In Action`
     });
-
-}
-
-// Favourite Team Under Pressure
-
-if (
-    fixture.home === "Portugal" ||
-    fixture.away === "Portugal"
-) {
-
-    console.log(
-        "PORTUGAL TRIGGERED",
-        fixture.home,
-        fixture.away
-    );
-
-    score += 90;
-
-    reasons.push({
-    type: "story",
-    priority: 90,
-    text: "⚠️ Portugal's Fate In The Balance"
-});
-
-reasons.push({
-    type: "family",
-    priority: 60,
-    text: "⭐ Sue Watches On Nervously"
-});
 
 }
 
@@ -2119,6 +2073,7 @@ console.log(
     };
 
 }
+
 function getRankChangeText(player) {
 
     if (player.rankChange > 0) {
@@ -3357,6 +3312,45 @@ function ordinal(n) {
     if (n === 3) return "3rd";
 
     return `${n}th`;
+
+}
+
+function getFavouriteOwner(team) {
+
+    return Object.keys(starredTeams)
+        .find(player =>
+            starredTeams[player]?.includes(team)
+        );
+
+}
+
+function getFavouriteTeamInFixture(fixture) {
+
+    const homeOwner =
+        getFavouriteOwner(fixture.home);
+
+    if (homeOwner) {
+
+        return {
+            team: fixture.home,
+            owner: homeOwner
+        };
+
+    }
+
+    const awayOwner =
+        getFavouriteOwner(fixture.away);
+
+    if (awayOwner) {
+
+        return {
+            team: fixture.away,
+            owner: awayOwner
+        };
+
+    }
+
+    return null;
 
 }
 
