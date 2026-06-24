@@ -3283,17 +3283,39 @@ function getHonoursBoard() {
 
     const honours = [];
 
-    const round1 =
-        calculateLatestRoundMVP();
+    const rounds =
+        [...new Set(fixtures.map(f => f.round))]
+            .sort((a,b) => a - b);
 
-    if (round1) {
+    const completedRounds =
+        rounds.filter(round => {
 
-        honours.push({
-            code: `R${round1.round}`,
-            winner: round1.player
+            const roundFixtures =
+                fixtures.filter(
+                    f => f.round === round
+                );
+
+            return roundFixtures.every(
+                f => f.status === "completed"
+            );
+
         });
 
-    }
+    completedRounds.forEach(round => {
+
+        const winner =
+            getRoundWinner(round);
+
+        if (winner) {
+
+            honours.push({
+                code: `R${round}`,
+                winner: winner.player
+            });
+
+        }
+
+    });
 
     return honours;
 
@@ -4832,7 +4854,7 @@ function buildScoresFromFixtures(fixturesList) {
     return scores;
 }
 
-    function calculateScores() {
+function calculateScores() {
         let scores = {
     Sam:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
     Martin: { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
@@ -5020,11 +5042,18 @@ document.getElementById("hero-story-sub").innerText =
 const chips =
     buildHonoursChips();
 
-chips.push(
-    `<span class="honours-chip live">
-        ⚔️ R2 Live
-    </span>`
-);
+const nextRound =
+    getHonoursBoard().length + 1;
+
+if (nextRound <= 3) {
+
+    chips.push(
+        `<span class="honours-chip live">
+            ⚔️ R${nextRound} Live
+        </span>`
+    );
+
+}
 
 chips.push(
     `<span class="honours-chip group">
