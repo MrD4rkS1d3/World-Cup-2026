@@ -243,7 +243,13 @@ min-width:0;
         .team-chip.starred { background: #fefcbf; border-color: #f6e05e; font-weight: bold; }
         .team-chip.locked-state { cursor: default; pointer-events: none; }
         .star-icon { color:#d69e2e; font-size:0.9rem; margin-left:8px; flex-shrink:0; }
+tr.eliminated{
 
+    opacity:.45;
+
+    filter:grayscale(100%);
+
+}
         /* TOURNAMENT CENTRE */
 
 #tournament-centre {
@@ -1629,7 +1635,7 @@ border:1px solid #f5c2c7;
                 <th style="text-align:center;">🤝 Draws</th>
                 <th style="text-align:center;">⚽ Goals</th>
                 <th style="text-align:center;">🧤 CS</th>
-                <th style="text-align:center;">🌟 Bonus</th>
+                <th id="bonus-header" style="text-align:center;">🌟 Bonus</th>
                 <th style="text-align:center;">⭐ Points</th>
             </tr>
         </thead>
@@ -2502,8 +2508,6 @@ Object.values(tournament.finalGroups).forEach(group => {
 
 }
 
-
-// Helpers
 // =====================================================
 // ENGINE 3.7 HELPERS
 // =====================================================
@@ -2603,6 +2607,542 @@ function isGuaranteed(team) {
 return (
     analysis.teamsThatCanFinishAbove === 0
 );
+
+}
+
+// =====================================================
+// ENGINE 4.0 - QUALIFIED TEAMS
+// =====================================================
+
+function buildQualifiedTeams() {
+
+    tournament.qualifiedTeams = {
+
+        winners:{},
+
+        runnersUp:{},
+
+        bestThird:[]
+
+    };
+
+    Object.entries(tournament.finalGroups).forEach(([group,teams])=>{
+
+        tournament.qualifiedTeams.winners[group] =
+            teams.find(t=>t.groupPosition===1)?.team;
+
+        tournament.qualifiedTeams.runnersUp[group] =
+            teams.find(t=>t.groupPosition===2)?.team;
+
+    });
+
+    tournament.qualifiedTeams.bestThird =
+        tournament.thirdPlaceTable
+            .slice(0,8)
+            .map(team=>({
+
+                team:team.team,
+
+                group:team.group,
+
+                position:team.thirdPlacePosition
+
+            }));
+
+}
+
+// =====================================================
+// ENGINE 4.1 - FIFA BRACKET SLOTS
+// =====================================================
+
+// =====================================================
+// ENGINE 4.1 - FIFA ROUND OF 32 TEMPLATE
+// =====================================================
+
+const fifaRoundOf32Slots = {
+
+    73:{
+        home:{type:"TEAM",team:"South Africa"},
+        away:{type:"TEAM",team:"Canada"}
+    },
+
+    74:{
+        home:{type:"TEAM",team:"Germany"},
+        away:{type:"TEAM",team:"Paraguay"}
+    },
+
+    75:{
+        home:{type:"TEAM",team:"Netherlands"},
+        away:{type:"TEAM",team:"Morocco"}
+    },
+
+    76:{
+        home:{type:"TEAM",team:"Brazil"},
+        away:{type:"TEAM",team:"Japan"}
+    },
+
+    77:{
+        home:{type:"TEAM",team:"France"},
+        away:{type:"TEAM",team:"Sweden"}
+    },
+
+    78:{
+        home:{type:"TEAM",team:"Ivory Coast"},
+        away:{type:"TEAM",team:"Norway"}
+    },
+
+    79:{
+        home:{type:"TEAM",team:"Mexico"},
+        away:{
+            type:"BEST_THIRD",
+            groups:["C","E","F","H","I"]
+        }
+    },
+
+    80:{
+        home:{
+            type:"GROUP_POSITION",
+            group:"L",
+            position:1
+        },
+        away:{
+            type:"BEST_THIRD",
+            groups:["E","H","I","J","K"]
+        }
+    },
+
+    81:{
+        home:{type:"TEAM",team:"United States"},
+        away:{type:"TEAM",team:"Bosnia and Herzegovina"}
+    },
+
+    82:{
+        home:{type:"TEAM",team:"Belgium"},
+        away:{
+            type:"BEST_THIRD",
+            groups:["A","E","H","I","J"]
+        }
+    },
+
+    83:{
+        home:{
+            type:"GROUP_POSITION",
+            group:"K",
+            position:2
+        },
+        away:{
+            type:"GROUP_POSITION",
+            group:"L",
+            position:2
+        }
+    },
+
+    84:{
+        home:{type:"TEAM",team:"Spain"},
+        away:{
+            type:"GROUP_POSITION",
+            group:"J",
+            position:2
+        }
+    },
+
+    85:{
+        home:{type:"TEAM",team:"Switzerland"},
+        away:{
+            type:"BEST_THIRD",
+            groups:["E","F","G","I","J"]
+        }
+    },
+
+    86:{
+        home:{type:"TEAM",team:"Argentina"},
+        away:{type:"TEAM",team:"Cape Verde"}
+    },
+
+    87:{
+        home:{
+            type:"GROUP_POSITION",
+            group:"K",
+            position:1
+        },
+        away:{
+            type:"BEST_THIRD",
+            groups:["D","E","I","J","L"]
+        }
+    },
+
+    88:{
+        home:{type:"TEAM",team:"Australia"},
+        away:{type:"TEAM",team:"Egypt"}
+    }
+
+};
+
+// =====================================================
+// KNOCKOUT QUALIFIERS
+// =====================================================
+
+function getQualifiedTeams(){
+
+    return tournament.qualifiedTeams;
+
+}
+
+// =====================================================
+// SLOT RESOLUTION HELPERS
+// =====================================================
+
+function getGroupWinner(group){
+
+    return tournament.qualifiedTeams.winners[group] || "";
+
+}
+
+function getGroupRunnerUp(group){
+
+    return tournament.qualifiedTeams.runnersUp[group] || "";
+
+}
+
+function getBestThird(index){
+
+    return tournament.qualifiedTeams.bestThird[index]?.team || "";
+
+}
+
+function getOwner(team){
+
+    return assignments[team] || "";
+
+}
+// =====================================================
+// ROUND OF 32 GENERATOR
+// =====================================================
+
+function generateRoundOf32Fixtures(){
+
+    if(
+        !fixtures
+            .filter(f=>f.id<=72)
+            .every(f=>f.status==="completed")
+    ){
+        return;
+    }
+
+    console.log("Generating Round of 32...");
+
+    const qualified = getQualifiedTeams();
+
+    fixtures
+        .filter(f=>f.id>=73 && f.id<=88)
+        .forEach(fixture=>{
+
+            const slot =
+                fifaRoundOf32Slots[fixture.id];
+
+            if(!slot) return;
+
+            fixture.home = resolveSlot(slot.home);
+
+fixture.away = resolveSlot(slot.away);
+
+fixture.homeUser = getOwner(fixture.home);
+
+fixture.awayUser = getOwner(fixture.away);
+
+if(fixture.home && fixture.away){
+
+    fixture.status = "upcoming";
+
+}
+
+        });
+
+}
+// =====================================================
+// ENGINE 4.3 - MATCH WINNER
+// =====================================================
+
+function getMatchWinner(matchId){
+
+    const match =
+        fixtures.find(f => f.id === matchId);
+
+    if(!match)
+        return null;
+
+    if(match.status !== "completed")
+        return null;
+
+    if(match.homeScore > match.awayScore){
+
+        return{
+
+            team:match.home,
+            user:match.homeUser
+
+        };
+
+    }
+
+    if(match.awayScore > match.homeScore){
+
+        return{
+
+            team:match.away,
+            user:match.awayUser
+
+        };
+
+    }
+
+    return null;
+
+}
+
+// =====================================================
+// ENGINE 4.5 - MATCH LOSER
+// =====================================================
+
+function getMatchLoser(matchId){
+
+    const match =
+        fixtures.find(f=>f.id===matchId);
+
+    if(!match)
+        return null;
+
+    if(match.status!=="completed")
+        return null;
+
+    if(match.homeScore < match.awayScore){
+
+        return{
+
+            team:match.home,
+            user:match.homeUser
+
+        };
+
+    }
+
+    if(match.awayScore < match.homeScore){
+
+        return{
+
+            team:match.away,
+            user:match.awayUser
+
+        };
+
+    }
+
+    return null;
+
+}
+
+// =====================================================
+// PLACE WINNER INTO FIXTURE
+// =====================================================
+
+function placeWinner(fromMatch,toMatch,side){
+
+    const winner =
+        getMatchWinner(fromMatch);
+
+    if(!winner)
+        return;
+
+    const fixture =
+        fixtures.find(f=>f.id===toMatch);
+
+    if(!fixture)
+        return;
+
+    if(side==="home"){
+
+        fixture.home = winner.team;
+        fixture.homeUser = winner.user;
+
+    }
+
+    else{
+
+        fixture.away = winner.team;
+        fixture.awayUser = winner.user;
+
+    }
+
+}
+
+function placeLoser(fromMatch,toMatch,side){
+
+    const loser =
+        getMatchLoser(fromMatch);
+
+    if(!loser)
+        return;
+
+    const fixture =
+        fixtures.find(f=>f.id===toMatch);
+
+    if(!fixture)
+        return;
+
+    if(side==="home"){
+
+        fixture.home=loser.team;
+        fixture.homeUser=loser.user;
+
+    }
+
+    else{
+
+        fixture.away=loser.team;
+        fixture.awayUser=loser.user;
+
+    }
+
+}
+// =====================================================
+// UPDATE KNOCKOUT BRACKET
+// =====================================================
+
+function updateKnockoutBracket(){
+
+    // ---------- Round of 16 ----------
+
+    placeWinner(74,89,"home");
+    placeWinner(77,89,"away");
+
+    placeWinner(73,90,"home");
+    placeWinner(75,90,"away");
+
+    placeWinner(76,91,"home");
+    placeWinner(78,91,"away");
+
+    placeWinner(79,92,"home");
+    placeWinner(80,92,"away");
+
+    placeWinner(83,93,"home");
+    placeWinner(84,93,"away");
+
+    placeWinner(81,94,"home");
+    placeWinner(82,94,"away");
+
+    placeWinner(86,95,"home");
+    placeWinner(88,95,"away");
+
+    placeWinner(85,96,"home");
+    placeWinner(87,96,"away");
+
+        // ---------- Quarter Finals ----------
+
+    placeWinner(89,97,"home");
+    placeWinner(90,97,"away");
+
+    placeWinner(93,98,"home");
+    placeWinner(94,98,"away");
+
+    placeWinner(91,99,"home");
+    placeWinner(92,99,"away");
+
+    placeWinner(95,100,"home");
+    placeWinner(96,100,"away");
+
+    // ---------- Semi Finals ----------
+
+    placeWinner(97,101,"home");
+    placeWinner(98,101,"away");
+
+    placeWinner(99,102,"home");
+    placeWinner(100,102,"away");
+
+    // ---------- Final ----------
+
+    placeWinner(101,104,"home");
+    placeWinner(102,104,"away");
+
+    // ---------- Third Place ----------
+
+    placeLoser(101,103,"home");
+    placeLoser(102,103,"away");
+
+}
+
+// =====================================================
+// ENGINE 5.0 - SURVIVAL MODE
+// =====================================================
+
+function buildAliveTable(){
+
+    tournament.aliveTable = {};
+
+    Object.keys(assignments).forEach(player=>{
+
+        tournament.aliveTable[player] =
+            assignments[player]
+                .filter(team=>isTeamAlive(team))
+                .length;
+
+    });
+
+}
+
+// =====================================================
+// TEAM ALIVE CHECK
+// =====================================================
+
+function isTeamAlive(team){
+
+    // Group Stage
+
+    if(
+        fixtures.some(f=>f.id<=72 && f.status!=="completed")
+    ){
+
+        return true;
+
+    }
+
+    // Knockout
+
+    const knockoutFixture =
+        fixtures.find(f=>
+            f.id>=73 &&
+            (f.home===team || f.away===team)
+        );
+
+    if(!knockoutFixture)
+        return false;
+
+    if(knockoutFixture.status!=="completed")
+        return true;
+
+    const winner =
+        getMatchWinner(knockoutFixture.id);
+
+    return winner?.team===team;
+
+}
+
+function getAliveTeams(player){
+
+    return tournament.aliveTable?.[player] || 0;
+
+}
+
+// Helpers
+
+// =====================================================
+// SURVIVAL MODE ACTIVE
+// =====================================================
+
+function isSurvivalMode(){
+
+    return fixtures
+        .filter(f=>f.id<=72)
+        .every(f=>f.status==="completed");
 
 }
 
@@ -4283,6 +4823,68 @@ function getQualificationDot(teamName) {
 
 }
 
+// =====================================================
+// SLOT RESOLUTION
+// =====================================================
+
+function resolveSlot(slot){
+
+    if(!slot) return "";
+
+    switch(slot.type){
+
+        // -----------------------------
+        // Fixed Team
+        // -----------------------------
+
+        case "TEAM":
+
+            return slot.team;
+
+        // -----------------------------
+        // Group Winner / Runner-up
+        // -----------------------------
+
+        case "GROUP_POSITION":{
+
+            const table =
+                tournament.finalGroups[slot.group];
+
+            if(!table) return "";
+
+            return table.find(
+                team =>
+                    team.groupPosition === slot.position
+            )?.team || "";
+
+        }
+
+        // -----------------------------
+        // Best Third Place
+        // -----------------------------
+
+        case "BEST_THIRD":{
+
+            const eligible =
+
+                tournament.qualifiedTeams.bestThird
+                    .filter(team =>
+                        slot.groups.includes(team.group)
+                    );
+
+            if(!eligible.length)
+                return "";
+
+            return eligible[0].team;
+
+        }
+
+    }
+
+    return "";
+
+}
+
 //Helper End//
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
@@ -5553,7 +6155,159 @@ function getQualificationDot(teamName) {
 "awayOwnGoals": 0,
 "status": "upcoming"
 },
+
+{
+    "id":73,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Sun 28 June",
+    "kickoff":"19:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+{
+    "id":74,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Mon 29 June",
+    "kickoff":"21:30",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+{
+    "id":75,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Tue 30 June",
+    "kickoff":"01:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+{
+    "id":76,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Mon 29 June",
+    "kickoff":"18:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+{
+    "id":77,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Tue 30 June",
+    "kickoff":"22:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+{
+    "id":78,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Tue 30 June",
+    "kickoff":"17:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+{
+    "id":79,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Tue 30 June",
+    "kickoff":"13:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+{
+    "id":80,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Wed 1 July",
+    "kickoff":"17:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"pending"
+},
+
 ];
+
+// =====================================================
+// KNOCKOUT STAGE TEMPLATE (ENGINE 4)
+// =====================================================
+
+
 
     function checkAdminPassword(val) {
         let badge = document.getElementById("admin-status-badge");
@@ -6185,7 +6939,11 @@ if (podium && sorted.length >= 3) {
     <div class="podium-points">${sorted[0].pts} pts</div>
 
     <div class="podium-gap">
-        (🌟 +${sorted[0].bonus} Included) • Leads by ${sorted[0].pts - sorted[1].pts} pts
+        ${
+    isSurvivalMode()
+        ? `❤️ ${getAliveTeams(sorted[0].name)} Alive`
+        : `🌟 +${sorted[0].bonus} Included`
+} • Leads by ${sorted[0].pts - sorted[1].pts} pts
     </div>
 </div>
 
@@ -6195,7 +6953,11 @@ if (podium && sorted.length >= 3) {
     <div class="podium-points">${sorted[1].pts} pts</div>
 
     <div class="podium-gap">
-        (🌟 +${sorted[1].bonus} Included) •
+        ${
+    isSurvivalMode()
+        ? `❤️ ${getAliveTeams(sorted[1].name)} Alive`
+        : `🌟 +${sorted[1].bonus} Included`
+} •
         ${getRankChangeText(sorted[1])}
     </div>
 </div>
@@ -6401,6 +7163,15 @@ document.getElementById("centre-shakeup-sub").innerHTML =
 
         let flashClass = p.duelState ? `duel-${p.duelState}` : "";
 
+if(
+    isSurvivalMode() &&
+    getAliveTeams(p.name)===0
+){
+
+    flashClass += " eliminated";
+
+}
+
         tbody.innerHTML += `<tr class="${flashClass}">
             <td>
                 <span class="medal-badge ${badgeClass}">${rankContent}</span>
@@ -6412,7 +7183,15 @@ document.getElementById("centre-shakeup-sub").innerHTML =
             <td style="text-align:center;">${p.draws}</td>
             <td style="text-align:center;">${p.goals}</td>
             <td style="text-align:center;">${p.cs}</td>
-            <td style="text-align:center;"><span class="bonus-chip">+${p.bonus}</span></td>
+            <td style="text-align:center;">
+    ${
+        isSurvivalMode()
+
+        ? `<span class="bonus-chip">${getAliveTeams(p.name)}</span>`
+
+        : `<span class="bonus-chip">+${p.bonus}</span>`
+    }
+</td>
             <td style="text-align:center;"><span class="points-chip">${p.pts}</span></td>
         </tr>`;
     });
@@ -7175,10 +7954,11 @@ if (f.round !== activeRound) {
     renderRivalryMatrix(fixtures);
 
     function renderAll() {
+        calculateScores();
         renderDashboard();
         renderFixtures();
-        renderQuickUpdate();
-        calculateScores();
+        console.log("Round of 32 generated.");
+        renderQuickUpdate();        
         renderHallOfInfamy();
         renderRivalryMatrix(fixtures);
         rebuildChronicle();
@@ -7602,6 +8382,14 @@ buildThirdPlaceTable();
 
 updateQualificationStatus();
 
+buildQualifiedTeams();
+
+generateRoundOf32Fixtures();
+
+updateKnockoutBracket();
+
+buildAliveTable();
+
     Object.keys(tournament.groups).forEach(group => {
 
         console.group(`Group ${group}`);
@@ -7671,6 +8459,19 @@ Object.values(tournament.finalGroups).forEach(group => {
 console.groupEnd();
 
     });
+
+    console.group("Qualified Teams");
+
+console.log("Group Winners");
+console.table(tournament.qualifiedTeams.winners);
+
+console.log("Group Runners-Up");
+console.table(tournament.qualifiedTeams.runnersUp);
+
+console.log("Best Third-Placed Teams");
+console.table(tournament.qualifiedTeams.bestThird);
+
+console.groupEnd();
 
     console.log("======================================");
     console.log(" DIAGNOSTICS COMPLETE");
