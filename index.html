@@ -6489,13 +6489,21 @@ function buildScoresFromFixtures(fixturesList) {
                 }
             }
 
-            if (homeMult === 2 && scores[f.homeUser]) {
-                scores[f.homeUser].bonus += homeBasePoints;
-            }
+            if (
+    !isSurvivalMode() &&
+    homeMult === 2 &&
+    scores[f.homeUser]
+) {
+    scores[f.homeUser].bonus += homeBasePoints;
+}
 
-            if (awayMult === 2 && scores[f.awayUser]) {
-                scores[f.awayUser].bonus += awayBasePoints;
-            }
+if (
+    !isSurvivalMode() &&
+    awayMult === 2 &&
+    scores[f.awayUser]
+) {
+    scores[f.awayUser].bonus += awayBasePoints;
+}
         }
     });
 
@@ -6583,11 +6591,19 @@ if (aG === 0 && scores[f.homeUser]) {
         }
     }
 }
-if (homeMult === 2 && scores[f.homeUser]) {
+if (
+    !isSurvivalMode() &&
+    homeMult === 2 &&
+    scores[f.homeUser]
+) {
     scores[f.homeUser].bonus += homeBasePoints;
 }
 
-if (awayMult === 2 && scores[f.awayUser]) {
+if (
+    !isSurvivalMode() &&
+    awayMult === 2 &&
+    scores[f.awayUser]
+) {
     scores[f.awayUser].bonus += awayBasePoints;
 }
             }
