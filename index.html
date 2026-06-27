@@ -227,7 +227,17 @@
         .manager-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); position: relative; }
         .manager-card.dimmed { opacity: 0.6; pointer-events: none; background: #f7fafc; }
         .manager-name { font-weight: bold; color: #2c5282; border-bottom: 1px solid #edf2f7; padding-bottom: 4px; margin-bottom: 8px; font-size: 0.9rem; }
-        .team-name { display:flex; align-items:center; gap:6px; flex:1; }
+        .team-name{
+display:flex;
+align-items:center;
+gap:6px;
+flex:1;
+min-width:0;
+}
+.team-label{
+flex:1;
+min-width:0;
+}
         .team-chip { display: flex; justify-content: space-between; align-items: center; background: #f7fafc; padding: 6px 10px; margin-bottom: 4px; border-radius: 4px; font-size: 0.82rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; }
         .team-chip:hover { background: #edf2f7; border-color: #cbd5e0; }
         .team-chip.starred { background: #fefcbf; border-color: #f6e05e; font-weight: bold; }
@@ -551,6 +561,22 @@
     font-weight:700;
     white-space:nowrap;
 }
+.qualification-legend{
+display:flex;
+align-items:center;
+gap:14px;
+margin-right:14px;
+font-size:.72rem;
+font-weight:600;
+color:#64748b;
+}
+
+.qualification-legend span{
+display:flex;
+align-items:center;
+gap:5px;
+white-space:nowrap;
+}
         .fixture-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #edf2f7; background:#fff; border-radius:6px; margin-bottom:6px; box-shadow:0 1px 3px rgba(0,0,0,0.02); font-size:0.88rem; }
         .completed { background-color: #f0fff4; border-left: 4px solid #38a169; }
         .upcoming { border-left: 4px solid #ed8936; }
@@ -592,12 +618,36 @@
         .score-inputs input { width: 30px; text-align: center; padding: 3px; border: 1px solid #cbd5e0; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
         .score-inputs input:disabled { background: #edf2f7; color: #4a5568; border-color: #e2e8f0; cursor: not-allowed; }
         .qualification-dot{
+width:10px;
+height:10px;
+border-radius:50%;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-font-size:0.95rem;
 margin:0 4px;
+flex-shrink:0;
 }
+
+.qualification-dot.qualified{
+background:#22c55e;
+}
+
+.qualification-dot.qualifying{
+background:#3b82f6;
+}
+
+.qualification-dot.alive{
+background:#f59e0b;
+}
+
+.qualification-dot.eliminated{
+background:#ef4444;
+}
+
+.qualification-dot.unknown{
+background:#94a3b8;
+}
+
         .family-h2h { width:180px; display:flex; align-items:center; justify-content:center; gap:6px; font-weight:700; font-size:0.72rem; color:#1a365d; background:#edf2ff; padding:6px 10px; border-radius:999px; border-left:4px solid #3182ce; white-space:nowrap; }
         .Favourite-badge { font-size:0.7rem; background:#d69e2e; color:white; padding:1px 6px; border-radius:3px; display:inline-flex; align-items:center; }
         .Favourite-badge.left { order:-1; margin-right:6px; }
@@ -605,7 +655,21 @@ margin:0 4px;
 
         .team-name {display: flex; align-items: center; gap: 6px;}
         .flag-icon {width: 24px; height: 18px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 1px 3px rgba(0,0,0,0.3);}
-        .rank-pill { display:inline-block; margin-left:6px; padding:2px 7px; border-radius:999px; background:#edf2f7; color:#4a5568; font-size:0.72rem; font-weight:700; vertical-align:middle; }
+        .rank-pill{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:34px;
+height:20px;
+margin-left:6px;
+padding:0;
+border-radius:999px;
+background:#edf2f7;
+color:#4a5568;
+font-size:0.72rem;
+font-weight:700;
+flex-shrink:0;
+}
         .team-badge { margin-right:4px; }        
         .fixture-flag { width:28px; height:20px; border-radius:3px; border:1px solid rgba(255,255,255,0.2); box-shadow:0 1px 3px rgba(0,0,0,0.3); object-fit:cover; flex-shrink:0; }   
         .fixture-home-team { display:flex; justify-content:flex-end; align-items:center; gap:4px; width:100%; }
@@ -1271,19 +1335,41 @@ border:1px solid #f5c2c7;
  <!--<button class="lock-btn" id="lock-button" onclick="lockCurrentPlayerTeam()" disabled>🔒 Lock Selection</button>-->
 </div>
 <div id="team-content" style="display:none;">
-    <div class="rules-box" style="background: #ebf8ff; border: 1px solid #bee3f8; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #2c5282;">
-    <strong style="display:block; margin-bottom: 5px;">💡 Favourite team Rules:</strong>
-    <ul style="margin: 0; padding-left: 20px;">
-       <!-- <li>You may select <strong>only one</strong> team to Star.</li>-->
-        <li>Your Starred favourite team's goals, wins, and clean sheets are <strong>doubled</strong> (x2) in the scoreboard.</li>
-        <!--<li>Once you click <strong>"Lock My Selection"</strong>, your choice is permanent for this device.</li>-->
-    </ul>
-    </div>
+<div class="rules-box" style="background:#ebf8ff; border:1px solid #bee3f8; padding:12px; border-radius:8px; margin:15px 0; font-size:0.85rem; color:#2c5282;">
+
+<strong style="display:block; margin-bottom:8px;">
+📘 Team Guide
+</strong>
+
+<ul style="margin:0; padding-left:20px;">
+
+<li>
+⭐ <strong>Favourite Team:</strong> Goals, wins and clean sheets earned by your starred team are worth <strong>double points (x2)</strong>.
+</li>
+
+<li style="margin-top:10px;">
+🚦 <strong>Round of 32 Qualification</strong>
+</li>
+
+<li><span class="qualification-dot qualified"></span> <strong>Confirmed</strong> — Team has mathematically secured a place in the Round of 32.</li>
+
+<li><span class="qualification-dot qualifying"></span> <strong>Currently Qualifying</strong> — Team is currently in a qualifying position but can still be overtaken.</li>
+
+<li><span class="qualification-dot alive"></span> <strong>Still Alive</strong> — Team can still qualify with its remaining fixture(s).</li>
+
+<li><span class="qualification-dot eliminated"></span> <strong>Eliminated</strong> — Team can no longer qualify for the Round of 32.</li>
+
+</ul>
+
+</div>
 
     <div class="config-grid" id="star-configurator">
-        <!-- Cards generated dynamically -->
-    </div>
-</div>    
+    <!-- Cards generated dynamically -->
+</div>
+
+</div> <!-- team-content -->
+    
+   
 <div id="tournament-centre">
 
     <div class="dashboard-header"
@@ -1506,8 +1592,7 @@ border:1px solid #f5c2c7;
         </h3>
 
     </div>
-
-    <div id="scoreboard-content">
+<div id="scoreboard-content">
 
 <div class="rules-box-header section-title-row"
      onclick="toggleSection('score-rules','score-rules-arrow')"
@@ -1515,7 +1600,7 @@ border:1px solid #f5c2c7;
 
     <span>📊 Scoring Rules</span>
 
-<span id="score-rules-arrow">▶</span>
+    <span id="score-rules-arrow">▶</span>
 
 </div>
 
@@ -1588,7 +1673,6 @@ border:1px solid #f5c2c7;
 </div>
 
 </div> <!-- fixtures-content -->
-
 </div>
 
 <script>
@@ -2277,23 +2361,51 @@ function updateQualificationStatus() {
     });
 
     // -------------------------------------------------
-    // Group Winners & Runners-Up
-    // -------------------------------------------------
+// Group Winners & Runners-Up
+// -------------------------------------------------
 
-    Object.values(tournament.finalGroups).forEach(group => {
+Object.values(tournament.finalGroups).forEach(group => {
 
-        group.forEach(team => {
+    const groupFinished =
+        group.every(team => team.played === 3);
 
-            if (team.groupPosition <= 2) {
+    group.forEach(team => {
 
-                team.qualificationStatus = "GUARANTEED";
-                team.qualificationReason = `Group ${team.groupPosition}`;
+        if (team.groupPosition > 2)
+            return;
 
-            }
+        if (groupFinished) {
 
-        });
+            team.qualificationStatus = "GUARANTEED";
+            team.qualificationReason = `Finished Group ${team.groupPosition}`;
+
+            return;
+
+        }
+
+        const threats =
+            group.filter(other =>
+                other.team !== team.team &&
+                getMaximumPoints(other) > team.pts
+            );
+
+        if (threats.length === 0) {
+
+            team.qualificationStatus = "GUARANTEED";
+            team.qualificationReason =
+                "Mathematically qualified";
+
+        } else {
+
+            team.qualificationStatus = "CURRENTLY_QUALIFYING";
+            team.qualificationReason =
+                `Currently ${team.groupPosition}${team.groupPosition===1?"st":"nd"} in group`;
+
+        }
 
     });
+
+});
 
     // -------------------------------------------------
     // Third Place Teams
@@ -2908,7 +3020,7 @@ function hasBadge(team, text) {
 function renderTeamAssignment(team) {
 
     const badge = getPrimaryBadge(team);
-
+const qualification = getQualificationDot(team);
     return `
         ${badge ? badge.split(" ")[0] + " " : ""}
         ${team}
@@ -4145,12 +4257,11 @@ function getQualificationDot(teamName) {
 
         return {
 
-            icon:
-                team.qualificationStatus === "GUARANTEED" ? "🟢" :
-                team.qualificationStatus === "CURRENTLY_QUALIFYING" ? "🔵" :
-                team.qualificationStatus === "STILL_ALIVE" ? "🟡" :
-                team.qualificationStatus === "ELIMINATED" ? "🔴" :
-                "⚪",
+            className:
+                team.qualificationStatus === "GUARANTEED" ? "qualified" :
+                team.qualificationStatus === "CURRENTLY_QUALIFYING" ? "qualifying" :
+                team.qualificationStatus === "STILL_ALIVE" ? "alive" :
+                "eliminated",
 
             status: team.qualificationStatus,
 
@@ -4162,7 +4273,7 @@ function getQualificationDot(teamName) {
 
     return {
 
-        icon: "⚪",
+        className: "unknown",
 
         status: null,
 
@@ -5281,13 +5392,13 @@ function getQualificationDot(teamName) {
     "away": "Saudi Arabia",
     "homeUser": "Sue",
     "awayUser": "Tom",
-    "homeScore": "",
-    "awayScore": "",
+    "homeScore": 0,
+    "awayScore": 0,
     "homeRedCards": 0,
 "awayRedCards": 0,
 "homeOwnGoals": 0,
 "awayOwnGoals": 0,
-"status": "upcoming"
+"status": "completed"
 },
 {
     "id": 64,
@@ -5298,13 +5409,13 @@ function getQualificationDot(teamName) {
     "away": "Spain",
     "homeUser": "Paul",
     "awayUser": "Sam",
-    "homeScore": "",
-    "awayScore": "",
-    "homeRedCards": 0,
+    "homeScore": 0,
+    "awayScore": 1,
+    "homeRedCards": 1,
 "awayRedCards": 0,
 "homeOwnGoals": 0,
 "awayOwnGoals": 0,
-"status": "upcoming"
+"status": "completed"
 },
 {
     "id": 65,
@@ -5493,13 +5604,16 @@ function getQualificationDot(teamName) {
                 chip.id = `chip-${user}-${team.replace(/[^a-zA-Z0-9]/g, '_')}`;
         const flagCode = flagCodes[team]; 
                 const badge = getPrimaryBadge(team);
+                const qualification = getQualificationDot(team);
 
 chip.innerHTML = `
     <span class="team-name">
         <span class="rank-pill">#${getTeamRank(team)}</span>
         <img class="flag-icon" src="https://flagcdn.com/${flagCode}.svg" alt="${team}">
+        <span class="qualification-dot ${qualification.className}" title="${qualification.reason || ""}"></span>
+        <span class="team-label">${team}</span>
         ${badge ? `<span class="team-badge">${badge.split(" ")[0]}</span>` : ""}
-        ${team}
+        
     </span>
     <span class="star-icon">${isStarred ? '★' : '☆'}</span>
 `;
@@ -6909,7 +7023,23 @@ roundDiv.innerHTML = `
                    </span>`
                 : ""
             }
+${
+currentRound === 3
+?
+`<div class="qualification-legend">
 
+<span><span class="qualification-dot qualified"></span>Confirmed</span>
+
+<span><span class="qualification-dot qualifying"></span>Qualifying</span>
+
+<span><span class="qualification-dot alive"></span>Alive</span>
+
+<span><span class="qualification-dot eliminated"></span>Eliminated</span>
+
+</div>`
+:
+""
+}
             <span id="round-arrow-${currentRound}"
                   class="round-arrow">
                 ${currentRound === activeRound ? "▼" : "▶"}
@@ -6939,7 +7069,7 @@ let homeDisplay = `<span class="fixture-home-team">
 <span class="rank-pill">#${getTeamRank(f.home)}</span>
 <span>${f.home}</span>
 ${homeBadge ? `<span class="team-badge">${homeBadge.split(" ")[0]}</span>` : ""}
-<span class="qualification-dot" title="${homeQualification.reason || ""}">${homeQualification.icon}</span>
+<span class="qualification-dot ${homeQualification.className}" title="${homeQualification.reason || ""}"></span></span>
 <img class="fixture-flag" src="https://flagcdn.com/${homeFlag}.svg" alt="${f.home}">
 </span>`;
 
@@ -6947,7 +7077,7 @@ const awayQualification = getQualificationDot(f.away);
 
 let awayDisplay = `<span class="fixture-away-team">
     <img class="fixture-flag" src="https://flagcdn.com/${awayFlag}.svg" alt="${f.away}">
-    <span class="qualification-dot" title="${awayQualification.reason || ""}">${awayQualification.icon}</span>
+    <span class="qualification-dot ${awayQualification.className}" title="${awayQualification.reason || ""}"></span>
     ${awayBadge ? `<span class="team-badge">${awayBadge.split(" ")[0]}</span>` : ""}
     <span>${f.away}</span>
     <span class="rank-pill">#${getTeamRank(f.away)}</span>
