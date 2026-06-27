@@ -591,7 +591,13 @@
         .score-inputs { width:120px; display:flex; justify-content:center; align-items:center; gap:4px; }
         .score-inputs input { width: 30px; text-align: center; padding: 3px; border: 1px solid #cbd5e0; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
         .score-inputs input:disabled { background: #edf2f7; color: #4a5568; border-color: #e2e8f0; cursor: not-allowed; }
-        
+        .qualification-dot{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+font-size:0.95rem;
+margin:0 4px;
+}
         .family-h2h { width:180px; display:flex; align-items:center; justify-content:center; gap:6px; font-weight:700; font-size:0.72rem; color:#1a365d; background:#edf2ff; padding:6px 10px; border-radius:999px; border-left:4px solid #3182ce; white-space:nowrap; }
         .Favourite-badge { font-size:0.7rem; background:#d69e2e; color:white; padding:1px 6px; border-radius:3px; display:inline-flex; align-items:center; }
         .Favourite-badge.left { order:-1; margin-right:6px; }
@@ -1711,7 +1717,782 @@ border:1px solid #f5c2c7;
 
 
 };
+
+// =====================================================
+// TOURNAMENT INTELLIGENCE ENGINE
+// Engine 1 - Tournament Core
+// =====================================================
+
+const tournament = {
+
+    version: "1.0",
+
+    phase: "GROUP_STAGE",
+
+    groups: {
+
+    A: ["Mexico", "South Africa", "South Korea", "Czechia"],
+
+    B: ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"],
+
+    C: ["Brazil", "Morocco", "Haiti", "Scotland"],
+
+    D: ["USA", "Paraguay", "Australia", "Turkey"],
+
+    E: ["Germany", "Curacao", "Ivory Coast", "Ecuador"],
+
+    F: ["Netherlands", "Japan", "Sweden", "Tunisia"],
+
+    G: ["Belgium", "Egypt", "Iran", "New Zealand"],
+
+    H: ["Spain", "Cape Verde", "Saudi Arabia", "Uruguay"],
+
+    I: ["France", "Senegal", "Iraq", "Norway"],
+
+    J: ["Argentina", "Algeria", "Austria", "Jordan"],
+
+    K: ["Portugal", "DR Congo", "Uzbekistan", "Colombia"],
+
+    L: ["England", "Croatia", "Ghana", "Panama"]
+
+},
+
+    standings: {},
+
+    finalGroups: {},
+
+    thirdPlaceTable: {},
+
+    qualification: {},
+
+    bestThird: [],
+
+    qualified: [],
+
+    eliminated: [],
+
+    bracket: {},
+
+    timeline: {}
+
+};
+
+function getTeamGroup(team) {
+
+    for (const [group, teams] of Object.entries(tournament.groups)) {
+
+        if (teams.includes(team)) {
+
+            return group;
+
+        }
+
+    }
+
+    return null;
+
+}
+
+function getGroupTeams(group) {
+
+    return tournament.groups[group] || [];
+
+}
+
+function getGroupFixtures(group) {
+
+    const teams = getGroupTeams(group);
+
+    return fixtures.filter(fixture =>
+        teams.includes(fixture.home) &&
+        teams.includes(fixture.away)
+    );
+
+}
+
+function validateTournamentGroups() {
+
+    const allTeams = Object.values(tournament.groups).flat();
+
+    const duplicates = allTeams.filter(
+        (team, index) =>
+            allTeams.indexOf(team) !== index
+    );
+
+    const missing = Object.keys(teamInfo).filter(
+        team => !allTeams.includes(team)
+    );
+
+    console.log("Tournament Validation");
+
+    console.log("Total Teams:", allTeams.length);
+
+    console.log("Duplicate Teams:", duplicates);
+
+    console.log("Missing Teams:", missing);
+
+}
+
+// =====================================================
+// ENGINE 2 - STANDINGS ENGINE
+// =====================================================
+
+function calculateStandings(teams, fixtures) {
+
+    const standings = {};
+
+    teams.forEach(team => {
+
+        standings[team] = {
+
+    team,
+
+    played: 0,
+    won: 0,
+    drawn: 0,
+    lost: 0,
+
+    gf: 0,
+    ga: 0,
+    gd: 0,
+
+    pts: 0,
+
+    fairPlay: 0
+
+};
+
+    });
+
+    fixtures.forEach(fixture => {
+
+        if (fixture.status !== "completed") return;
+
+        const home = standings[fixture.home];
+        const away = standings[fixture.away];
+
+        if (!home || !away) return;
+
+        home.played++;
+        away.played++;
+
+        home.gf += fixture.homeScore;
+        home.ga += fixture.awayScore;
+
+        away.gf += fixture.awayScore;
+        away.ga += fixture.homeScore;
+
+        if (fixture.homeScore > fixture.awayScore) {
+
+            home.won++;
+            away.lost++;
+
+            home.pts += 3;
+
+        }
+
+        else if (fixture.homeScore < fixture.awayScore) {
+
+            away.won++;
+            home.lost++;
+
+            away.pts += 3;
+
+        }
+
+        else {
+
+            home.drawn++;
+            away.drawn++;
+
+            home.pts++;
+            away.pts++;
+
+        }
+
+    });
+
+    Object.values(standings).forEach(team => {
+
+        team.gd = team.gf - team.ga;
+
+    });
+
+    return Object.values(standings);
+
+}
+
+// =====================================================
+// ENGINE 2.1 - GROUP STANDINGS WRAPPER
+// =====================================================
+
+function calculateGroupStandings(group) {
+
+    return calculateStandings(
+
+        getGroupTeams(group),
+
+        getGroupFixtures(group)
+
+    );
+
+}
+
+// =====================================================
+// ENGINE 2.5 - STANDINGS CACHE
+// =====================================================
+
+function rebuildTournamentStandings() {
+
+    tournament.standings = {};
+
+    Object.keys(tournament.groups).forEach(group => {
+
+        tournament.standings[group] =
+            calculateGroupStandings(group);
+
+    });
+
+}
+
+function getGroupStandings(group) {
+
+    return tournament.standings[group] || [];
+
+}
+
+// =====================================================
+// ENGINE 2.7 - BASIC TABLE SORTER
+// =====================================================
+
+function getSortedGroupStandings(group) {
+
+    return [...getGroupStandings(group)].sort((a, b) => {
+
+        // Points
+        if (b.pts !== a.pts)
+            return b.pts - a.pts;
+
+        // Goal Difference
+        if (b.gd !== a.gd)
+            return b.gd - a.gd;
+
+        // Goals Scored
+        if (b.gf !== a.gf)
+            return b.gf - a.gf;
+
+        // Alphabetical (temporary)
+        return a.team.localeCompare(b.team);
+
+    });
+
+}
+
+// =====================================================
+// ENGINE 3.1 - TIE DETECTION
+// =====================================================
+
+function detectPointTies(group) {
+
+    const standings = getSortedGroupStandings(group);
+
+    const tiedGroups = [];
+
+    let currentTie = [];
+
+    for (let i = 0; i < standings.length; i++) {
+
+        const current = standings[i];
+        const next = standings[i + 1];
+
+        currentTie.push(current.team);
+
+        if (!next || current.pts !== next.pts) {
+
+            if (currentTie.length > 1) {
+
+                tiedGroups.push([...currentTie]);
+
+            }
+
+            currentTie = [];
+
+        }
+
+    }
+
+    return tiedGroups;
+
+}
+
+// =====================================================
+// ENGINE 3.2 - HEAD TO HEAD FIXTURE ENGINE
+// =====================================================
+
+function getHeadToHeadFixtures(teams) {
+
+    return fixtures.filter(fixture => {
+
+        if (fixture.status !== "completed") return false;
+
+        return teams.includes(fixture.home) &&
+               teams.includes(fixture.away);
+
+    });
+
+}
+
+// =====================================================
+// ENGINE 3.3 - MINI LEAGUE ENGINE
+// =====================================================
+
+function calculateMiniLeague(teams) {
+
+    return calculateStandings(
+
+        teams,
+
+        getHeadToHeadFixtures(teams)
+
+    );
+
+}
+
+// =====================================================
+// ENGINE 3.4 - FIFA TIE RESOLVER
+// =====================================================
+
+function resolveFifaTie(group, tiedTeams) {
+
+    const overallStandings = getSortedGroupStandings(group);
+
+    const miniLeague = calculateMiniLeague(tiedTeams);
+
+    const overallLookup = {};
+
+    overallStandings.forEach(team => {
+
+        overallLookup[team.team] = team;
+
+    });
+
+    return [...miniLeague].sort((a, b) => {
+
+        // ---------------------------------
+        // STEP 1 - HEAD TO HEAD
+        // ---------------------------------
+
+        if (b.pts !== a.pts) return b.pts - a.pts;
+
+        if (b.gd !== a.gd) return b.gd - a.gd;
+
+        if (b.gf !== a.gf) return b.gf - a.gf;
+
+        // ---------------------------------
+        // STEP 2 - OVERALL GROUP
+        // ---------------------------------
+
+        const overallA = overallLookup[a.team];
+        const overallB = overallLookup[b.team];
+
+        if (overallB.gd !== overallA.gd)
+            return overallB.gd - overallA.gd;
+
+        if (overallB.gf !== overallA.gf)
+            return overallB.gf - overallA.gf;
+
+        // ---------------------------------
+        // STEP 3 - FAIR PLAY
+        // (temporary bypass)
+        // ---------------------------------
+
+        // Engine 3.5 goes here
+
+        // ---------------------------------
+        // STEP 4 - FIFA WORLD RANKING
+        // ---------------------------------
+
+        return teamInfo[a.team].rank - teamInfo[b.team].rank;
+
+    });
+
+}
+
+// =====================================================
+// ENGINE 3.4 - RESOLVED GROUP STANDINGS
+// =====================================================
+
+function getResolvedGroupStandings(group) {
+
+    let standings = getSortedGroupStandings(group);
+
+    const ties = detectPointTies(group);
+
+    ties.forEach(tiedTeams => {
+
+        const resolvedOrder =
+            resolveFifaTie(group, tiedTeams);
+
+        const lookup = {};
+
+        resolvedOrder.forEach((team, index) => {
+
+            lookup[team.team] = index;
+
+        });
+
+        standings.sort((a, b) => {
+
+            const aTied = tiedTeams.includes(a.team);
+            const bTied = tiedTeams.includes(b.team);
+
+            if (aTied && bTied) {
+
+                return lookup[a.team] - lookup[b.team];
+
+            }
+
+            return 0;
+
+        });
+
+    });
+
+    return standings;
+
+}
+
+// =====================================================
+// ENGINE 3.5 - FINAL GROUP TABLES
+// =====================================================
+
+function buildFinalGroupTables() {
+
+    tournament.finalGroups = {};
+
+    Object.keys(tournament.groups).forEach(group => {
+
+        tournament.finalGroups[group] =
+            getResolvedGroupStandings(group)
+                .map((team, index) => ({
+
+                    ...team,
+
+                    group,
+
+                    groupPosition: index + 1,
+
+                    qualified: null,
+
+                    qualificationReason: null
+
+                }));
+
+    });
+
+}
+
+// =====================================================
+// ENGINE 3.6 - LIVE THIRD PLACE TABLE
+// =====================================================
+
+function buildThirdPlaceTable() {
+
+    const thirdPlacedTeams = [];
+
+    Object.values(tournament.finalGroups).forEach(group => {
+
+        const thirdPlace =
+            group.find(
+                team => team.groupPosition === 3
+            );
+
+        if (thirdPlace) {
+
+            thirdPlacedTeams.push({
+                ...thirdPlace
+            });
+
+        }
+
+    });
+
+    tournament.thirdPlaceTable =
+        thirdPlacedTeams.sort((a, b) => {
+
+            // Points
+
+            if (b.pts !== a.pts)
+                return b.pts - a.pts;
+
+            // Goal Difference
+
+            if (b.gd !== a.gd)
+                return b.gd - a.gd;
+
+            // Goals Scored
+
+            if (b.gf !== a.gf)
+                return b.gf - a.gf;
+
+            // Fair Play
+            // (temporary bypass)
+
+            // FIFA Ranking
+
+            return (
+                teamInfo[a.team].rank -
+                teamInfo[b.team].rank
+            );
+
+        })
+        .map((team, index) => ({
+
+            ...team,
+
+            thirdPlacePosition:
+                index + 1
+
+        }));
+
+}
+
+// =====================================================
+// ENGINE 3.7 - QUALIFICATION STATUS
+// =====================================================
+
+function updateQualificationStatus() {
+
+    // Reset every team
+
+    Object.values(tournament.finalGroups).forEach(group => {
+
+        group.forEach(team => {
+
+            team.qualificationStatus = null;
+            team.qualificationReason = null;
+
+        });
+
+    });
+
+    // -------------------------------------------------
+    // Group Winners & Runners-Up
+    // -------------------------------------------------
+
+    Object.values(tournament.finalGroups).forEach(group => {
+
+        group.forEach(team => {
+
+            if (team.groupPosition <= 2) {
+
+                team.qualificationStatus = "GUARANTEED";
+                team.qualificationReason = `Group ${team.groupPosition}`;
+
+            }
+
+        });
+
+    });
+
+    // -------------------------------------------------
+    // Third Place Teams
+    // -------------------------------------------------
+
+    tournament.thirdPlaceTable.forEach((team, index) => {
+
+        const actualTeam =
+            tournament.finalGroups[team.group]
+                .find(t => t.team === team.team);
+
+        if (!actualTeam) return;
+
+        const matchesRemaining =
+            3 - actualTeam.played;
+            const analysis =
+    analyseThirdPlaceTeam(actualTeam);
+
+        if (analysis.currentlyQualifying) {
+
+    actualTeam.qualificationStatus =
+        isGuaranteed(actualTeam)
+            ? "GUARANTEED"
+            : "CURRENTLY_QUALIFYING";
+
+    actualTeam.qualificationReason =
+        `${analysis.currentPosition}th in Third Place Table`;
+
+}
+
+        else {
+
+            if (analysis.canStillQualify) {
+
+    actualTeam.qualificationStatus =
+        "STILL_ALIVE";
+
+    actualTeam.qualificationReason =
+        "Can still reach Top 8";
+
+}
+
+            else {
+
+                actualTeam.qualificationStatus =
+                    "ELIMINATED";
+
+                actualTeam.qualificationReason =
+                    "Finished outside Top 8";
+
+            }
+
+        }
+
+    });
+
+    // -------------------------------------------------
+    // Fourth Place Teams
+    // -------------------------------------------------
+
+    Object.values(tournament.finalGroups).forEach(group => {
+
+        group.forEach(team => {
+
+            if (team.groupPosition !== 4)
+                return;
+
+            const matchesRemaining =
+                3 - team.played;
+
+            if (matchesRemaining > 0) {
+
+                team.qualificationStatus =
+                    "STILL_ALIVE";
+
+                team.qualificationReason =
+                    "Group still in progress";
+
+            }
+
+            else {
+
+                team.qualificationStatus =
+                    "ELIMINATED";
+
+                team.qualificationReason =
+                    "Bottom of group";
+
+            }
+
+        });
+
+    });
+
+}
+
+
 // Helpers
+// =====================================================
+// ENGINE 3.7 HELPERS
+// =====================================================
+
+function getRemainingMatches(team) {
+
+    return Math.max(0, 3 - team.played);
+
+}
+
+function getMaximumPoints(team) {
+
+    return team.pts + (getRemainingMatches(team) * 3);
+
+}
+
+function getThirdPlaceThreats(team) {
+
+    return tournament.thirdPlaceTable
+        .filter(other => {
+
+            if (other.team === team.team)
+                return false;
+
+            return getMaximumPoints(other) >= team.pts;
+
+        })
+        .map(other => ({
+
+            team: other.team,
+
+            currentPoints: other.pts,
+
+            maximumPoints: getMaximumPoints(other),
+
+            gamesRemaining: getRemainingMatches(other),
+
+            currentGD: other.gd,
+
+            currentGF: other.gf
+
+        }));
+
+}
+
+function analyseThirdPlaceTeam(team) {
+
+    const threats =
+        getThirdPlaceThreats(team);
+
+    return {
+
+        team: team.team,
+
+        group: team.group,
+
+        currentPoints: team.pts,
+
+        maximumPoints: getMaximumPoints(team),
+
+        gamesRemaining:
+            getRemainingMatches(team),
+
+        currentPosition:
+            team.thirdPlacePosition,
+
+        threatCount:
+            threats.length,
+
+        threats,
+
+        currentlyQualifying:
+            team.thirdPlacePosition <= 8,
+
+        teamsThatCanFinishAbove:
+    threats.filter(threat =>
+        threat.maximumPoints >=
+        team.pts
+    ).length,
+
+guaranteed:
+    false,
+
+canStillQualify:
+    getMaximumPoints(team) >=
+    tournament.thirdPlaceTable[7].pts
+
+    };
+
+}
+
+function isGuaranteed(team) {
+
+    const analysis =
+    analyseThirdPlaceTeam(team);
+
+return (
+    analysis.teamsThatCanFinishAbove === 0
+);
+
+}
 
 function getPlayerPosition(player, scores) {
 
@@ -3354,6 +4135,43 @@ function getFavouriteTeamInFixture(fixture) {
 
 }
 
+function getQualificationDot(teamName) {
+
+    for (const group of Object.values(tournament.finalGroups)) {
+
+        const team = group.find(t => t.team === teamName);
+
+        if (!team) continue;
+
+        return {
+
+            icon:
+                team.qualificationStatus === "GUARANTEED" ? "🟢" :
+                team.qualificationStatus === "CURRENTLY_QUALIFYING" ? "🔵" :
+                team.qualificationStatus === "STILL_ALIVE" ? "🟡" :
+                team.qualificationStatus === "ELIMINATED" ? "🔴" :
+                "⚪",
+
+            status: team.qualificationStatus,
+
+            reason: team.qualificationReason
+
+        };
+
+    }
+
+    return {
+
+        icon: "⚪",
+
+        status: null,
+
+        reason: null
+
+    };
+
+}
+
 //Helper End//
     // Tracks starred selections globally, loads from local device storage if previously saved
     let starredTeams = {
@@ -3382,6 +4200,7 @@ function getFavouriteTeamInFixture(fixture) {
             "Ivory Coast"
         ]
     };
+    
     // Tracks if specific user locked their choice on this device
     let lockedUsers = {
         Sam: false,
@@ -4428,13 +5247,13 @@ function getFavouriteTeamInFixture(fixture) {
     "away": "France",
     "homeUser": "Sam",
     "awayUser": "Martin",
-    "homeScore": "",
-    "awayScore": "",
+    "homeScore": 1,
+    "awayScore": 4,
     "homeRedCards": 0,
 "awayRedCards": 0,
 "homeOwnGoals": 0,
 "awayOwnGoals": 0,
-"status": "upcoming"
+"status": "completed"
 },
 {
     "id": 62,
@@ -4445,13 +5264,13 @@ function getFavouriteTeamInFixture(fixture) {
     "away": "Iraq",
     "homeUser": "Jenni",
     "awayUser": "Elissa",
-    "homeScore": "",
-    "awayScore": "",
+    "homeScore": 5,
+    "awayScore": 0,
     "homeRedCards": 0,
-"awayRedCards": 0,
+"awayRedCards": 1,
 "homeOwnGoals": 0,
 "awayOwnGoals": 0,
-"status": "upcoming"
+"status": "completed"
 },
 {
     "id": 63,
@@ -4640,17 +5459,6 @@ function getFavouriteTeamInFixture(fixture) {
         renderFixtures();
     }
 
-   // function initLandingPage() {
-    //    let container = document.getElementById("profile-selectors");
-     //   container.innerHTML = "";
-      //  Object.keys(assignments).forEach(user => {
-       //     let btn = document.createElement("button");
-        //    btn.className = `profile-btn ${activePlayer === user ? 'active' : ''}`;
-         //   btn.innerText = user + (lockedUsers[user] ? " (Locked 🔒)" : "");
-          //  btn.onclick = () => selectProfile(user);
-           // container.appendChild(btn);
-       // });
-   // }
 
     function selectProfile(user) {
         activePlayer = user;
@@ -4663,15 +5471,10 @@ function getFavouriteTeamInFixture(fixture) {
         let container = document.getElementById("star-configurator");
         container.innerHTML = "";
         
-       // let lockBtn = document.getElementById("lock-button");
+      
         if (activePlayer) {
              document.getElementById("dashboard-section").innerText = "🌟 Team Assignments and Favourite teams";
-      //      document.getElementById("dashboard-title").innerText = `🌟 ${activePlayer}'s Selection Screen`;
-       //     lockBtn.disabled = lockedUsers[activePlayer];
-       //     lockBtn.innerText = lockedUsers[activePlayer] ? "🔒 Selection Locked In" : "🔒 Lock My Selection";
-       // } else {
-           
-        //    lockBtn.disabled = true;
+      
         }
 
         Object.keys(assignments).forEach(user => {
@@ -4736,14 +5539,6 @@ chip.innerHTML = `
         renderFixtures();
     }
 
-   // function lockCurrentPlayerTeam() {
-   //    if (!isAdmin) return; // Only Admin can lock/unlock choices 
-   //    if (!activePlayer) return; 
-       
-   //    lockedUsers[activePlayer] = true; 
-      // initLandingPage(); 
-   //    renderDashboard(); 
-   // }
 function buildScoresFromFixtures(fixturesList) {
 
     let scores = {
@@ -6137,13 +6932,27 @@ roundDiv.innerHTML = `
             let homeBadge = getPrimaryBadge(f.home);
 let awayBadge = getPrimaryBadge(f.away);
 
+const homeQualification = getQualificationDot(f.home);
+
 let homeDisplay = `<span class="fixture-home-team">
     ${homeIsStarred ? "🌟 " : ""}
-    ${homeBadge ?`<span class="team-badge">${homeBadge.split(" ")[0]}</span>` : ""}     <span>${f.home}</span>     <span class="rank-pill">#${getTeamRank(f.home)}</span>     <img class="fixture-flag" src="https://flagcdn.com/${homeFlag}.svg" alt="${f.home}"> </span>`;
+<span class="rank-pill">#${getTeamRank(f.home)}</span>
+<span>${f.home}</span>
+${homeBadge ? `<span class="team-badge">${homeBadge.split(" ")[0]}</span>` : ""}
+<span class="qualification-dot" title="${homeQualification.reason || ""}">${homeQualification.icon}</span>
+<img class="fixture-flag" src="https://flagcdn.com/${homeFlag}.svg" alt="${f.home}">
+</span>`;
 
-let awayDisplay = `<span class="fixture-away-team">     <img class="fixture-flag" src="https://flagcdn.com/${awayFlag}.svg" alt="${f.away}">
-    ${awayBadge ?`<span class="team-badge">${awayBadge.split(" ")[0]}</span>` : ""}     <span>${f.away}</span>     <span class="rank-pill">#${getTeamRank(f.away)}</span>
-    ${awayIsStarred ? " 🌟" : ""} </span>`;
+const awayQualification = getQualificationDot(f.away);
+
+let awayDisplay = `<span class="fixture-away-team">
+    <img class="fixture-flag" src="https://flagcdn.com/${awayFlag}.svg" alt="${f.away}">
+    <span class="qualification-dot" title="${awayQualification.reason || ""}">${awayQualification.icon}</span>
+    ${awayBadge ? `<span class="team-badge">${awayBadge.split(" ")[0]}</span>` : ""}
+    <span>${f.away}</span>
+    <span class="rank-pill">#${getTeamRank(f.away)}</span>
+    ${awayIsStarred ? " 🌟" : ""}
+</span>`;
 
             let h2hText = f.homeUser === f.awayUser
                 ? `${f.homeUser} (Internal)`
@@ -6275,7 +7084,7 @@ if (f.round !== activeRound) {
         let blob = new Blob([code], {type: "text/plain"});
         let a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = "updated_fixtures.txt";
+        a.download = "championship_data.json";
         a.click();
         alert("Fixtures code downloaded!");
     }
@@ -6640,6 +7449,106 @@ document.getElementById(
     ].filter(Boolean).join(" • ");
 }
 }
+
+// =====================================================
+// TOURNAMENT DIAGNOSTICS
+// =====================================================
+
+function runTournamentDiagnostics() {
+
+    console.clear();
+
+    console.log("======================================");
+    console.log(" TOURNAMENT DIAGNOSTICS");
+    console.log("======================================");
+
+    validateTournamentGroups();
+
+    rebuildTournamentStandings();
+
+buildFinalGroupTables();
+
+buildThirdPlaceTable();
+
+updateQualificationStatus();
+
+    Object.keys(tournament.groups).forEach(group => {
+
+        console.group(`Group ${group}`);
+
+        console.table(
+            getSortedGroupStandings(group)
+        );
+
+        console.log(
+            "Point Ties:",
+            detectPointTies(group)
+        );
+
+        const ties = detectPointTies(group);
+
+ties.forEach(tie => {
+
+    console.table(
+        getHeadToHeadFixtures(tie)
+    );
+
+    console.table(
+    calculateMiniLeague(tie)
+);
+
+console.table(
+    resolveFifaTie(group, tie)
+);
+
+console.table(
+    tournament.finalGroups[group]
+);
+
+console.log(
+    "Official FIFA Table:",
+    tournament.finalGroups[group].map(team => team.team)
+);
+
+});
+
+        console.groupEnd();
+
+console.group("Third Place Table");
+
+console.table(
+    tournament.thirdPlaceTable
+);
+
+console.groupEnd();
+
+console.group("Qualification Status");
+
+Object.values(tournament.finalGroups).forEach(group => {
+
+    console.table(
+        group.map(team => ({
+            team: team.team,
+            group: team.group,
+            position: team.groupPosition,
+            status: team.qualificationStatus,
+            reason: team.qualificationReason
+        }))
+    );
+
+});
+
+console.groupEnd();
+
+    });
+
+    console.log("======================================");
+    console.log(" DIAGNOSTICS COMPLETE");
+    console.log("======================================");
+
+}
+
+runTournamentDiagnostics();
 
 renderAll();
 
