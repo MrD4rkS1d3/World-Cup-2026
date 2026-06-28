@@ -3145,6 +3145,11 @@ function isSurvivalMode(){
         .every(f=>f.status==="completed");
 
 }
+function isKnockoutStage(){
+
+    return isSurvivalMode();
+
+}
 
 function getPlayerPosition(player, scores) {
 
@@ -6111,13 +6116,13 @@ function resolveSlot(slot){
     "away": "Portugal",
     "homeUser": "Jenni",
     "awayUser": "Jenni",
-    "homeScore": "",
-    "awayScore": "",
+    "homeScore": 0,
+    "awayScore": 0,
     "homeRedCards": 0,
 "awayRedCards": 0,
 "homeOwnGoals": 0,
 "awayOwnGoals": 0,
-"status": "upcoming"
+"status": "completed"
 },
 {
     "id": 70,
@@ -6128,13 +6133,13 @@ function resolveSlot(slot){
     "away": "Uzbekistan",
     "homeUser": "Lewis",
     "awayUser": "Sam",
-    "homeScore": "",
-    "awayScore": "",
+    "homeScore": 3,
+    "awayScore": 1,
     "homeRedCards": 0,
 "awayRedCards": 0,
 "homeOwnGoals": 0,
 "awayOwnGoals": 0,
-"status": "upcoming"
+"status": "completed"
 },
 {
     "id": 71,
@@ -7806,9 +7811,25 @@ function getRoundWinner(roundNumber) {
             .map(f => f.round)
             )][0] || 1;
         fixtures.forEach(f => {
+
+    if (
+        f.round >= 4 &&
+        !isSurvivalMode()
+    ) {
+        return;
+    }
            if (f.round !== currentRound) {
 
     currentRound = f.round;
+    
+    if(
+    currentRound >= 4 &&
+    !isKnockoutStage()
+){
+
+    return;
+
+}
 
     const winner = getRoundWinner(currentRound);
 
@@ -7820,9 +7841,20 @@ roundDiv.innerHTML = `
     <div class="round-header-inner"
          onclick="toggleRound(${currentRound})">
 
-        <div class="round-title">
-            📅 Round ${currentRound} Fixtures
-        </div>
+<div class="round-title">
+${
+currentRound===1 ? "📅 Group Stage • Round 1" :
+currentRound===2 ? "📅 Group Stage • Round 2" :
+currentRound===3 ? "📅 Group Stage • Round 3" :
+currentRound===4 ? "🏆 Round of 32" :
+currentRound===5 ? "🏆 Round of 16" :
+currentRound===6 ? "🏆 Quarter-finals" :
+currentRound===7 ? "🏆 Semi-finals" :
+currentRound===8 ? "🥉 Third Place Play-off" :
+currentRound===9 ? "🏆 FIFA World Cup Final" :
+`Round ${currentRound}`
+}
+</div>
 
         <div class="round-right">
 
@@ -7935,6 +7967,12 @@ if (f.round !== activeRound) {
                 <span class="team-right">${awayDisplay}</span>
                 <span class="family-h2h">${h2hText}</span>
             `;
+            if(
+    f.round >=4 &&
+    !isKnockoutStage()
+){
+    return;
+}
             container.appendChild(row);
         });
     let adminPanel = document.getElementById("admin-management-panel");
