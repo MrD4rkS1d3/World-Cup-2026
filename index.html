@@ -501,6 +501,15 @@ tr.eliminated{
 
 
 }
+.eliminated-team{
+
+    opacity:0.35;
+
+    filter:grayscale(100%);
+
+    transition:0.3s;
+
+}
 
         /* TOURNAMENT CENTRE */
 
@@ -2754,58 +2763,7 @@ font-size:12px;
 
 <div id="team-content" style="display:none;">
 
-<div class="rules-box" style="background:#ebf8ff; border:1px solid #bee3f8; padding:12px; border-radius:8px; margin:15px 0; font-size:0.85rem; color:#2c5282;">
-
-
-
-<strong style="display:block; margin-bottom:8px;">
-
-📘 Team Guide
-
-</strong>
-
-
-
-<ul style="margin:0; padding-left:20px;">
-
-
-
-<li>
-
-⭐ <strong>Favourite Team:</strong> Goals, wins and clean sheets earned by your starred team are worth <strong>double points (x2)</strong>.
-
-</li>
-
-
-
-<li style="margin-top:10px;">
-
-🚦 <strong>Round of 32 Qualification</strong>
-
-</li>
-
-
-
-<li><span class="qualification-dot qualified"></span> <strong>Confirmed</strong> — Team has mathematically secured a place in the Round of 32.</li>
-
-
-
-<li><span class="qualification-dot qualifying"></span> <strong>Currently Qualifying</strong> — Team is currently in a qualifying position but can still be overtaken.</li>
-
-
-
-<li><span class="qualification-dot alive"></span> <strong>Still Alive</strong> — Team can still qualify with its remaining fixture(s).</li>
-
-
-
-<li><span class="qualification-dot eliminated"></span> <strong>Eliminated</strong> — Team can no longer qualify for the Round of 32.</li>
-
-
-
-</ul>
-
-
-
+<div class="rules-box" id="team-guide-box" style="background:#ebf8ff; border:1px solid #bee3f8; padding:12px; border-radius:8px; margin:15px 0; font-size:0.85rem; color:#2c5282;">
 </div>
 
 
@@ -3342,7 +3300,7 @@ font-size:12px;
 
                 <th style="text-align:center;">🧤 CS</th>
 
-                <th id="bonus-header" style="text-align:center;">🌟 Bonus</th>
+                <th id="bonus-header" style="text-align:center;"></th>
 
                 <th style="text-align:center;">⭐ Points</th>
 
@@ -7277,11 +7235,10 @@ function hasBadge(team, text) {
 
 function renderTeamAssignment(team) {
 
-
-
-    const badge = getPrimaryBadge(team);
-
-const qualification = getQualificationDot(team);
+    const badge =
+        isSurvivalMode()
+            ? ""
+            : getPrimaryBadge(team);
 
     return `
 
@@ -12930,7 +12887,69 @@ if(!tournament.qualifiedTeams)
 
         container.innerHTML = "";
 
-        
+        const teamGuide = document.getElementById("team-guide-box");
+
+if (teamGuide) {
+
+    teamGuide.innerHTML = isSurvivalMode()
+
+    ? `
+
+<strong style="display:block; margin-bottom:8px;">
+❤️ Survival Guide
+</strong>
+
+<ul style="margin:0; padding-left:20px;">
+
+<li>
+❤️ <strong>Alive:</strong> Team is still competing in the FIFA World Cup.
+</li>
+
+<li>
+💀 <strong>Eliminated:</strong> Team has been knocked out of the tournament.
+</li>
+
+<li>
+🏆 <strong>Knockout Stage:</strong> Every match is win or go home.
+</li>
+
+<li>
+👑 <strong>Family Champion:</strong> The player with the highest total points after the Final wins the Family World Cup.
+</li>
+
+</ul>
+
+`
+
+    : `
+
+<strong style="display:block; margin-bottom:8px;">
+📘 Team Guide
+</strong>
+
+<ul style="margin:0; padding-left:20px;">
+
+<li>
+⭐ <strong>Favourite Team:</strong> Goals, wins and clean sheets earned by your starred team are worth <strong>double points (x2)</strong>.
+</li>
+
+<li style="margin-top:10px;">
+🚦 <strong>Round of 32 Qualification</strong>
+</li>
+
+<li><span class="qualification-dot qualified"></span> <strong>Confirmed</strong> — Team has mathematically secured a place in the Round of 32.</li>
+
+<li><span class="qualification-dot qualifying"></span> <strong>Currently Qualifying</strong> — Team is currently in a qualifying position but can still be overtaken.</li>
+
+<li><span class="qualification-dot alive"></span> <strong>Still Alive</strong> — Team can still qualify with its remaining fixture(s).</li>
+
+<li><span class="qualification-dot eliminated"></span> <strong>Eliminated</strong> — Team can no longer qualify for the Round of 32.</li>
+
+</ul>
+
+`;
+
+}
 
       
 
@@ -12969,7 +12988,7 @@ if(!tournament.qualifiedTeams)
                 let isStarred = starredTeams[user].includes(team);
                 
 
-                chip.className = `team-chip ${isStarred ? 'starred' : ''} ${(lockedUsers[user] && !isAdmin) ? 'locked-state' : ''}`;
+                chip.className = `team-chip ${(!isSurvivalMode() && isStarred) ? 'starred' : ''} ${(lockedUsers[user] && !isAdmin) ? 'locked-state' : ''} ${isSurvivalMode() && !isTeamAlive(team) ? 'eliminated-team' : ''}`;
 
                 chip.id = `chip-${user}-${team.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
@@ -14241,7 +14260,11 @@ if (podium && sorted.length >= 3) {
 
     <div class="podium-gap">
 
-        (🌟 +${sorted[2].bonus} Included) •
+        ${
+            isSurvivalMode()
+                ? `❤️ ${getAliveTeams(sorted[2].name)} Alive`
+                : `🌟 +${sorted[2].bonus} Included`
+        } •
 
         ${getRankChangeText(sorted[2])}
 
@@ -14677,13 +14700,9 @@ if(
 
         isSurvivalMode()
 
+        ? `<span class="bonus-chip">❤️ ${getAliveTeams(p.name)} Alive</span>`
 
-
-        ? `<span class="bonus-chip">${getAliveTeams(p.name)}</span>`
-
-
-
-        : `<span class="bonus-chip">+${p.bonus}</span>`
+        : `<span class="bonus-chip">🌟 +${p.bonus}</span>`
 
     }
 
@@ -15959,37 +15978,34 @@ currentRound===9 ? "🏆 FIFA World Cup Final" :
             }
 
 ${
-
-currentRound === 3
-
+currentRound === 3 && !isSurvivalMode()
 ?
 
-`<div class="qualification-legend">
+isSurvivalMode()
 
+? `<div class="qualification-legend">
 
+<span><span class="qualification-dot survival-alive"></span>Alive</span>
+
+<span><span class="qualification-dot survival-dead"></span>Eliminated</span>
+
+</div>`
+
+: `<div class="qualification-legend">
 
 <span><span class="qualification-dot qualified"></span>Confirmed</span>
 
-
-
 <span><span class="qualification-dot qualifying"></span>Qualifying</span>
-
-
 
 <span><span class="qualification-dot alive"></span>Alive</span>
 
-
-
 <span><span class="qualification-dot eliminated"></span>Eliminated</span>
-
-
 
 </div>`
 
 :
 
 ""
-
 }
 
             <span id="round-arrow-${currentRound}"
@@ -16042,17 +16058,17 @@ const homeQualification = getQualificationDot(f.home);
 
 let homeDisplay = `<span class="fixture-home-team">
 
-    ${homeIsStarred ? "🌟 " : ""}
+    ${!isSurvivalMode() && homeIsStarred ? "🌟 " : ""}
 
-<span class="rank-pill">#${getTeamRank(f.home)}</span>
+    <span class="rank-pill">#${getTeamRank(f.home)}</span>
 
-<span>${f.home}</span>
+    <span>${f.home}</span>
 
-${homeBadge ? `<span class="team-badge">${homeBadge.split(" ")[0]}</span>` : ""}
+    ${homeBadge ? `<span class="team-badge">${homeBadge.split(" ")[0]}</span>` : ""}
 
-<span class="qualification-dot ${homeQualification.className}" title="${homeQualification.reason || ""}"></span></span>
+    ${!isSurvivalMode() ? `<span class="qualification-dot ${homeQualification.className}" title="${homeQualification.reason || ""}"></span>` : ""}
 
-<img class="fixture-flag" src="https://flagcdn.com/${homeFlag}.svg" alt="${f.home}">
+    <img class="fixture-flag" src="https://flagcdn.com/${homeFlag}.svg" alt="${f.home}">
 
 </span>`;
 
@@ -16066,7 +16082,7 @@ let awayDisplay = `<span class="fixture-away-team">
 
     <img class="fixture-flag" src="https://flagcdn.com/${awayFlag}.svg" alt="${f.away}">
 
-    <span class="qualification-dot ${awayQualification.className}" title="${awayQualification.reason || ""}"></span>
+    ${!isSurvivalMode() ? `<span class="qualification-dot ${awayQualification.className}" title="${awayQualification.reason || ""}"></span>` : ""}
 
     ${awayBadge ? `<span class="team-badge">${awayBadge.split(" ")[0]}</span>` : ""}
 
@@ -16074,7 +16090,7 @@ let awayDisplay = `<span class="fixture-away-team">
 
     <span class="rank-pill">#${getTeamRank(f.away)}</span>
 
-    ${awayIsStarred ? " 🌟" : ""}
+    ${!isSurvivalMode() && awayIsStarred ? " 🌟" : ""}
 
 </span>`;
 
@@ -16093,7 +16109,7 @@ let awayDisplay = `<span class="fixture-away-team">
     favBadge = "";
 
 }
-            if (homeIsStarred || awayIsStarred) {
+            if (!isSurvivalMode() && (homeIsStarred || awayIsStarred)) {
 
                 if (homeIsStarred && !awayIsStarred) {
 
