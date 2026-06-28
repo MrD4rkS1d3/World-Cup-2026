@@ -5778,13 +5778,23 @@ fixture.awayUser = getOwner(fixture.away);
 
 
 
-if(fixture.home && fixture.away){
+if (fixture.home && fixture.away) {
 
+    console.log(
+        fixture.id,
+        "Status before:",
+        fixture.status
+    );
 
+    if (fixture.status !== "completed") {
+        fixture.status = "upcoming";
+    }
 
-    fixture.status = "upcoming";
-
-
+    console.log(
+        fixture.id,
+        "Status after:",
+        fixture.status
+    );
 
 }
 
@@ -12385,39 +12395,28 @@ if(!tournament.qualifiedTeams)
 
 
 {
+    "id": 73,
+    "round": 4,
+    "stage": "Round of 32",
+    "date": "Sun 28 June",
+    "kickoff": "20:00",
 
-    "id":73,
+    "home": "South Africa",
+    "away": "Canada",
 
-    "round":4,
-
-    "stage":"Round of 32",
-
-    "date":"Sun 28 June",
-
-    "kickoff":"20:00",
-
-    "home":"",
-
-    "away":"",
-
-    "homeUser":"",
-
-    "awayUser":"",
+    "homeUser": "Tom",
+    "awayUser": "Sam",
 
     "homeScore":0,
-
     "awayScore":1,
 
     "homeRedCards":0,
-
     "awayRedCards":0,
 
     "homeOwnGoals":0,
-
     "awayOwnGoals":0,
 
     "status":"completed"
-
 },
 
 {
