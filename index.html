@@ -2491,14 +2491,33 @@ border:1px solid #f5c2c7;
 
 
 
-.honours-chip.champion {
+.honours-chip.champion{
 
-    background:#f7f2ff;
+    display:inline-flex;
 
-    color:#6b46c1;
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 18px;
+
+    margin:6px auto 12px;
+
+    background:linear-gradient(135deg,#fff6d6,#ffe082);
+
+    border:1px solid #f4c542;
+
+    border-radius:999px;
+
+    color:#8a5a00;
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    box-shadow:0 2px 6px rgba(0,0,0,.12);
 
 }
-
 
 
 </style>
@@ -3172,13 +3191,14 @@ font-size:12px;
 
         <div class="award-card honours-award">
 
-            <div class="award-label">🏆 HONOURS BOARD</div>
+    <div class="award-label">🏆 HONOURS BOARD</div>
 
-            <div id="award-honours-list"
+    <div id="award-honours-header"></div>
 
-                class="honours-list"></div>
+    <div id="award-honours-list"
+        class="honours-list"></div>
 
-        </div>
+</div>
 
 
 
@@ -3722,7 +3742,7 @@ const tournament = {
 
 },
 
-
+groupStageChampion: null,
 
     standings: {},
 
@@ -6617,7 +6637,82 @@ const familyReason =
 
 }
 
+function getFixtureWinner(fixture) {
 
+    if (fixture.status !== "completed") return null;
+
+    if (fixture.winner === "home") {
+        return {
+            team: fixture.home,
+            user: fixture.homeUser,
+            side: "home"
+        };
+    }
+
+    if (fixture.winner === "away") {
+        return {
+            team: fixture.away,
+            user: fixture.awayUser,
+            side: "away"
+        };
+    }
+
+    return null;
+
+}
+
+function updateKnockoutWinner(fixture){
+
+    if(fixture.status !== "completed") return;
+
+    if(fixture.round < 4) return;
+
+    fixture.winner = null;
+
+    const hG = Number(fixture.homeScore);
+    const aG = Number(fixture.awayScore);
+
+    if(hG > aG){
+
+        fixture.winner = "home";
+
+    } else if(aG > hG){
+
+        fixture.winner = "away";
+
+    } else {
+
+        const hP = Number(fixture.homePens);
+        const aP = Number(fixture.awayPens);
+
+        if(!Number.isNaN(hP) && !Number.isNaN(aP)){
+
+            if(hP > aP){
+
+                fixture.winner = "home";
+
+            } else if(aP > hP){
+
+                fixture.winner = "away";
+
+            }
+
+        }
+
+    }
+
+    if(fixture.id === 73){
+
+        console.log(
+            "Match 73:",
+            fixture.homeScore + "-" + fixture.awayScore,
+            "Winner =",
+            fixture.winner
+        );
+
+    }
+
+}
 
 function getFixtureStory(
 
@@ -9446,8 +9541,6 @@ function getOwnGoalStandings() {
 
 }
 
-
-
 function getHonoursBoard() {
 
 
@@ -9588,7 +9681,58 @@ function buildHonoursChips() {
 
 }
 
+function renderHonoursBoard(){
 
+    const chips = buildHonoursChips();
+
+    let championHTML = "";
+
+    if(isSurvivalMode()){
+        
+
+        championHTML = `
+    <div class="group-stage-champion">
+
+        <div class="group-stage-title">
+            👑 GROUP STAGE CHAMPION
+        </div>
+
+        <div class="honours-chip champion">
+            👑 ${tournament.groupStageChampion}
+        </div>
+
+    </div>
+`;
+
+        chips.push(`
+            <span class="honours-chip group">
+                🏆 Ro32 Open
+            </span>
+        `);
+
+    }else{
+
+        const nextRound = getHonoursBoard().length + 1;
+
+        if(nextRound <= 3){
+
+            chips.push(`
+                <span class="honours-chip live">
+                    🏆 R${nextRound} Open
+                </span>
+            `);
+
+        }
+
+    }
+
+    document.getElementById("award-honours-header").innerHTML =
+        championHTML;
+
+    document.getElementById("award-honours-list").innerHTML =
+        chips.join("");
+
+}
 
 function ordinal(n) {
 
@@ -9851,7 +9995,97 @@ if(!tournament.qualifiedTeams)
 
 }
 
+function getFixtureDisplayName(id){
 
+    if(id>=73 && id<=88)
+        return `Round of 32 - ${id-72}`;
+
+    if(id>=89 && id<=96)
+        return `Round of 16 - ${id-88}`;
+
+    if(id>=97 && id<=100)
+        return `Quarter-final - ${id-96}`;
+
+    if(id>=101 && id<=102)
+        return `Semi-final - ${id-100}`;
+
+    if(id===103)
+        return "Third Place Play-off";
+
+    if(id===104)
+        return "FIFA World Cup Final";
+
+    return `Match ${id}`;
+
+}
+
+function resolveParticipant(sourceId){
+
+    const source =
+        fixtures.find(f => f.id === sourceId);
+
+    if(!source) return null;
+
+    const winner =
+        getFixtureWinner(source);
+
+    if(winner){
+
+        return {
+
+            team: winner.team,
+            user: winner.user,
+            placeholder: false
+
+        };
+
+    }
+
+    return {
+
+        team: `Winner of ${getFixtureDisplayName(source.id)}`,
+        user: "",
+        placeholder: true
+
+    };
+
+}
+
+function testParticipantResolver(){
+
+    clearAdminLog();
+
+    adminLog("===== PARTICIPANT RESOLUTION =====");
+    adminLog("");
+
+    [89,90,97,101,104].forEach(id=>{
+
+        const fixture =
+            fixtures.find(f=>f.id===id);
+
+        const home =
+            resolveParticipant(fixture.homeSource);
+
+        const away =
+            resolveParticipant(fixture.awaySource);
+
+        adminLog(getFixtureDisplayName(id));
+
+        adminLog(
+            "Home:",
+            home.team
+        );
+
+        adminLog(
+            "Away:",
+            away.team
+        );
+
+        adminLog("");
+
+    });
+
+}
 //Helper End//
 
     // Tracks starred selections globally, loads from local device storage if previously saved
@@ -12391,360 +12625,242 @@ if(!tournament.qualifiedTeams)
 "status": "completed"
 
 },
-
-
-
+// Knockouts //
+// Round of 32//
 {
     "id": 73,
     "round": 4,
     "stage": "Round of 32",
     "date": "Sun 28 June",
     "kickoff": "20:00",
-
     "home": "South Africa",
     "away": "Canada",
-
     "homeUser": "Tom",
     "awayUser": "Sam",
-
     "homeScore":0,
     "awayScore":1,
-
+    "homePens":null,
+    "awayPens":null,
+    "winner":"away",    // "home" | "away" | null
     "homeRedCards":0,
     "awayRedCards":0,
-
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-
     "status":"completed"
 },
 
 {
-
     "id":74,
-
     "round":4,
-
     "stage":"Round of 32",
-
     "date":"Mon 29 June",
-
     "kickoff":"21:30",
-
     "home":"",
-
     "away":"",
-
     "homeUser":"",
-
     "awayUser":"",
-
     "homeScore":"",
-
     "awayScore":"",
-
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
-
     "awayRedCards":0,
-
     "homeOwnGoals":0,
-
     "awayOwnGoals":0,
-
-    "status":"pending"
-
+    "status":"upcoming"
 },
-
 {
-
     "id":75,
-
     "round":4,
-
     "stage":"Round of 32",
-
     "date":"Tue 30 June",
-
-    "kickoff":"01:00",
-
+    "kickoff":"02:00",
     "home":"",
-
     "away":"",
-
     "homeUser":"",
-
     "awayUser":"",
-
     "homeScore":"",
-
     "awayScore":"",
-
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
-
     "awayRedCards":0,
-
     "homeOwnGoals":0,
-
     "awayOwnGoals":0,
-
-    "status":"pending"
-
+    "status":"upcoming"
 },
-
 {
-
     "id":76,
-
     "round":4,
-
     "stage":"Round of 32",
-
     "date":"Mon 29 June",
-
     "kickoff":"18:00",
-
     "home":"",
-
     "away":"",
-
     "homeUser":"",
-
     "awayUser":"",
-
     "homeScore":"",
-
     "awayScore":"",
-
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
-
     "awayRedCards":0,
-
     "homeOwnGoals":0,
-
     "awayOwnGoals":0,
-
-    "status":"pending"
-
+    "status":"upcoming"
 },
-
 {
-
     "id":77,
-
     "round":4,
-
     "stage":"Round of 32",
-
     "date":"Tue 30 June",
-
     "kickoff":"22:00",
-
     "home":"",
-
     "away":"",
-
     "homeUser":"",
-
     "awayUser":"",
-
     "homeScore":"",
-
     "awayScore":"",
-
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
-
     "awayRedCards":0,
-
     "homeOwnGoals":0,
-
     "awayOwnGoals":0,
-
-    "status":"pending"
-
+    "status":"upcoming"
 },
-
 {
-
     "id":78,
-
     "round":4,
-
     "stage":"Round of 32",
-
     "date":"Tue 30 June",
-
-    "kickoff":"17:00",
-
+    "kickoff":"18:00",
     "home":"",
-
     "away":"",
-
     "homeUser":"",
-
     "awayUser":"",
-
     "homeScore":"",
-
     "awayScore":"",
-
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
-
     "awayRedCards":0,
-
     "homeOwnGoals":0,
-
     "awayOwnGoals":0,
-
-    "status":"pending"
-
+    "status":"upcoming"
 },
-
 {
-
     "id":79,
-
     "round":4,
-
     "stage":"Round of 32",
-
-    "date":"Tue 30 June",
-
-    "kickoff":"13:00",
-
-    "home":"",
-
-    "away":"",
-
-    "homeUser":"",
-
-    "awayUser":"",
-
-    "homeScore":"",
-
-    "awayScore":"",
-
-    "homeRedCards":0,
-
-    "awayRedCards":0,
-
-    "homeOwnGoals":0,
-
-    "awayOwnGoals":0,
-
-    "status":"pending"
-
-},
-
-{
-
-    "id":80,
-
-    "round":4,
-
-    "stage":"Round of 32",
-
     "date":"Wed 1 July",
-
-    "kickoff":"17:00",
-
+    "kickoff":"02:00",
     "home":"",
-
     "away":"",
-
     "homeUser":"",
-
     "awayUser":"",
-
     "homeScore":"",
-
     "awayScore":"",
-
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
-
     "awayRedCards":0,
-
     "homeOwnGoals":0,
-
     "awayOwnGoals":0,
-
-    "status":"pending"
-
+    "status":"upcoming"
 },
-
+{
+    "id":80,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Wed 1 July",
+    "kickoff":"17:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
 {
     "id":81,
     "round":4,
     "stage":"Round of 32",
-    "date":"Wed 1 July",
-    "kickoff":"17:00",
+    "date":"Thu 2 July",
+    "kickoff":"01:00",
     "home":"",
     "away":"",
     "homeUser":"",
     "awayUser":"",
     "homeScore":"",
     "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"pending"
+    "status":"upcoming"
 },
 {
     "id":82,
     "round":4,
     "stage":"Round of 32",
     "date":"Wed 1 July",
-    "kickoff":"22:00",
+    "kickoff":"21:00",
     "home":"",
     "away":"",
     "homeUser":"",
     "awayUser":"",
     "homeScore":"",
     "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"pending"
+    "status":"upcoming"
 },
 {
     "id":83,
     "round":4,
     "stage":"Round of 32",
-    "date":"Thu 2 July",
-    "kickoff":"19:00",
+    "date":"Fri 3 July",
+    "kickoff":"00:00",
     "home":"",
     "away":"",
     "homeUser":"",
     "awayUser":"",
     "homeScore":"",
     "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"pending"
+    "status":"upcoming"
 },
 {
     "id":84,
-    "round":4,
-    "stage":"Round of 32",
-    "date":"Thu 2 July",
-    "kickoff":"22:00",
-    "home":"",
-    "away":"",
-    "homeUser":"",
-    "awayUser":"",
-    "homeScore":"",
-    "awayScore":"",
-    "homeRedCards":0,
-    "awayRedCards":0,
-    "homeOwnGoals":0,
-    "awayOwnGoals":0,
-    "status":"pending"
-},
-{
-    "id":85,
     "round":4,
     "stage":"Round of 32",
     "date":"Thu 2 July",
@@ -12755,68 +12871,482 @@ if(!tournament.qualifiedTeams)
     "awayUser":"",
     "homeScore":"",
     "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"pending"
+    "status":"upcoming"
+},
+{
+    "id":85,
+    "round":4,
+    "stage":"Round of 32",
+    "date":"Fri 3 July",
+    "kickoff":"04:00",
+    "home":"",
+    "away":"",
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
 },
 {
     "id":86,
     "round":4,
     "stage":"Round of 32",
     "date":"Fri 3 July",
-    "kickoff":"18:00",
+    "kickoff":"23:00",
     "home":"",
     "away":"",
     "homeUser":"",
     "awayUser":"",
     "homeScore":"",
     "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"pending"
+    "status":"upcoming"
 },
 {
     "id":87,
     "round":4,
     "stage":"Round of 32",
-    "date":"Fri 3 July",
-    "kickoff":"20:30",
+    "date":"Sat 4 July",
+    "kickoff":"02:30",
     "home":"",
     "away":"",
     "homeUser":"",
     "awayUser":"",
     "homeScore":"",
     "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"pending"
+    "status":"upcoming"
 },
 {
     "id":88,
     "round":4,
     "stage":"Round of 32",
     "date":"Fri 3 July",
-    "kickoff":"17:00",
+    "kickoff":"19:00",
     "home":"",
     "away":"",
     "homeUser":"",
     "awayUser":"",
     "homeScore":"",
     "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
     "homeRedCards":0,
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"pending"
+    "status":"upcoming"
+},
+
+// Round of 16 //
+
+{
+    "id":89,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Sat 4 July",
+    "kickoff":"22:00",
+    "home":"",
+    "away":"",
+    "homeSource":74,
+    "awaySource":77,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":90,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Sat 4 July",
+    "kickoff":"18:00",
+    "home":"",
+    "away":"",
+    "homeSource":73,
+    "awaySource":75,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":91,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Sun 5 July",
+    "kickoff":"21:00",
+    "home":"",
+    "away":"",
+    "homeSource":76,
+    "awaySource":78,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":92,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Mon 6 July",
+    "kickoff":"01:00",
+    "home":"",
+    "away":"",
+    "homeSource":79,
+    "awaySource":80,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":93,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Mon 6 July",
+    "kickoff":"20:00",
+    "home":"",
+    "away":"",
+    "homeSource":83,
+    "awaySource":84,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":94,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Tue 7 July",
+    "kickoff":"01:00",
+    "home":"",
+    "away":"",
+    "homeSource":81,
+    "awaySource":82,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":95,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Tue 7 July",
+    "kickoff":"17:00",
+    "home":"",
+    "away":"",
+    "homeSource":86,
+    "awaySource":88,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":96,
+    "round":5,
+    "stage":"Round of 16",
+    "date":"Tue 7 July",
+    "kickoff":"21:00",
+    "home":"",
+    "away":"",
+    "homeSource":85,
+    "awaySource":87,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+
+// Quarter-Finals //
+
+{
+    "id":97,
+    "round":6,
+    "stage":"Quarter-finals",
+    "date":"Thu 9 July",
+    "kickoff":"21:00",
+    "home":"",
+    "away":"",
+    "homeSource":89,
+    "awaySource":90,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":98,
+    "round":6,
+    "stage":"Quarter-finals",
+    "date":"Fri 10 July",
+    "kickoff":"20:00",
+    "home":"",
+    "away":"",
+    "homeSource":93,
+    "awaySource":94,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":99,
+    "round":6,
+    "stage":"Quarter-finals",
+    "date":"Sat 11 July",
+    "kickoff":"22:00",
+    "home":"",
+    "away":"",
+    "homeSource":91,
+    "awaySource":92,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":100,
+    "round":6,
+    "stage":"Quarter-finals",
+    "date":"Sun 12 July",
+    "kickoff":"02:00",
+    "home":"",
+    "away":"",
+    "homeSource":95,
+    "awaySource":96,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+
+// Semi-Finals //
+
+{
+    "id":101,
+    "round":7,
+    "stage":"Semi-finals",
+    "date":"Tue 14 July",
+    "kickoff":"20:00",
+    "home":"",
+    "away":"",
+    "homeSource":97,
+    "awaySource":98,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+{
+    "id":102,
+    "round":7,
+    "stage":"Semi-finals",
+    "date":"Wed 15 July",
+    "kickoff":"20:00",
+    "home":"",
+    "away":"",
+    "homeSource":99,
+    "awaySource":100,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+
+// Third Place Playoff //
+
+{
+    "id":103,
+    "round":8,
+    "stage":"Third Place Play-off",
+    "date":"Sat 18 July",
+    "kickoff":"22:00",
+    "home":"",
+    "away":"",
+    "homeSource":null,
+    "awaySource":null,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
+},
+
+// Final //
+
+{
+    "id":104,
+    "round":9,
+    "stage":"Final",
+    "date":"Sun 19 July",
+    "kickoff":"20:00",
+    "home":"",
+    "away":"",
+    "homeSource":101,
+    "awaySource":102,
+    "homeUser":"",
+    "awayUser":"",
+    "homeScore":"",
+    "awayScore":"",
+    "homePens":null,
+    "awayPens":null,
+    "winner":null,
+    "homeRedCards":0,
+    "awayRedCards":0,
+    "homeOwnGoals":0,
+    "awayOwnGoals":0,
+    "status":"upcoming"
 }
-
-
 
 ];
 
@@ -13326,12 +13856,9 @@ if (
     return scores;
 
 }
+function buildScores(maxFixtureId = Infinity){
 
-
-
-function calculateScores() {
-
-        let scores = {
+    let scores = {
 
     Sam:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 },
 
@@ -13350,8 +13877,12 @@ function calculateScores() {
     Tom:    { wins:0, draws:0, goals:0, cs:0, bonus:0, pts:0 }
 
 };
-
+    
     fixtures.forEach(f => {
+
+    if (f.id > maxFixtureId) return;
+
+    updateKnockoutWinner(f);
 
             if (f.status === "completed" && f.homeScore !== "" && f.awayScore !== "") {
 
@@ -13521,11 +14052,14 @@ if (
 
     scores[p].bonus;});
 
+    return scores;
+}
 
 
+function calculateScores(maxFixtureId = Infinity) {
+
+    const scores = buildScores(); 
         renderScoreboard(scores);
-
-
 
 const completed =
 
@@ -13713,59 +14247,21 @@ document.getElementById("hero-story-sub").innerText =
 
 }
 
+const completedGroupFixtures =
+    fixtures.filter(f => f.id <= 72 && f.status === "completed").length;
 
+if (
+    completedGroupFixtures === 72 &&
+    !tournament.groupStageChampion
+) {
 
-const chips =
-
-    buildHonoursChips();
-
-
-
-const nextRound =
-
-    getHonoursBoard().length + 1;
-
-
-
-if (nextRound <= 3) {
-
-
-
-    chips.push(
-
-        `<span class="honours-chip live">
-
-            ⚔️ R${nextRound} Live
-
-        </span>`
-
-    );
-
-
+    tournament.groupStageChampion =
+        getCurrentLeader(buildScores(72));
 
 }
 
 
-
-chips.push(
-
-    `<span class="honours-chip group">
-
-        🏆 GS Open
-
-    </span>`
-
-);
-
-
-
-document.getElementById(
-
-    "award-honours-list"
-
-).innerHTML =
-
-    chips.join("");
+renderHonoursBoard();
 
     
 
@@ -15866,7 +16362,55 @@ function getRoundWinner(roundNumber) {
 
             )][0] || 1;
 
-        fixtures.forEach(f => {
+        const monthOrder = {
+    "June": 6,
+    "July": 7
+};
+
+const displayFixtures = [...fixtures]
+    .filter(f => {
+
+        // Never show beyond Round of 32 in this view
+        if (f.round > 4) return false;
+
+        // Only reveal Round of 32 once Survival Mode starts
+        if (f.round === 4 && !isSurvivalMode()) return false;
+
+        return true;
+
+    })
+    .sort((a, b) => {
+
+    // 1. Keep rounds together
+    if (a.round !== b.round) {
+        return a.round - b.round;
+    }
+
+    // 2. Date
+    const [, dayA, monthA] = a.date.split(" ");
+    const [, dayB, monthB] = b.date.split(" ");
+
+    if (monthOrder[monthA] !== monthOrder[monthB]) {
+        return monthOrder[monthA] - monthOrder[monthB];
+    }
+
+    if (parseInt(dayA) !== parseInt(dayB)) {
+        return parseInt(dayA) - parseInt(dayB);
+    }
+
+    // 3. Kick-off
+    const timeCompare = a.kickoff.localeCompare(b.kickoff);
+
+    if (timeCompare !== 0) {
+        return timeCompare;
+    }
+
+    // 4. Fixture ID (tie-breaker)
+    return a.id - b.id;
+
+});
+
+displayFixtures.forEach(f => {
 
 
 
@@ -17130,7 +17674,8 @@ function runTournamentDiagnostics() {
 
     console.log("======================================");
 
-
+console.log(buildScores(72));
+console.log(getCurrentLeader(buildScores(72)));
 
     validateTournamentGroups();
 
@@ -17547,6 +18092,3 @@ renderAll();
 </body>
 
 </html>
-
-
-
