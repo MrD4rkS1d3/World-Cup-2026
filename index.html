@@ -5909,73 +5909,66 @@ function getMatchWinner(matchId){
 
 function getMatchLoser(matchId){
 
-
-
     const match =
-
-        fixtures.find(f=>f.id===matchId);
-
-
+        fixtures.find(f => f.id === matchId);
 
     if(!match)
+        return null;
+
+    if(match.status !== "completed")
+        return null;
+
+    if(match.round >= 4){
+
+        if(match.winner === "home"){
+
+            return{
+
+                team: match.away,
+                user: match.awayUser
+
+            };
+
+        }
+
+        if(match.winner === "away"){
+
+            return{
+
+                team: match.home,
+                user: match.homeUser
+
+            };
+
+        }
 
         return null;
 
-
-
-    if(match.status!=="completed")
-
-        return null;
-
-
+    }
 
     if(match.homeScore < match.awayScore){
 
-
-
         return{
 
-
-
-            team:match.home,
-
-            user:match.homeUser
-
-
+            team: match.home,
+            user: match.homeUser
 
         };
 
-
-
     }
-
-
 
     if(match.awayScore < match.homeScore){
 
-
-
         return{
 
-
-
-            team:match.away,
-
-            user:match.awayUser
-
-
+            team: match.away,
+            user: match.awayUser
 
         };
 
-
-
     }
 
-
-
     return null;
-
-
 
 }
 
