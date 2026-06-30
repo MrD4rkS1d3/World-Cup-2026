@@ -488,26 +488,14 @@ min-width:0;
 
         .star-icon { color:#d69e2e; font-size:0.9rem; margin-left:8px; flex-shrink:0; }
 
-tr.eliminated{
 
-
-
-    opacity:.45;
-
-
-
-    filter:grayscale(100%);
-
-
-
-}
 .eliminated-team{
 
-    opacity:0.35;
+    opacity:.65;
 
-    filter:grayscale(100%);
+    filter:grayscale(35%);
 
-    transition:0.3s;
+    transition:.3s;
 
 }
 
@@ -1251,12 +1239,38 @@ white-space:nowrap;
 
         .team-right { width:auto; flex:1; min-width:160px; text-align:left; font-weight:600; display:flex; justify-content:flex-start; align-items:center; gap:4px; }
 
-        .score-inputs { width:120px; display:flex; justify-content:center; align-items:center; gap:4px; }
-
+        .score-inputs{
+    width:120px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:2px;
+}
         .score-inputs input { width: 30px; text-align: center; padding: 3px; border: 1px solid #cbd5e0; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
 
         .score-inputs input:disabled { background: #edf2f7; color: #4a5568; border-color: #e2e8f0; cursor: not-allowed; }
 
+        .score-row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:4px;
+}
+
+        .fixture-pens{
+
+    margin-top:5px;
+
+    font-size:.70rem;
+
+    color:#666;
+
+    line-height:1;
+
+    text-align:center;
+
+}
         .qualification-dot{
 
 width:10px;
@@ -1349,7 +1363,11 @@ align-items:center;
 
         .Favourite-badge.right { margin-left:6px; }
 
+        .team-winner{
 
+    font-weight:700;
+
+}
 
         .team-name {display: flex; align-items: center; gap: 6px;}
 
@@ -13501,7 +13519,7 @@ if (teamGuide) {
                 let isStarred = starredTeams[user].includes(team);
                 
 
-                chip.className = `team-chip ${(!isSurvivalMode() && isStarred) ? 'starred' : ''} ${(lockedUsers[user] && !isAdmin) ? 'locked-state' : ''} ${isSurvivalMode() && !isTeamAlive(team) ? 'eliminated-team' : ''}`;
+                chip.className = `team-chip ${(!isSurvivalMode() && isStarred) ? 'starred' : ''} ${(lockedUsers[user] && !isAdmin) ? 'locked-state' : ''}`;
 
                 chip.id = `chip-${user}-${team.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
@@ -13518,7 +13536,7 @@ if (teamGuide) {
 
 chip.innerHTML = `
 
-    <span class="team-name">
+    <span class="team-name ${isSurvivalMode() && !isTeamAlive(team) ? 'eliminated-team' : ''}">
 
         <span class="rank-pill">#${getTeamRank(team)}</span>
 
@@ -14058,8 +14076,8 @@ document.getElementById("hero-progress").innerText =
 
 
 const nextFixture =
-
-    fixtures.find(f => f.status !== "completed");
+    getDisplayFixtures()
+        .find(f => f.status !== "completed");
 
 
 
@@ -16326,6 +16344,61 @@ function getRoundWinner(roundNumber) {
 
 }
 
+// =====================================================
+// ENGINE 0.5 - DISPLAY FIXTURE ORDER
+// =====================================================
+
+function getDisplayFixtures(){
+
+    const monthOrder = {
+        "June": 6,
+        "July": 7
+    };
+
+    return [...fixtures]
+
+        .filter(f => {
+
+            // Never show beyond Round of 32 in this view
+            if (f.round > 4) return false;
+
+            // Only reveal Round of 32 once Survival Mode starts
+            if (f.round === 4 && !isSurvivalMode()) return false;
+
+            return true;
+
+        })
+
+        .sort((a,b) => {
+
+            // 1. Tournament Round
+            if (a.round !== b.round)
+                return a.round - b.round;
+
+            // 2. Calendar Date
+            const [,dayA,monthA] = a.date.split(" ");
+            const [,dayB,monthB] = b.date.split(" ");
+
+            if(monthOrder[monthA] !== monthOrder[monthB])
+                return monthOrder[monthA] - monthOrder[monthB];
+
+            if(parseInt(dayA) !== parseInt(dayB))
+                return parseInt(dayA) - parseInt(dayB);
+
+            // 3. Kick-off Time
+            const kickoffCompare =
+                a.kickoff.localeCompare(b.kickoff);
+
+            if(kickoffCompare !== 0)
+                return kickoffCompare;
+
+            // 4. Fixture ID (final tie-break)
+            return a.id - b.id;
+
+        });
+
+}
+
     function renderFixtures() {
 
         let container = document.getElementById("fixtures-container");
@@ -16346,53 +16419,7 @@ function getRoundWinner(roundNumber) {
 
             )][0] || 1;
 
-        const monthOrder = {
-    "June": 6,
-    "July": 7
-};
-
-const displayFixtures = [...fixtures]
-    .filter(f => {
-
-        // Never show beyond Round of 32 in this view
-        if (f.round > 4) return false;
-
-        // Only reveal Round of 32 once Survival Mode starts
-        if (f.round === 4 && !isSurvivalMode()) return false;
-
-        return true;
-
-    })
-    .sort((a, b) => {
-
-    // 1. Keep rounds together
-    if (a.round !== b.round) {
-        return a.round - b.round;
-    }
-
-    // 2. Date
-    const [, dayA, monthA] = a.date.split(" ");
-    const [, dayB, monthB] = b.date.split(" ");
-
-    if (monthOrder[monthA] !== monthOrder[monthB]) {
-        return monthOrder[monthA] - monthOrder[monthB];
-    }
-
-    if (parseInt(dayA) !== parseInt(dayB)) {
-        return parseInt(dayA) - parseInt(dayB);
-    }
-
-    // 3. Kick-off
-    const timeCompare = a.kickoff.localeCompare(b.kickoff);
-
-    if (timeCompare !== 0) {
-        return timeCompare;
-    }
-
-    // 4. Fixture ID (tie-breaker)
-    return a.id - b.id;
-
-});
+        const displayFixtures = getDisplayFixtures();
 
 displayFixtures.forEach(f => {
 
@@ -16577,7 +16604,15 @@ isSurvivalMode()
 
 let awayBadge = getPrimaryBadge(f.away);
 
+const homeWinnerClass =
+    isSurvivalMode() && f.winner === "home"
+        ? "team-winner"
+        : "";
 
+const awayWinnerClass =
+    isSurvivalMode() && f.winner === "away"
+        ? "team-winner"
+        : "";
 
 const homeQualification = getQualificationDot(f.home);
 
@@ -16589,7 +16624,7 @@ let homeDisplay = `<span class="fixture-home-team">
 
     <span class="rank-pill">#${getTeamRank(f.home)}</span>
 
-    <span>${f.home}</span>
+    <span class="${homeWinnerClass}">${f.home}</span>
 
     ${homeBadge ? `<span class="team-badge">${homeBadge.split(" ")[0]}</span>` : ""}
 
@@ -16613,7 +16648,7 @@ let awayDisplay = `<span class="fixture-away-team">
 
     ${awayBadge ? `<span class="team-badge">${awayBadge.split(" ")[0]}</span>` : ""}
 
-    <span>${f.away}</span>
+    <span class="${awayWinnerClass}">${f.away}</span>
 
     <span class="rank-pill">#${getTeamRank(f.away)}</span>
 
@@ -16690,17 +16725,34 @@ if (f.round !== activeRound) {
 
                 <div class="score-inputs">
 
-                    <input type="number" min="0" value="${f.homeScore}" ${inputState} 
+    <div class="score-row">
 
-    onchange="updateFixtureData(${f.id}, 'home', this.value)">
+        <input type="number" min="0" value="${f.homeScore}" ${inputState}
+            onchange="updateFixtureData(${f.id}, 'home', this.value)">
 
-<span>-</span>
+        <span>-</span>
 
-<input type="number" min="0" value="${f.awayScore}" ${inputState} 
+        <input type="number" min="0" value="${f.awayScore}" ${inputState}
+            onchange="updateFixtureData(${f.id}, 'away', this.value)">
 
-    onchange="updateFixtureData(${f.id}, 'away', this.value)">
+    </div>
 
-                </div>
+    ${
+    f.status === "completed" &&
+    f.round >= 4 &&
+    f.winner &&
+    f.homeScore == f.awayScore &&
+    f.homePens != null &&
+    f.awayPens != null &&
+    f.homePens !== "" &&
+    f.awayPens !== ""
+        ? `<div class="fixture-pens">
+                Pens ${f.homePens} - ${f.awayPens}
+           </div>`
+        : ""
+}
+
+</div>
 
                 <span class="team-right">${awayDisplay}</span>
 
@@ -16980,9 +17032,9 @@ function jumpToNextFixture() {
 
 
 
-    const target =
-
-        fixtures.find(f => f.status !== "completed");
+    const nextFixture =
+    getDisplayFixtures()
+        .find(f => f.status !== "completed");
 
 
 
