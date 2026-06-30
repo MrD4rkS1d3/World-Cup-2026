@@ -2706,9 +2706,9 @@ Qualified Teams
 Third Place
 </button>
 
-<button onclick="showRoundOf32()">
+<!--<button onclick="showRoundOf32()">
 Round of 32
-</button>
+</button>-->
 
 <button onclick="generateRoundOf32Fixtures();showRoundOf32();">
 Generate R32
@@ -2718,9 +2718,37 @@ Generate R32
 🧪 Force Generate R32
 </button>
 
-<button onclick="forceSurvivalMode()">
+<div id="admin-management-panel">
+
+    <button onclick="forceGenerateRoundOf32()">
+        🏆 Force Generate Round of 32
+    </button>
+
+    <button onclick="previewRoadToFinal()">
+        🛣️ Preview Road to the Final
+    </button>
+
+    <!-- ===================================================== -->
+    <!-- RTTF DEVELOPMENT PREVIEW -->
+    <!-- ===================================================== -->
+
+    <div id="road-to-final-preview-card"
+         class="dashboard-card"
+         style="display:none; margin-top:16px;">
+
+        <div class="dashboard-header">
+            🧪 Road to the Final Preview
+        </div>
+
+        <div id="road-to-final-preview"></div>
+
+    </div>
+
+</div>
+
+<!--<button onclick="forceSurvivalMode()">
 💀 Test Survival
-</button>
+</button>-->
 
 <pre id="admin-debug-log"
 style="
@@ -2736,7 +2764,7 @@ font-size:12px;
 </div>
     </div>
 
-
+<!--<div id="road-to-final-container"></div>-->
 
 <div id="leaderboard-strip" class="leaderboard-strip"></div>
 
@@ -3113,19 +3141,9 @@ font-size:12px;
 
     </div>
 
-
-
-
-
-
-
 </div>
 
-
-
     </div>
-
-
 
 </div>
 
@@ -3452,9 +3470,16 @@ font-size:12px;
 
     };
 
-    
+// =====================================================
+// GLOBAL DATE HELPERS
+// =====================================================
 
-    const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
+const monthOrder = {
+    "June": 6,
+    "July": 7
+};
+
+const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
 
     let isAdmin = false;
 
@@ -6114,8 +6139,6 @@ function placeLoser(fromMatch,toMatch,side){
 
     }
 
-
-
 }
 
 // =====================================================
@@ -6123,8 +6146,6 @@ function placeLoser(fromMatch,toMatch,side){
 // UPDATE KNOCKOUT BRACKET
 
 // =====================================================
-
-
 
 function updateKnockoutBracket(){
 
@@ -6244,11 +6265,96 @@ function updateKnockoutBracket(){
 
     placeLoser(102,103,"away");
 
+}
 
+// =====================================================
+// ENGINE 6.0 - ROAD TO THE FINAL DATA
+// =====================================================
+
+function buildRoadToFinal(){
+
+    tournament.roadToFinal = {
+
+        rounds: [
+
+            {
+                key: "round16",
+                title: "Round of 16",
+                fixtures: fixtures.filter(f => f.id >= 89 && f.id <= 96)
+            },
+
+            {
+                key: "quarterFinals",
+                title: "Quarter-finals",
+                fixtures: fixtures.filter(f => f.id >= 97 && f.id <= 100)
+            },
+
+            {
+                key: "semiFinals",
+                title: "Semi-finals",
+                fixtures: fixtures.filter(f => f.id >= 101 && f.id <= 102)
+            },
+
+            {
+                key: "thirdPlace",
+                title: "Third Place Play-off",
+                fixtures: fixtures.filter(f => f.id === 103)
+            },
+
+            {
+                key: "final",
+                title: "Final",
+                fixtures: fixtures.filter(f => f.id === 104)
+            }
+
+        ]
+
+    };
 
 }
 
+// =====================================================
+// ENGINE 6.1 - ROAD TO THE FINAL RENDERER
+// =====================================================
 
+function renderRoadToFinal(){
+
+    const container =
+        document.getElementById("road-to-final-preview");
+
+    if(!container) return;
+
+    container.innerHTML = "";
+
+    tournament.roadToFinal.rounds.forEach(round=>{
+
+        const section =
+            document.createElement("div");
+
+        section.innerHTML = `
+            <h3>${round.title}</h3>
+        `;
+
+        round.fixtures.forEach(fixture=>{
+
+            const row =
+                document.createElement("div");
+
+            row.innerHTML = `
+                ${fixture.home || "TBD"}
+                vs
+                ${fixture.away || "TBD"}
+            `;
+
+            section.appendChild(row);
+
+        });
+
+        container.appendChild(section);
+
+    });
+
+}
 
 // =====================================================
 
@@ -16349,11 +16455,7 @@ function getRoundWinner(roundNumber) {
 // =====================================================
 
 function getDisplayFixtures(){
-
-    const monthOrder = {
-        "June": 6,
-        "July": 7
-    };
+    
 
     return [...fixtures]
 
@@ -16810,15 +16912,30 @@ if (f.round !== activeRound) {
 
     list.innerHTML = ""; 
 
-    const today = new Date().getDate(); 
+    const now = new Date();
 
-    let pending = fixtures.filter(f => {
+let pending = fixtures.filter(f => {
 
-        let day = parseInt(f.date.split(" ")[1]);
+    const parts = f.date.split(" ");
 
-        return f.status === "upcoming" && day <= today;
+    const day = parseInt(parts[1]);
 
-    });
+    const month = monthOrder[parts[2]];
+
+    const fixtureDate = new Date(
+        now.getFullYear(),
+        month - 1,
+        day
+    );
+
+    return (
+        f.status === "upcoming" &&
+        fixtureDate <= now &&
+        f.home &&
+        f.away
+    );
+
+});
 
     
 
@@ -16883,6 +17000,7 @@ if (f.round !== activeRound) {
         renderFixtures();
 
         console.log("Round of 32 generated.");
+        renderRoadToFinal();
 
         renderQuickUpdate();        
 
@@ -17743,7 +17861,7 @@ generateRoundOf32Fixtures();
 
 updateKnockoutBracket();
 
-
+buildRoadToFinal();
 
 buildAliveTable();
 
@@ -18112,6 +18230,22 @@ function debugSpain(){
     console.log("Status:", fixture.status);
 
     console.log("Winner:", getMatchWinner(fixture.id));
+
+}
+
+// =====================================================
+// RTTF DEVELOPMENT PREVIEW
+// =====================================================
+
+function previewRoadToFinal(){
+
+    buildRoadToFinal();
+
+    document.getElementById("road-to-final-preview-card").style.display = "block";
+
+    renderRoadToFinal();
+
+    showBroadcast("🛣️ Road to the Final preview generated.");
 
 }
 
