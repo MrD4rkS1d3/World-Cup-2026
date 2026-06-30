@@ -5836,77 +5836,68 @@ if (fixture.home && fixture.away) {
 
 function getMatchWinner(matchId){
 
-
-
     const match =
-
         fixtures.find(f => f.id === matchId);
 
-
-
     if(!match)
-
         return null;
-
-
 
     if(match.status !== "completed")
+        return null;
+
+    if(match.round >= 4){
+
+        if(match.winner === "home"){
+
+            return{
+
+                team: match.home,
+                user: match.homeUser
+
+            };
+
+        }
+
+        if(match.winner === "away"){
+
+            return{
+
+                team: match.away,
+                user: match.awayUser
+
+            };
+
+        }
 
         return null;
 
-
+    }
 
     if(match.homeScore > match.awayScore){
 
-
-
         return{
 
-
-
-            team:match.home,
-
-            user:match.homeUser
-
-
+            team: match.home,
+            user: match.homeUser
 
         };
 
-
-
     }
-
-
 
     if(match.awayScore > match.homeScore){
 
-
-
         return{
 
-
-
-            team:match.away,
-
-            user:match.awayUser
-
-
+            team: match.away,
+            user: match.awayUser
 
         };
 
-
-
     }
-
-
 
     return null;
 
-
-
 }
-
-
 
 // =====================================================
 
