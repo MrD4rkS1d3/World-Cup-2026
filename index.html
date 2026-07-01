@@ -5891,38 +5891,44 @@ function getMatchWinner(matchId){
     if(match.round >= 4){
 
         if(match.winner === "home"){
-
             return{
-
                 team: match.home,
                 user: match.homeUser
-
             };
-
         }
 
         if(match.winner === "away"){
-
             return{
-
                 team: match.away,
                 user: match.awayUser
-
             };
+        }
 
+        // Fallback for normal knockout wins
+        if(match.homeScore > match.awayScore){
+            return{
+                team: match.home,
+                user: match.homeUser
+            };
+        }
+
+        if(match.awayScore > match.homeScore){
+            return{
+                team: match.away,
+                user: match.awayUser
+            };
         }
 
         return null;
-
     }
+
+    // ---------- Group Stage ----------
 
     if(match.homeScore > match.awayScore){
 
         return{
-
             team: match.home,
             user: match.homeUser
-
         };
 
     }
@@ -5930,10 +5936,8 @@ function getMatchWinner(matchId){
     if(match.awayScore > match.homeScore){
 
         return{
-
             team: match.away,
             user: match.awayUser
-
         };
 
     }
@@ -5964,38 +5968,44 @@ function getMatchLoser(matchId){
     if(match.round >= 4){
 
         if(match.winner === "home"){
-
             return{
-
                 team: match.away,
                 user: match.awayUser
-
             };
-
         }
 
         if(match.winner === "away"){
-
             return{
-
                 team: match.home,
                 user: match.homeUser
-
             };
+        }
 
+        // Fallback for normal knockout wins
+        if(match.homeScore < match.awayScore){
+            return{
+                team: match.home,
+                user: match.homeUser
+            };
+        }
+
+        if(match.awayScore < match.homeScore){
+            return{
+                team: match.away,
+                user: match.awayUser
+            };
         }
 
         return null;
-
     }
+
+    // ---------- Group Stage ----------
 
     if(match.homeScore < match.awayScore){
 
         return{
-
             team: match.home,
             user: match.homeUser
-
         };
 
     }
@@ -6003,10 +6013,8 @@ function getMatchLoser(matchId){
     if(match.awayScore < match.homeScore){
 
         return{
-
             team: match.away,
             user: match.awayUser
-
         };
 
     }
