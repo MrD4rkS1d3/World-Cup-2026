@@ -452,9 +452,67 @@
 
         .manager-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); position: relative; }
 
-        .manager-card.dimmed { opacity: 0.6; pointer-events: none; background: #f7fafc; }
+        .manager-card.dimmed{
 
-        .manager-name { font-weight: bold; color: #2c5282; border-bottom: 1px solid #edf2f7; padding-bottom: 4px; margin-bottom: 8px; font-size: 0.9rem; }
+    opacity:.6;
+
+    pointer-events:none;
+
+}
+        .manager-name{
+
+    font-weight:bold;
+
+    color:#2c5282;
+
+    border-bottom:1px solid #edf2f7;
+
+    padding-bottom:8px;
+
+    margin-bottom:12px;
+
+    font-size:.9rem;
+
+    flex-shrink:0;
+
+}
+.manager-eliminated{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:stretch;
+
+    justify-content:flex-start;
+
+    min-height:303px;
+
+    border:1px solid #fca5a5;
+
+    border-radius:8px;
+
+    background:linear-gradient(180deg,#fff5f5 0%,#ffe4e6 100%);
+
+    box-sizing:border-box;
+
+}
+
+.manager-eliminated .manager-name{
+
+    align-self:stretch;
+
+    text-align:left;
+
+    color:#b91c1c;
+
+    border-bottom:1px solid #fecaca;
+
+    padding-bottom:8px;
+
+    margin-bottom:12px;
+
+}
 
         .team-name{
 
@@ -496,6 +554,94 @@ min-width:0;
     filter:grayscale(35%);
 
     transition:.3s;
+
+}
+
+/* ==========================================
+   PLAYER ELIMINATION PANEL
+========================================== */
+
+.player-eliminated{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    margin-top:10px;
+
+    min-height:285px;
+
+    height:calc(100% - 42px);
+
+    border-radius:8px;
+
+    background:linear-gradient(180deg,#fff5f5 0%,#ffe4e6 100%);
+
+    border:1px solid #fca5a5;
+
+    padding:20px;
+
+    box-sizing:border-box;
+
+}
+
+.player-eliminated-icon{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:100%;
+
+    font-size:5.8rem;
+
+}
+
+.player-eliminated-title{
+
+    align-self:center;
+
+    text-align:center;
+
+    font-size:1.45rem;
+
+    font-weight:800;
+
+    color:#c53030;
+
+    letter-spacing:1px;
+
+    margin:10px 0 22px;
+
+}
+
+.player-eliminated-sub{
+
+    align-self:center;
+
+    text-align:center;
+
+    font-style:italic;
+
+    font-size:.95rem;
+
+    color:#991b1b;
+
+    line-height:1.6;
+
+    padding:0 20px 18px;
+
+    max-width:170px;
 
 }
 
@@ -3729,7 +3875,57 @@ const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
 
 };
 
+// =====================================================
+// NARRATIVE LIBRARY
+// Central repository for Family Championship banter.
+// =====================================================
 
+const narrativeLibrary = {
+
+    elimination: [
+
+        "Better luck in 2030!",
+
+        "See you next World Cup!",
+
+        "Time to support someone else's team!",
+
+        "Your Family Championship dream is over!",
+
+        "The sofa is your new dugout!",
+
+        "No trophies this time!",
+
+        "At least the bragging rights lasted a while!",
+
+        "Time to become a neutral!",
+
+        "Your last team has fallen.",
+
+        "The comeback starts in four years."
+
+    ]
+
+};
+
+function getNarrative(category){
+
+    const entries = narrativeLibrary[category];
+
+    if (!entries || entries.length === 0)
+        return "";
+
+    return entries[
+        Math.floor(Math.random() * entries.length)
+    ];
+
+}
+
+function getEliminationNarrative(){
+
+    return getNarrative("elimination");
+
+}
 
 // =====================================================
 
@@ -13638,11 +13834,13 @@ function buildProgressionPoints(){
 // Render the dashboard with team assignments and favourite teams
 // =====================================================
 
-    function renderDashboard() {        
+function renderDashboard() {        
 
         let container = document.getElementById("star-configurator");
 
         container.innerHTML = "";
+
+        const scores = buildScores();
 
         const teamGuide = document.getElementById("team-guide-box");
 
@@ -13726,13 +13924,50 @@ if (teamGuide) {
 
             // If not admin, grey out other profiles so players can only click their own card
 
-            let isDimmed = !isAdmin && (activePlayer !== user);
+            const eliminated =
+    isSurvivalMode() &&
+    scores[user]?.eliminated;
 
-            card.className = `manager-card ${isDimmed ? 'dimmed' : ''}`;
+let isDimmed =
+    !eliminated &&
+    !isAdmin &&
+    activePlayer !== user;
+
+card.className =
+    `manager-card ${
+        eliminated
+            ? "manager-eliminated"
+            : (isDimmed ? "dimmed" : "")
+    }`;
 
             card.innerHTML = `<div class="manager-name">${user} ${lockedUsers[user] ? '🔒' : ''}</div>`;
 
             
+
+if (
+    isSurvivalMode() &&
+    scores[user]?.eliminated
+) {
+
+    card.innerHTML += `
+
+<div class="player-eliminated-icon">💀</div>
+
+<div class="player-eliminated-title">
+    ELIMINATED
+</div>
+
+<div class="player-eliminated-sub">
+    "${getEliminationNarrative()}"
+</div>
+
+`;
+
+    container.appendChild(card);
+
+    return;
+
+}
 
             assignments[user].forEach(team => {
 
