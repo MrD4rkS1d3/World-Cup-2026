@@ -1355,6 +1355,42 @@ align-items:center;
 
 }
 
+.survival-chip{
+
+    display:inline-flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-width:64px;
+
+    gap:2px;
+
+    line-height:1.1;
+
+}
+
+.survival-label{
+
+    font-size:0.72rem;
+
+    font-weight:700;
+
+}
+
+.out-chip{
+
+    background:#fff1f2;
+
+    border:1px solid #fca5a5;
+
+    color:#b91c1c;
+
+}
+
         .family-h2h { width:180px; display:flex; align-items:center; justify-content:center; gap:6px; font-weight:700; font-size:0.72rem; color:#1a365d; background:#edf2ff; padding:6px 10px; border-radius:999px; border-left:4px solid #3182ce; white-space:nowrap; }
 
         .Favourite-badge { font-size:0.7rem; background:#d69e2e; color:white; padding:1px 6px; border-radius:3px; display:inline-flex; align-items:center; }
@@ -2137,7 +2173,7 @@ border:1px solid #f5c2c7;
 
 }
 
-
+/* Hall of Infamy Section */
 
 #hall-of-infamy-section {
 
@@ -3314,23 +3350,7 @@ font-size:12px;
 
 
 
-    <strong style="display:block; margin-bottom:8px;">
-
-        📊 Scoring Rules:
-
-    </strong>
-
-
-
-    <ul style="margin:0; padding-left:20px;">
-
-        <li><strong>Win:</strong> 3 points | <strong>Draw:</strong> 1 point</li>
-
-        <li><strong>Goal:</strong> 1 point | <strong>Clean Sheet:</strong> 2 points</li>
-
-        <li><strong>Favourite (Starred Team):</strong> All points earned by your Starred team are <strong>doubled (x2)</strong>.</li>
-
-    </ul>
+    <div id="scoring-rules-content"></div>
 
 
 
@@ -3344,25 +3364,27 @@ font-size:12px;
 
         <thead>
 
-            <tr>
+    <tr>
 
-                <th style="width:35%;">👤 Player</th>
+        <th style="width:35%;">👤 Player</th>
 
-                <th style="text-align:center;">🏆 Wins</th>
+        <th style="text-align:center;">🏆 Wins</th>
 
-                <th style="text-align:center;">🤝 Draws</th>
+        <th style="text-align:center;">🤝 Draws</th>
 
-                <th style="text-align:center;">⚽ Goals</th>
+        <th style="text-align:center;">⚽ Goals</th>
 
-                <th style="text-align:center;">🧤 CS</th>
+        <th style="text-align:center;">🧤 CS</th>
 
-                <th id="bonus-header" style="text-align:center;"></th>
+        <th id="bonus-header" style="text-align:center;"></th>
 
-                <th style="text-align:center;">⭐ Points</th>
+        <th id="progression-header" style="text-align:center;"></th>
 
-            </tr>
+        <th style="text-align:center;">🏆 Total</th>
 
-        </thead>
+    </tr>
+
+</thead>
 
         <tbody></tbody>
 
@@ -6451,7 +6473,60 @@ function getAliveTeams(player){
 
 // Helpers
 
+//=====================================================
+// Dynamic Scoring Rules
+//=====================================================
 
+function getScoringRulesHTML(){
+
+    if(isSurvivalMode()){
+
+        return `
+            <strong style="display:block; margin-bottom:8px;">
+                📊 Scoring Rules:
+            </strong>
+
+            <ul style="margin:0; padding-left:20px;">
+
+                <li><strong>Win:</strong> 3 points | <strong>Draw:</strong> 1 point</li>
+
+                <li><strong>Goal:</strong> 1 point | <strong>Clean Sheet:</strong> 2 points</li>
+
+                <li><strong>Progression:</strong> +2 | ❤️ Alive | 💀 OUT | ⭐ Bonus Frozen</li>
+
+            </ul>
+        `;
+
+    }
+
+    return `
+        <strong style="display:block; margin-bottom:8px;">
+            📊 Scoring Rules:
+        </strong>
+
+        <ul style="margin:0; padding-left:20px;">
+
+            <li><strong>Win:</strong> 3 points | <strong>Draw:</strong> 1 point</li>
+
+            <li><strong>Goal:</strong> 1 point | <strong>Clean Sheet:</strong> 2 points</li>
+
+            <li><strong>Favourite (Starred Team):</strong> All points earned by your Starred team are <strong>doubled (x2)</strong>.</li>
+
+        </ul>
+    `;
+
+}
+
+//=====================================================
+// Render Scoring Rules
+//=====================================================
+
+function renderScoringRules(){
+
+    document.getElementById("scoring-rules-content").innerHTML =
+        getScoringRulesHTML();
+
+}
 
 // =====================================================
 
@@ -6482,7 +6557,7 @@ function isSurvivalMode(){
 function updateSurvivalUI(){
 
     console.log("updateSurvivalUI()");
-console.log("isSurvivalMode =", isSurvivalMode());
+    console.log("isSurvivalMode =", isSurvivalMode());
 
     const survival = isSurvivalMode();
 
@@ -6490,28 +6565,40 @@ console.log("isSurvivalMode =", isSurvivalMode());
 
     const dashboardTitle = document.getElementById("dashboard-title");
 
-if (dashboardTitle) {
+    if (dashboardTitle) {
 
-    dashboardTitle.innerHTML = `
-        <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
-        <span id="team-arrow">▶</span>
-    `;
+        dashboardTitle.innerHTML = `
+            <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
+            <span id="team-arrow">▶</span>
+        `;
 
-}
+    }
 
-    // Bonus column
+    // Scoreboard headers
 
     const bonusHeader =
-    document.getElementById("bonus-header");
+        document.getElementById("bonus-header");
 
-if (bonusHeader) {
+    const progressionHeader =
+        document.getElementById("progression-header");
 
-    bonusHeader.innerText =
-        survival
-            ? "❤️ Alive"
-            : "🌟 Bonus";
+    if (bonusHeader) {
 
-}
+        bonusHeader.innerText =
+            survival
+                ? "❤️ Alive"
+                : "🌟 Bonus";
+
+    }
+
+    if (progressionHeader) {
+
+        progressionHeader.innerText =
+            survival
+                ? "🏆 Prog"
+                : "";
+
+    }
 
 }
 
@@ -6817,16 +6904,16 @@ function updateKnockoutWinner(fixture){
 
     }
 
-    if(fixture.id === 73){
+    if(fixture.round >= 4 && fixture.status === "completed"){
 
-        console.log(
-            "Match 73:",
-            fixture.homeScore + "-" + fixture.awayScore,
-            "Winner =",
-            fixture.winner
-        );
+    console.log(
+        `Match ${fixture.id}:`,
+        `${fixture.home} ${fixture.homeScore}-${fixture.awayScore} ${fixture.away}`,
+        "| Winner:",
+        fixture.winner
+    );
 
-    }
+}
 
 }
 
@@ -13466,19 +13553,11 @@ function testParticipantResolver(){
 
 ];
 
-
-
 // =====================================================
 
 // KNOCKOUT STAGE TEMPLATE (ENGINE 4)
 
 // =====================================================
-
-
-
-
-
-
 
     function checkAdminPassword(val) {
 
@@ -13508,10 +13587,6 @@ function testParticipantResolver(){
 
     }
 
-
-
-
-
     function selectProfile(user) {
 
         activePlayer = user;
@@ -13522,11 +13597,48 @@ function testParticipantResolver(){
 
     }
 
+// =====================================================
+// ENGINE 5.0 - PROGRESSION POINTS
+// =====================================================
 
+function buildProgressionPoints(){
 
-    function renderDashboard() {
+    const progression = {};
 
-        
+    // Create every player automatically
+    Object.keys(assignments).forEach(player => {
+        progression[player] = 0;
+    });
+
+    fixtures.forEach(match => {
+
+        // Ignore group stage
+        if(match.round < 4)
+            return;
+
+        // Existing knockout engine decides the winner
+        const winner = getMatchWinner(match.id);
+
+        if(!winner)
+            return;
+
+        // Safety check
+        if(!(winner.user in progression))
+            return;
+
+        progression[winner.user] += 2;
+
+    });
+
+    return progression;
+
+}
+
+// =====================================================
+// Render the dashboard with team assignments and favourite teams
+// =====================================================
+
+    function renderDashboard() {        
 
         let container = document.getElementById("star-configurator");
 
@@ -13594,9 +13706,7 @@ if (teamGuide) {
 
 `;
 
-}
-
-      
+}     
 
         if (activePlayer) {
 
@@ -13607,8 +13717,6 @@ if (teamGuide) {
       
 
         }
-
-
 
         Object.keys(assignments).forEach(user => {
 
@@ -13647,7 +13755,6 @@ if (teamGuide) {
     qualification.className !== "eliminated";
 
 
-
 chip.innerHTML = `
 
     <span class="team-name ${isSurvivalMode() && !isTeamAlive(team) ? 'eliminated-team' : ''}">
@@ -13664,9 +13771,7 @@ chip.innerHTML = `
 
         <span class="team-label">${team}</span>
 
-        ${badge ? `<span class="team-badge">${badge.split(" ")[0]}</span>` : ""}
-
-        
+        ${badge ? `<span class="team-badge">${badge.split(" ")[0]}</span>` : ""}        
 
     </span>
 
@@ -13706,7 +13811,6 @@ chip.innerHTML = `
     }
 
     }
-
 
 
     function toggleStar(user, team) {
@@ -13749,7 +13853,9 @@ chip.innerHTML = `
 
     }
 
-
+//=====================================================
+//Build and Calculate Scores from Fixtures
+//=====================================================
 
 function buildScoresFromFixtures(fixturesList) {
 
@@ -13915,14 +14021,10 @@ function buildScoresFromFixtures(fixturesList) {
 
 
 
-            if (
-
-    !isSurvivalMode() &&
-
+if (
+    f.id <= 72 &&
     homeMult === 2 &&
-
     scores[f.homeUser]
-
 ) {
 
     scores[f.homeUser].bonus += homeBasePoints;
@@ -13932,13 +14034,9 @@ function buildScoresFromFixtures(fixturesList) {
 
 
 if (
-
-    !isSurvivalMode() &&
-
+    f.id <= 72 &&
     awayMult === 2 &&
-
     scores[f.awayUser]
-
 ) {
 
     scores[f.awayUser].bonus += awayBasePoints;
@@ -13951,21 +14049,25 @@ if (
 
 
 
-    Object.keys(scores).forEach(p => {
+    const progression = buildProgressionPoints();
 
-        scores[p].pts =
+Object.keys(scores).forEach(p => {
 
-            (scores[p].wins * 3) +
+    // Survival Mode
+    scores[p].progression = progression[p] || 0;
+    scores[p].alive = getAliveTeams(p);
+    scores[p].eliminated = scores[p].alive === 0;
 
-            scores[p].draws +
+    // Tournament Points
+    scores[p].pts =
+        (scores[p].wins * 3) +
+        scores[p].draws +
+        scores[p].goals +
+        (scores[p].cs * 2) +
+        scores[p].bonus +
+        scores[p].progression;
 
-            scores[p].goals +
-
-            (scores[p].cs * 2) +
-
-            scores[p].bonus;
-
-    });
+});
 
 
 
@@ -14122,12 +14224,9 @@ if (aG === 0 && scores[f.homeUser]) {
 
 if (
 
-    !isSurvivalMode() &&
-
+    f.id <= 72 &&
     homeMult === 2 &&
-
     scores[f.homeUser]
-
 ) {
 
     scores[f.homeUser].bonus += homeBasePoints;
@@ -14137,13 +14236,9 @@ if (
 
 
 if (
-
-    !isSurvivalMode() &&
-
+    f.id <= 72 &&
     awayMult === 2 &&
-
     scores[f.awayUser]
-
 ) {
 
     scores[f.awayUser].bonus += awayBasePoints;
@@ -14154,24 +14249,30 @@ if (
 
         });
 
-        Object.keys(scores).forEach(p => {
+        const progression = buildProgressionPoints();
 
-            scores[p].pts =
+Object.keys(scores).forEach(p => {
 
-    (scores[p].wins * 3) +
+    // Survival Mode
+    scores[p].progression = progression[p] || 0;
+    scores[p].alive = getAliveTeams(p);
+    scores[p].eliminated = scores[p].alive === 0;
 
-    scores[p].draws +
+    // Tournament Points
+    scores[p].pts =
+        (scores[p].wins * 3) +
+        scores[p].draws +
+        scores[p].goals +
+        (scores[p].cs * 2) +
+        scores[p].bonus +
+        scores[p].progression;
 
-    scores[p].goals +
+});
 
-    (scores[p].cs * 2) +
+return scores;
 
-    scores[p].bonus;});
-
-    return scores;
+    
 }
-
-
 function calculateScores(maxFixtureId = Infinity) {
 
     const scores = buildScores(); 
@@ -14816,8 +14917,7 @@ if (podium && sorted.length >= 3) {
         ${
 
     isSurvivalMode()
-
-        ? `❤️ ${getAliveTeams(sorted[0].name)} Alive`
+    ? `❤️ ${sorted[0].alive} Alive`
 
         : `🌟 +${sorted[0].bonus} Included`
 
@@ -14844,8 +14944,7 @@ if (podium && sorted.length >= 3) {
         ${
 
     isSurvivalMode()
-
-        ? `❤️ ${getAliveTeams(sorted[1].name)} Alive`
+    ? `❤️ ${sorted[1].alive} Alive`
 
         : `🌟 +${sorted[1].bonus} Included`
 
@@ -14865,6 +14964,7 @@ if (podium && sorted.length >= 3) {
 
     <div class="podium-name">${sorted[2].name}</div>
 
+
     <div class="podium-points">${sorted[2].pts} pts</div>
 
 
@@ -14873,7 +14973,7 @@ if (podium && sorted.length >= 3) {
 
         ${
             isSurvivalMode()
-                ? `❤️ ${getAliveTeams(sorted[2].name)} Alive`
+                ? `❤️ ${sorted[2].alive} Alive`
                 : `🌟 +${sorted[2].bonus} Included`
         } •
 
@@ -15265,13 +15365,13 @@ document.getElementById("centre-shakeup-sub").innerHTML =
 
 
 
-if(
+if (
 
     isSurvivalMode() &&
 
-    getAliveTeams(p.name)===0
+    p.eliminated
 
-){
+) {
 
 
 
@@ -15281,7 +15381,7 @@ if(
 
 }
 
-
+const survival = isSurvivalMode();
 
         tbody.innerHTML += `<tr class="${flashClass}">
 
@@ -15307,19 +15407,29 @@ if(
 
             <td style="text-align:center;">
 
-    ${
+${
+    isSurvivalMode()
 
-        isSurvivalMode()
+        ? p.eliminated
 
-        ? `<span class="bonus-chip">❤️ ${getAliveTeams(p.name)} Alive</span>`
+            ? `<span class="bonus-chip survival-chip out-chip">💀<span class="survival-label">OUT</span></span>`
+
+            : `<span class="bonus-chip survival-chip">❤️ ${p.alive}<span class="survival-label">Alive</span></span>`
 
         : `<span class="bonus-chip">🌟 +${p.bonus}</span>`
-
-    }
+}
 
 </td>
 
-            <td style="text-align:center;"><span class="points-chip">${p.pts}</span></td>
+${
+    isSurvivalMode()
+
+        ? `<td style="text-align:center;"><span class="points-chip">${p.progression}</span></td>`
+
+        : ""
+}
+
+<td style="text-align:center;"><span class="points-chip">${p.pts}</span></td>
 
         </tr>`;
 
@@ -16896,6 +17006,7 @@ if (f.round !== activeRound) {
 
 }   
 
+
 // --- NEW: GENERATE UPDATE CODE ---
 
     function updateFixtureData(id, side, val) {
@@ -16997,66 +17108,43 @@ let pending = fixtures.filter(f => {
 
     function renderAll() {
 
-        if (isSurvivalMode()) {
-            generateRoundOf32Fixtures();
-            buildAliveTable();
-        }
+    // Survival state
+    if (isSurvivalMode()) {
+        generateRoundOf32Fixtures();
+        buildAliveTable();
+    }
 
-        calculateScores();
-        renderDashboard();
+    // Core calculations
+    calculateScores();
 
-        renderFixtures();
+    // Main UI
+    renderDashboard();
+    renderFixtures();
+    renderRoadToFinal();
+    renderQuickUpdate();
 
-        console.log("Round of 32 generated.");
-        renderRoadToFinal();
+    // Tournament Centre
+    renderHallOfInfamy();
+    renderRivalryMatrix(fixtures);
 
-        renderQuickUpdate();        
+    // Narrative
+    rebuildChronicle();
+    renderTournamentLog();
 
-        renderHallOfInfamy();
+    // Survival Mode
+    updateSurvivalUI();
 
-        renderRivalryMatrix(fixtures);
+    // Dynamic UI
+    renderScoringRules();
 
-        rebuildChronicle();
+    console.log("Round of 32 generated.");
 
-        renderTournamentLog();
+    // Admin
+    let adminPanel = document.getElementById("admin-management-panel");
 
-        updateSurvivalUI();
-
-      //  let landingSection = document.getElementById("landing-section");
-
-        //let dashboardHeader = document.getElementById("dashboard-section")
-
-        let adminPanel = document.getElementById("admin-management-panel");
-
-
-
-        if (adminPanel) {
-
-            adminPanel.style.display = isAdmin ? "block" : "none";
-
-        }
-
-
-
-
-
-       // if (dashboardHeader) {
-
-       //     dashboardHeader.style.display = isAdmin ? "block" : "none";
-
-       // }
-
-      //  if (landingSection) {
-
-      //      landingSection.style.display = isAdmin ? "none" : "block";
-
-      //  }
-
-
-
-     
-
-
+    if (adminPanel) {
+        adminPanel.style.display = isAdmin ? "block" : "none";
+    }
 
 }
 
