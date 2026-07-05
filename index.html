@@ -9010,25 +9010,33 @@ function isTeamAlive(team){
         return true;
     }
 
-    const knockoutFixture = fixtures.find(f =>
-        f.id >= 73 &&
-        (f.home === team || f.away === team)
-    );
+    const knockoutFixtures = fixtures
+        .filter(f =>
+            f.id >= 73 &&
+            (f.home === team || f.away === team)
+        )
+        .sort((a,b) => a.round - b.round);
 
-    console.log(team, knockoutFixture);
-
-    if (!knockoutFixture)
+    if (!knockoutFixtures.length)
         return false;
 
-    if (knockoutFixture.status !== "completed")
-        return true;
+    for (const fixture of knockoutFixtures){
 
-    const winner = getMatchWinner(knockoutFixture.id);
+        if (fixture.status !== "completed"){
+            return true;
+        }
 
-    return winner?.team === team;
+        const winner = getMatchWinner(fixture.id);
+
+        if (!winner || winner.team !== team){
+            return false;
+        }
+
+    }
+
+    return true;
 
 }
-
 
 
 function getAliveTeams(player){
@@ -16865,8 +16873,8 @@ Object.keys(scores).forEach(p => {
 
     // Survival Mode
     scores[p].progression = progression[p] || 0;
-    scores[p].alive = getAliveTeams(p);
-    scores[p].eliminated = scores[p].alive === 0;
+scores[p].alive = getAliveTeams(p);
+scores[p].eliminated = scores[p].alive === 0;
 
     // Tournament Points
     scores[p].pts =
