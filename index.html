@@ -12,9 +12,1444 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; }
 
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+       
+/* =====================================================
+   SURVIVAL MODE V2
+===================================================== */
 
-        
+
+#hero-banner{
+
+    flex:1;
+
+}
+
+.header-icon-btn{
+
+    background:none;
+
+    border:none;
+
+    color:white;
+
+    font-size:clamp(1rem,2vw,1.4rem);
+
+    cursor:pointer;
+
+}
+
+#header-brand{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:clamp(8px,1.5vw,14px);
+
+    flex:0 0 auto;
+
+    min-width:max-content;
+
+}
+
+#header-logo{
+
+    font-size:clamp(1.7rem,3vw,2.4rem);
+
+    line-height:1;
+
+}
+
+#header-title{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    white-space:nowrap;
+
+    line-height:1.05;
+
+}
+
+.header-main-title{
+
+    font-size:clamp(.95rem,2vw,1.35rem);
+
+    font-weight:800;
+
+    color:#ffffff;
+
+    letter-spacing:.5px;
+
+}
+
+.header-sub-title{
+
+     font-size:clamp(.95rem,2vw,1.35rem);
+
+    font-weight:800;
+
+    color:#f5b942;
+
+    letter-spacing:.5px;
+
+}
+
+/* ==========================================
+   HEADER LEADER CHIP
+========================================== */
+
+#header-leader-chip{
+
+    flex:1;
+
+    display:flex;
+
+    justify-content:center;
+
+}
+
+.leader-chip{
+
+    display:flex;
+
+    align-items:center;
+
+     gap:clamp(8px,1vw,18px);
+
+    padding:clamp(6px,1vw,10px) clamp(12px,2vw,26px);
+
+    border-radius:999px;
+
+    background:linear-gradient(180deg,#fff7d6 0%,#ffe79a 100%);
+
+    border:2px solid #e6b325;
+
+    box-shadow:0 6px 18px rgba(230,179,37,.35);
+
+    white-space:nowrap;
+
+}
+
+.leader-rank{
+
+    font-size:1.5rem;
+
+}
+
+.leader-name{
+
+    font-size:clamp(.9rem,2vw,1.25rem);
+
+    font-weight:700;
+
+    color:#1f2937;
+
+}
+
+.leader-points{
+
+    font-size:clamp(.85rem,1.8vw,1.15rem);
+
+    font-weight:700;
+
+    color:#1f2937;
+
+}
+
+.leader-lead{
+
+    font-size:clamp(.8rem,1.8vw,1.1rem);
+
+    font-weight:700;
+
+    color:#15803d;
+
+}
+
+.leader-divider{
+
+    width:2px;
+
+    height:18px;
+
+    background:#e6b325;
+
+    opacity:.6;
+
+}
+
+/* ==========================================
+   TOURNAMENT TIMELINE
+========================================== */
+
+.timeline-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:24px 34px;
+
+    margin:18px 0;
+
+    box-shadow:0 8px 22px rgba(0,0,0,.08);
+
+}
+
+.timeline-title{
+
+    font-size:.9rem;
+
+    letter-spacing:.08em;
+
+    font-weight:800;
+
+    margin-bottom:20px;
+
+    color:#1f2937;
+
+}
+
+.timeline-track{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+}
+
+.timeline-stage{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    flex:1;
+
+}
+
+.timeline-dot{
+
+    width:28px;
+
+    height:28px;
+
+    border-radius:50%;
+
+    background:#e5e7eb;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:.8rem;
+
+    font-weight:700;
+
+}
+
+.timeline-stage.complete .timeline-dot{
+
+    background:#22c55e;
+
+    color:white;
+
+}
+
+.timeline-stage.current .timeline-dot{
+
+    background:#7c3aed;
+
+    transform:scale(1.18);
+
+}
+
+.timeline-text strong{
+
+    font-size:.82rem;
+
+    color:#1f2937;
+
+    white-space:nowrap;
+
+}
+
+.timeline-text strong{
+
+    font-size:.82rem;
+
+    color:#1f2937;
+
+}
+
+.timeline-text span{
+
+    font-size:.74rem;
+
+    color:#64748b;
+
+}
+
+.timeline-arrow{
+
+    color:#94a3b8;
+
+    font-weight:700;
+
+}
+
+.timeline-finale{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    color:#7c3aed;
+
+    font-weight:700;
+
+    min-width:70px;
+
+    justify-content:center;
+
+}
+
+.timeline-scroll{
+
+    overflow-x:auto;
+
+    overflow-y:hidden;
+
+    -webkit-overflow-scrolling:touch;
+
+}
+
+.timeline-track{
+
+    min-width:720px;
+
+}
+
+/* =====================================================
+   ROAD TO THE FINAL
+===================================================== */
+.rttf-round-title{
+
+    grid-column:1 / -1;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:0 0 18px;
+
+    font-size:1rem;
+
+    font-weight:800;
+
+    letter-spacing:.05em;
+
+    color:#6d28d9;
+
+    text-transform:uppercase;
+
+    position:relative;
+
+}
+
+.rttf-round-title::before,
+.rttf-round-title::after{
+
+    content:"";
+
+    flex:1;
+
+    height:1px;
+
+    background:#c4b5fd;
+
+    margin:0 16px;
+
+}
+
+.rttf-card{
+
+    background:#ffffff;
+
+    border-radius:22px;
+
+    padding:clamp(18px,2vw,28px);
+
+    margin:22px 0;
+
+    box-shadow:0 10px 28px rgba(0,0,0,.08);
+
+}
+
+.rttf-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.rttf-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+}
+
+.rttf-icon{
+
+    font-size:2rem;
+
+}
+
+.rttf-heading{
+
+    font-size:clamp(1.2rem,2vw,1.6rem);
+
+    font-weight:800;
+
+    color:#1f2937;
+
+}
+
+.rttf-subheading{
+
+    font-size:.82rem;
+
+    font-weight:700;
+
+    letter-spacing:.08em;
+
+    color:#7c3aed;
+
+}
+
+#road-to-final-pages{
+
+    position:relative;
+
+}
+
+.rttf-pagination{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-top:22px;
+
+}
+
+.rttf-pagination-dot{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#d1d5db;
+
+    transition:.25s;
+
+    flex-shrink:0;
+
+}
+
+.rttf-pagination-dot.active{
+
+    background:#7c3aed;
+
+    transform:scale(1.2);
+
+}
+#road-to-final-container{
+
+    margin:20px 0;
+
+}
+
+/* =====================================================
+   RTTF MATCH CARD
+===================================================== */
+
+.rttf-match{
+
+    background:#fafafa;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:18px;
+
+    padding:10px;
+
+    margin-bottom:12px;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.05);
+
+}
+
+.rttf-card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:12px;
+
+}
+
+.rttf-fixture-id{
+
+    background:#2563eb;
+
+    color:#fff;
+
+    padding:3px 8px;
+
+    border-radius:999px;
+
+    font-size:.68rem;
+
+    font-weight:700;
+
+}
+
+.rttf-progress{
+
+    flex:1;
+
+    text-align:center;
+
+    font-size:.72rem;
+
+    font-weight:700;
+
+    color:#6d28d9;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+}
+
+.rttf-kickoff{
+
+    font-size:.72rem;
+
+    color:#64748b;
+
+}
+
+.rttf-team-row{
+
+    display:flex;
+
+    justify-content:flex-start;
+
+    margin:6px 0;
+
+}
+
+.rttf-team-info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.rttf-flag{
+
+    width:28px;
+
+    height:20px;
+
+    object-fit:cover;
+
+    border-radius:4px;
+
+}
+
+.rttf-country{
+
+    font-size:.80rem;
+
+    font-weight:600;
+
+    color:#1f2937;
+
+    white-space:normal;
+
+    word-break:break-word;
+
+}
+
+.rttf-player{
+
+    font-size:.72rem;
+
+    color:#6b7280;
+
+}
+
+.rttf-vs{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:20px;
+
+    font-size:.58rem;
+
+    font-weight:800;
+
+    color:#7c3aed;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+
+}
+
+.rttf-match-row{
+
+    display:grid;
+
+    grid-template-columns:1fr auto 1fr;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.rttf-side{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:8px;
+
+    min-width:0;
+
+    overflow:hidden;
+
+}
+
+.rttf-side.right{
+
+    display:flex;
+
+    flex-direction:row-reverse;
+
+    justify-content:flex-start;
+
+    align-items:flex-start;
+
+    text-align:right;
+
+    margin-left:auto;
+
+    width:100%;
+
+}
+
+.rttf-centre{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex:0 0 90px;
+
+}
+
+.rttf-score-row{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.rttf-score-box{
+
+    width:24px;
+
+    height:24px;
+
+    font-size:.78rem;
+
+    border-radius:6px;
+
+    border:1px solid #d1d5db;    
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-weight:700;
+
+    background:#fff;
+
+}
+
+.rttf-pens{
+
+    margin-top:4px;
+
+    font-size:.72rem;
+
+    color:#64748b;
+
+    font-weight:600;
+
+}
+
+.rttf-family{
+
+    margin-top:16px;
+
+    padding-top:14px;
+
+    border-top:1px solid #e5e7eb;
+
+    text-align:center;
+
+    font-size:.82rem;
+
+    color:#64748b;
+
+}
+
+/* =====================================================
+   ROYAL DASHBOARD
+===================================================== */
+
+#royal-dashboard{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,minmax(0,1fr));
+
+    gap:20px;
+
+    margin:24px 0;
+
+}
+
+.royal-dashboard-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    background:#ffffff;
+
+    border-radius:22px;
+
+    border:1px solid #ececec;
+
+    overflow:hidden;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+}
+
+#royal-podium-card{
+
+    background:#fffdf7;
+
+}
+
+#royal-survival-card{
+
+    background:#fff8f9;
+
+}
+
+#royal-rivalries-card{
+
+    background:#faf7ff;
+
+}
+
+.royal-dashboard-header{
+
+    padding:18px;
+
+    text-align:center;
+
+    font-size:1.05rem;
+
+    font-weight:800;
+
+    letter-spacing:.05em;
+
+}
+
+.royal-dashboard-header.podium{
+
+    background:linear-gradient(#fffdf6,#fff7df);
+
+    color:#d97706;
+
+    border-bottom:1px solid #f5d76b;
+
+}
+
+.royal-dashboard-header.survival{
+
+    background:#ffeef2;
+
+    color:#dc2626;
+
+    border-bottom:1px solid #fecdd3;
+
+}
+
+.royal-dashboard-header.rivalry{
+
+    background:#f3ecff;
+
+    color:#7c3aed;
+
+    border-bottom:1px solid #ddd6fe;
+
+}
+
+#royal-podium-content,
+#royal-survival-content,
+#royal-rivalries-content{
+
+    flex:1;
+
+    padding:18px;
+
+}
+
+.royal-dashboard-tile{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    min-height:108px;
+
+    padding:14px 16px;
+
+    margin-bottom:14px;
+
+    border-radius:16px;
+
+    border:1px solid rgba(0,0,0,.08);
+
+    background:#ffffff;
+
+    box-sizing:border-box;
+
+}
+
+.royal-dashboard-tile:last-child{
+
+    margin-bottom:0;
+
+}
+
+.place-1{
+
+    background:#fffdf2;
+
+    border-color:#f6d54a;
+
+}
+
+.place-2{
+
+    background:#f8fbff;
+
+    border-color:#dbeafe;
+
+}
+
+.place-3{
+
+    background:#fff8f1;
+
+    border-color:#f3c58a;
+
+}
+
+.survival-tile{
+
+    background:#fff3f5;
+
+    border-color:#fecdd3;
+
+    justify-content:space-evenly;
+
+    align-items:center;
+
+}
+
+.rivalry-tile{
+
+    background:#f8f5ff;
+
+    border-color:#ddd6fe;
+
+}
+
+/* =====================================================
+   ROYAL DASHBOARD CONTENT
+===================================================== */
+
+.royal-podium-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:8px;
+
+}
+
+.royal-podium-name{
+
+    display:flex;
+
+    align-items:center;
+
+    font-size:1.15rem;
+
+    font-weight:800;
+
+    color:#1f2937;
+
+}
+
+.royal-medal{
+
+    margin-right:8px;
+
+}
+
+.royal-podium-score{
+
+    font-size:1.3rem;
+
+    font-weight:800;
+
+    color:#1f2937;
+
+}
+
+.royal-podium-bottom{
+
+    font-size:.88rem;
+
+    color:#64748b;
+
+    line-height:1.45;
+
+}
+
+/* =====================================================
+   SURVIVAL TILES
+===================================================== */
+
+.royal-survival-heading{
+
+    text-align:center;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+    color:#64748b;
+
+    margin-bottom:10px;
+
+}
+
+.royal-survival-value{
+
+    text-align:center;
+
+    font-size:1.45rem;
+
+    font-weight:800;
+
+    color:#1f2937;
+
+    line-height:1.3;
+
+    margin-bottom:8px;
+
+}
+
+.royal-survival-sub{
+
+    text-align:center;
+
+    font-size:.86rem;
+
+    color:#64748b;
+
+    line-height:1.4;
+
+}
+
+/* =====================================================
+   RIVALRY TILES
+===================================================== */
+
+.royal-rivalry-heading{
+
+    text-align:center;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.08em;
+
+    color:#64748b;
+
+    margin-bottom:10px;
+
+}
+
+.royal-rivalry-value{
+
+    text-align:center;
+
+    font-size:1.35rem;
+
+    font-weight:800;
+
+    color:#1f2937;
+
+    line-height:1.3;
+
+    margin-bottom:8px;
+
+}
+
+.royal-rivalry-sub{
+
+    text-align:center;
+
+    font-size:.86rem;
+
+    color:#64748b;
+
+}
+
+/* =====================================================
+   DASHBOARD BUTTON
+===================================================== */
+
+.royal-dashboard-button{
+
+    width:calc(100% - 36px);
+
+    margin:18px;
+
+    margin-top:auto;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:12px;
+
+    font-size:.92rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+#royal-podium-card .royal-dashboard-button{
+
+    background:#fff8e6;
+
+    border:1px solid #f6d54a;
+
+    color:#92400e;
+
+}
+
+#royal-survival-card .royal-dashboard-button{
+
+    background:#ffeef2;
+
+    border:1px solid #fecdd3;
+
+    color:#b91c1c;
+
+}
+
+#royal-rivalries-card .royal-dashboard-button{
+
+    background:#f3ecff;
+
+    border:1px solid #ddd6fe;
+
+    color:#6d28d9;
+
+}
+
+.royal-dashboard-button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+}
+
+#royal-rivalries-card{
+
+    background:#faf7ff;
+
+}
+
+#chronicle-ticker{
+
+    margin:20px 0;
+
+}
+
+/* =====================================================
+   APPLICATION LAYOUT
+===================================================== */
+
+html,
+body{
+
+    margin:0;
+
+    padding:0;
+
+    height:100%;
+
+}
+
+body{
+
+    background:#dfe3ea;
+
+}
+
+.container{
+
+    max-width:1000px;
+
+    margin:0 auto;
+
+    background:white;
+
+    padding:0;
+
+    border-radius:12px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+#app-header{
+
+    position:fixed;
+
+    top:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:100%;
+
+    max-width:1000px;
+
+    height:72px;
+
+    display:grid;
+
+    grid-template-columns:auto 1fr auto;
+
+    align-items:center;
+
+    gap:clamp(10px,2vw,24px);
+
+    padding:0 clamp(12px,2vw,22px);
+
+    background:#071224;
+
+    color:white;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+    box-sizing:border-box;
+
+    box-shadow:0 4px 16px rgba(0,0,0,.25);
+
+    z-index:1000;
+
+}
+
+#app-pages{
+
+    padding-top:72px;
+
+    padding-bottom:72px;
+
+    min-height:100vh;
+
+}
+
+.app-page .dashboard-header{
+
+    cursor:default;
+
+}
+
+.app-page .dashboard-header:hover{
+
+    background:#f8fafc;
+
+    transform:none;
+
+}
+
+.app-page .dashboard-header .section-title-row{
+
+    justify-content:flex-start;
+
+}
+
+.page-title{
+
+    justify-content:flex-start;
+
+}
+
+.page-content{
+
+    padding:20px;
+
+}
+
+#app-footer{
+
+    position:fixed;
+
+    bottom:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:100%;
+
+    max-width:1000px;
+
+    height:72px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    background:#071224;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 -4px 16px rgba(0,0,0,.25);
+
+    box-sizing:border-box;
+
+    z-index:1000;
+
+}
+
+.app-page{
+
+    display:none;
+
+    animation:fadePage .25s ease;
+
+}
+
+.app-page.active{
+
+    display:block;
+
+}
+
+@keyframes fadePage{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ======================================================
+   APPLICATION FOOTER
+====================================================== */
+
+.footer-button{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:4px;
+
+    border:none;
+
+    background:none;
+
+    color:#94a3b8;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    border-radius:12px;
+
+    padding:8px;
+
+}
+
+.footer-button:hover{
+
+    color:white;
+
+    background:rgba(255,255,255,.06);
+
+}
+
+.footer-button.active{
+
+    color:#38bdf8;
+
+    background:rgba(56,189,248,.15);
+
+}
+
+.footer-icon{
+
+    font-size:22px;
+
+    line-height:1;
+
+}
+
+.footer-label{
+
+    font-size:.72rem;
+
+    font-weight:600;
+
+    letter-spacing:.4px;
+
+}
+
+.hidden{
+
+    display:none !important;
+
+}
+/* =====================================================
+   UI V1
+===================================================== */
 
         /* Admin Bar */
 
@@ -642,6 +2077,56 @@ min-width:0;
     padding:0 20px 18px;
 
     max-width:170px;
+
+}
+
+/* =====================================================
+   ROAD TO THE FINAL (RTTF) Preview
+===================================================== */
+
+#road-to-final-preview{
+
+    display:flex;
+
+    overflow-x:auto;
+
+    scroll-snap-type:x mandatory;
+
+    scroll-behavior:smooth;
+
+    gap:20px;
+
+    padding:16px 0;
+
+}
+
+#road-to-final-preview::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+.rttf-page{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+
+    gap:16px;
+
+    align-items:start;
+
+}
+
+.rttf-page h3{
+
+    margin:0 0 20px;
+
+    text-align:center;
+
+    font-size:1.25rem;
+
+    color:#1e3a5f;
 
 }
 
@@ -2728,6 +4213,491 @@ border:1px solid #f5c2c7;
 
 <div class="container">
 
+ <!--=====================================================
+         APPLICATION HEADER
+    ======================================================-->
+
+    <header id="app-header">
+
+    <div id="header-brand">
+
+        <div id="header-logo">🏆</div>
+
+        <div id="header-title">
+
+            <div class="header-main-title">FAMILY WORLD CUP</div>
+
+            <div class="header-sub-title">SWEEPSTAKE TOURNAMENT</div>
+
+        </div>
+
+    </div>
+
+    <div id="header-leader-chip">
+
+    <div class="leader-chip">
+
+        <span class="leader-rank">🥇</span>
+
+        <span class="leader-name">Lewis</span>
+
+        <span class="leader-divider"></span>
+
+        <span class="leader-points">128 pts</span>
+
+        <span class="leader-divider"></span>
+
+        <span class="leader-lead">⭐ +11</span>
+
+    </div>
+
+    </div>
+
+    <div id="header-navigation">
+
+        <button id="header-awards-btn" class="header-icon-btn">🏅</button>
+
+        <button id="header-home-btn" class="header-icon-btn">🏠</button>
+
+        <button id="header-menu-btn" class="header-icon-btn">☰</button>
+
+    </div>
+
+</header>
+
+ <!--=====================================================
+         APPLICATION PAGES
+    ======================================================-->
+
+<main id="app-pages">
+
+    <!-- ======================================================
+         HOME PAGE
+    ====================================================== -->        
+
+<section id="page-home" class="app-page active">
+    <div class="page-content">
+
+    <!-- ======================================================
+         TOURNAMENT TIMELINE
+    ====================================================== -->
+
+    <div class="timeline-scroll">
+
+        <div class="timeline-track">
+
+            <section id="tournament-timeline">
+
+                <div class="timeline-card">
+
+                    <div class="timeline-title">
+                        TOURNAMENT TIMELINE
+                    </div>
+
+                    <div class="timeline-track">
+
+                        <div class="timeline-stage complete">
+
+                            <div class="timeline-dot">✓</div>
+
+                            <div class="timeline-text">
+                                <strong>GROUP STAGE</strong>
+                                <span>72 / 72</span>
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-arrow">→</div>
+
+                        <div class="timeline-stage current">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-text">
+                                <strong>ROUND OF 32</strong>
+                                <span>In Progress</span>
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-arrow">→</div>
+
+                        <div class="timeline-stage">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-text">
+                                <strong>ROUND OF 16</strong>
+                                <span>Locked</span>
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-arrow">→</div>
+
+                        <div class="timeline-stage">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-text">
+                                <strong>QUARTER FINALS</strong>
+                                <span>Locked</span>
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-arrow">→</div>
+
+                        <div class="timeline-stage">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-text">
+                                <strong>SEMI FINALS</strong>
+                                <span>Locked</span>
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-arrow">→</div>
+
+                        <div class="timeline-finale">
+
+                            🏆
+
+                            <span>THE FINAL</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- ======================================================
+         ROAD TO THE FINAL
+    ====================================================== -->
+
+    <section id="road-to-final-container">
+
+        <div class="rttf-card">
+
+            <div class="rttf-header">
+
+                <div class="rttf-title">
+
+                    <span class="rttf-icon">🏆</span>
+
+                    <div>
+
+                        <div class="rttf-heading">
+                            ROAD TO THE FINAL
+                        </div>
+
+                        <div class="rttf-subheading">
+                            SURVIVAL MODE
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="road-to-final-pages">
+
+                <!-- RTTF Pages Render Here -->
+
+            </div>
+
+            <div class="rttf-pagination">
+
+                <span class="rttf-pagination-dot active"
+                      onclick="showRTTFPage(0)"></span>
+
+                <span class="rttf-pagination-dot"
+                      onclick="showRTTFPage(1)"></span>
+
+                <span class="rttf-pagination-dot"
+                      onclick="showRTTFPage(2)"></span>
+
+                <span class="rttf-pagination-dot"
+                      onclick="showRTTFPage(3)"></span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ======================================================
+         ROYAL DASHBOARD
+    ====================================================== -->
+
+    <section id="royal-dashboard">
+
+        <div id="royal-podium-card"
+             class="royal-dashboard-card">
+
+            <div class="royal-dashboard-header podium">
+
+                <div class="royal-dashboard-title">
+
+                    🏆 LIVE PODIUM
+
+                </div>
+
+            </div>
+
+            <div id="royal-podium-content"></div>
+
+            <button class="royal-dashboard-button"
+                    onclick="showPage('page-standings')">
+
+                View Full Standings →
+
+            </button>
+
+        </div>
+
+        <div id="royal-survival-card"
+             class="royal-dashboard-card">
+
+            <div class="royal-dashboard-header survival">
+
+                ❤️ SURVIVAL TRACKER
+
+            </div>
+
+            <div id="royal-survival-content"></div>
+
+            <button class="royal-dashboard-button"
+                    onclick="showPage('page-assignments')">
+
+                View Team Assignments →
+
+            </button>
+
+        </div>
+
+        <div id="royal-rivalries-card"
+             class="royal-dashboard-card">
+
+            <div class="royal-dashboard-header rivalry">
+
+                ⚔️ FAMILY RIVALRIES
+
+            </div>
+
+            <div id="royal-rivalries-content"></div>
+
+            <button class="royal-dashboard-button"
+                    onclick="showPage('page-rivalries')">
+
+                View Rivalry Matrix →
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- ======================================================
+         CHRONICLE
+    ====================================================== -->
+
+    <section id="chronicle-ticker"></section>
+</div>
+</section>
+
+ <section id="page-fixtures"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+        <section id="page-centre"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+        <section id="page-standings" class="app-page" hidden>
+
+    <div id="live-scoreboard">
+
+        <div class="dashboard-header">
+
+            <h3 class="section-title-row">
+
+                <span>
+                    🏆 Live Scoreboard
+                </span>
+
+            </h3>
+
+        </div>
+
+        <div id="scoreboard-content">
+
+            <div class="rules-box-header section-title-row"
+                 onclick="toggleSection('score-rules','score-rules-arrow')"
+                 style="cursor:pointer; margin-bottom:10px;">
+
+                <span>📊 Scoring Rules</span>
+
+                <span id="score-rules-arrow">▶</span>
+
+            </div>
+
+            <div id="score-rules"
+                 class="rules-box"
+                 style="display:none; background:#f0f7ff; border:1px solid #bee3f8; padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.85rem; color:#2c5282;">
+
+                <div id="scoring-rules-content"></div>
+
+            </div>
+
+            <div class="scoreboard-wrapper">
+
+                <table id="scoreboard">
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="width:35%;">👤 Player</th>
+                            <th style="text-align:center;">🏆 Wins</th>
+                            <th style="text-align:center;">🤝 Draws</th>
+                            <th style="text-align:center;">⚽ Goals</th>
+                            <th style="text-align:center;">🧤 CS</th>
+                            <th id="bonus-header" style="text-align:center;"></th>
+                            <th id="progression-header" style="text-align:center;"></th>
+                            <th style="text-align:center;">🏆 Total</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+        <section id="page-assignments" class="app-page" hidden>
+
+    <div class="dashboard-header"
+         id="dashboard-section">
+
+        <h3 id="dashboard-title"
+             class="section-title-row page-title">
+
+            <span>
+
+                📋 Team Assignments & Favourites
+
+            </span>
+
+        </h3>
+
+    </div>
+
+    <div id="team-content">
+
+        <div class="rules-box"
+             id="team-guide-box"
+             style="background:#ebf8ff; border:1px solid #bee3f8; padding:12px; border-radius:8px; margin:15px 0; font-size:0.85rem; color:#2c5282;">
+
+        </div>
+
+        <div class="config-grid"
+             id="star-configurator">
+
+            <!-- Cards generated dynamically -->
+
+        </div>
+
+    </div>
+
+</section>
+
+        <section id="page-rivalries"
+                 class="app-page"
+                 hidden>
+<div id="rivalry-matrix"></div>
+        </section>
+
+        <section id="page-infamy"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+        <section id="page-chronicle"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+    </main>
+
+<!-- ======================================================
+     APPLICATION FOOTER
+====================================================== -->
+
+<footer id="app-footer">
+
+    <button id="footer-fixtures"
+            class="footer-button">
+
+        <span class="footer-icon">⚽</span>
+
+        <span class="footer-label">
+            Fixtures
+        </span>
+
+    </button>
+
+    <button id="footer-centre"
+            class="footer-button">
+
+        <span class="footer-icon">🏟️</span>
+
+        <span class="footer-label">
+            Centre
+        </span>
+
+    </button>
+
+    <button id="footer-infamy"
+            class="footer-button">
+
+        <span class="footer-icon">😂</span>
+
+        <span class="footer-label">
+            Infamy
+        </span>
+
+    </button>
+
+</footer>    
+
+<!--======================================================
+     V1 UI
+======================================================-->
+<div id="legacy-ui" class="hidden">
 <div class="admin-bar">
 
     <div>Tournament Mode: <span id="admin-status-badge" class="admin-status status-viewer">Viewer Mode (Read-Only)</span></div>
@@ -2742,8 +4712,7 @@ border:1px solid #f5c2c7;
 
 </div>
 
-
-
+<!---->
 <div id="hero-banner">
 
 
@@ -2852,7 +4821,7 @@ border:1px solid #f5c2c7;
 
 </div>
 
-    
+ 
 
     <div id="admin-management-panel" style="display:none; background: #fffaf0; border: 2px dashed #ecc94b; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
 
@@ -2915,16 +4884,30 @@ Generate R32
     <!-- ===================================================== -->
 
     <div id="road-to-final-preview-card"
-         class="dashboard-card"
-         style="display:none; margin-top:16px;">
+     class="dashboard-card"
+     style="display:none; margin-top:16px;">
 
-        <div class="dashboard-header">
-            🧪 Road to the Final Preview
+    <div class="dashboard-header">
+        🏆 Road To The Final
+    </div>
+
+    <div id="road-to-final-preview">
+
+        <div class="rttf-page" id="rttf-round16">
+            <h3>Round of 16</h3>
         </div>
 
-        <div id="road-to-final-preview"></div>
+        <div class="rttf-page" id="rttf-quarterfinals">
+            <h3>Quarter-finals</h3>
+        </div>
+
+        <div class="rttf-page" id="rttf-finals">
+            <h3>Finals Weekend</h3>
+        </div>
 
     </div>
+
+</div>
 
 </div>
 
@@ -2945,12 +4928,12 @@ font-size:12px;
 
 </div>
     </div>
-
-<!--<div id="road-to-final-container"></div>-->
+<!--
+<div id="road-to-final-container"></div>
 
 <div id="leaderboard-strip" class="leaderboard-strip"></div>
 
-    
+
 
 
 
@@ -2971,7 +4954,7 @@ font-size:12px;
     </div>-->
 
 
-
+<div id="legacy-team-assignments" hidden>
 <div class="dashboard-header" 
 
     id="dashboard-section"    
@@ -3024,7 +5007,7 @@ font-size:12px;
 
 
 </div> <!-- team-content -->
-
+</div>
     
 
    
@@ -3428,6 +5411,7 @@ font-size:12px;
 
 </div>
 
+<div id="legacy-scoreboard" hidden>
 <div id="live-scoreboard">
 
 
@@ -3537,7 +5521,7 @@ font-size:12px;
     </table>
 
     </div>
-
+</div>
 </div>
 
 
@@ -3560,59 +5544,37 @@ font-size:12px;
 
 
 
-<div id="fixtures-anchor"></div>
+<section id="page-fixtures" class="app-page">
 
+    <!-- ======================================================
+         TOURNAMENT FIXTURES
+    ====================================================== -->
 
+    <div id="fixtures-anchor"></div>
 
-<div class="dashboard-header"
+    <div class="dashboard-header">
 
-     onclick="toggleSection('fixtures-content','fixtures-arrow')">
+        <h3 class="section-title-row">
 
+            <span>
+                🗓️ Full Tournament Fixtures
+            </span>
 
+        </h3>
 
-    <h3 class="section-title-row">
+    </div>
 
+    <div id="fixtures-content">
 
+        <div id="fixtures-container">
 
-        <span>
+            <!-- Loaded dynamically -->
 
-            🗓️ Full Tournament Fixtures
+        </div>
 
-        </span>
-
-
-
-        <span id="fixtures-arrow">
-
-            ▼
-
-        </span>
-
-
-
-    </h3>
-
-
-
+    </div>
 </div>
-
-
-
-<div id="fixtures-content">
-
-
-
-    <div id="fixtures-container">
-
-    <!-- Loaded dynamically -->
-
-</div>
-
-
-
-</div> <!-- fixtures-content -->
-
-</div>
+</section>
 
 
 
@@ -6078,7 +8040,7 @@ if (fixture.home && fixture.away) {
     );
 
 }
-
+updateKnockoutWinner(fixture);
 
 
         });
@@ -6503,41 +8465,104 @@ function buildRoadToFinal(){
 
         rounds: [
 
-            {
-                key: "round16",
-                title: "Round of 16",
-                fixtures: fixtures.filter(f => f.id >= 89 && f.id <= 96)
-            },
+    {
+        key: "round32",
+        title: "Round of 32",
+        fixtures: fixtures.filter(f => f.id >= 73 && f.id <= 88)
+    },
 
-            {
-                key: "quarterFinals",
-                title: "Quarter-finals",
-                fixtures: fixtures.filter(f => f.id >= 97 && f.id <= 100)
-            },
+    {
+        key: "round16",
+        title: "Round of 16",
+        fixtures: fixtures.filter(f => f.id >= 89 && f.id <= 96)
+    },
 
-            {
-                key: "semiFinals",
-                title: "Semi-finals",
-                fixtures: fixtures.filter(f => f.id >= 101 && f.id <= 102)
-            },
+    {
+        key: "quarterFinals",
+        title: "Quarter-finals",
+        fixtures: fixtures.filter(f => f.id >= 97 && f.id <= 100)
+    },
 
-            {
-                key: "thirdPlace",
-                title: "Third Place Play-off",
-                fixtures: fixtures.filter(f => f.id === 103)
-            },
+    {
+        key: "finalsWeekend",
+        title: "Finals Weekend",
+        fixtures: fixtures.filter(f => f.id >= 101 && f.id <= 104)
+    }
 
-            {
-                key: "final",
-                title: "Final",
-                fixtures: fixtures.filter(f => f.id === 104)
-            }
-
-        ]
+]
 
     };
 
 }
+
+// =====================================================
+// RTTF PLACEHOLDER LABELS
+// =====================================================
+
+function getRTTFPlaceholder(fixtureId, side){
+
+    const placeholders = {
+
+        97:{home:"Winner R16-1",away:"Winner R16-2"},
+        98:{home:"Winner R16-3",away:"Winner R16-4"},
+        99:{home:"Winner R16-5",away:"Winner R16-6"},
+        100:{home:"Winner R16-7",away:"Winner R16-8"},
+
+        101:{home:"Winner QF-1",away:"Winner QF-2"},
+        102:{home:"Winner QF-3",away:"Winner QF-4"},
+
+        103:{home:"Loser SF-1",away:"Loser SF-2"},
+
+        104:{home:"Winner SF-1",away:"Winner SF-2"}
+
+    };
+
+    return placeholders[fixtureId]?.[side] || "TBD";
+
+}
+
+/* =====================================================
+   APPLICATION NAVIGATION
+===================================================== */
+
+function showPage(pageId){
+
+    document
+        .querySelectorAll(".app-page")
+        .forEach(page =>{
+
+            page.classList.remove("active");
+            page.hidden = true;
+
+        });
+
+    const page = document.getElementById(pageId);
+
+    if(page){
+
+        page.hidden = false;
+        page.classList.add("active");
+if(pageId === "page-rivalries"){
+
+    renderRivalryMatrix(fixtures);
+
+}
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+    }
+
+}
+
+document
+    .getElementById("header-home-btn")
+    .addEventListener("click",()=>{
+
+        showPage("page-home");
+
+});
 
 // =====================================================
 // ENGINE 6.1 - ROAD TO THE FINAL RENDERER
@@ -6567,9 +8592,9 @@ function renderRoadToFinal(){
                 document.createElement("div");
 
             row.innerHTML = `
-                ${fixture.home || "TBD"}
+                ${fixture.home || getRTTFPlaceholder(fixture.id,"home")}
                 vs
-                ${fixture.away || "TBD"}
+                ${fixture.away || getRTTFPlaceholder(fixture.id,"away")}
             `;
 
             section.appendChild(row);
@@ -6582,6 +8607,345 @@ function renderRoadToFinal(){
 
 }
 
+
+function buildRTTFCard(fixture,prefix){
+
+    const card =
+        document.createElement("div");
+
+    card.className =
+        "rttf-match";
+
+    const home =
+        fixture.home ||
+        getRTTFPlaceholder(fixture.id,"home");
+
+    const away =
+        fixture.away ||
+        getRTTFPlaceholder(fixture.id,"away");
+
+    const homeFlag = flagCodes[fixture.home] || "";
+const awayFlag = flagCodes[fixture.away] || "";
+
+let progressText = "";
+
+if(fixture.winner){
+
+    const winnerTeam =
+    fixture.winner === "home"
+        ? fixture.home
+        : fixture.winner === "away"
+            ? fixture.away
+            : "";
+
+    const winnerPlayer =
+        fixture.winner === "home"
+            ? fixture.homeUser
+            : fixture.winner === "away"
+                ? fixture.awayUser
+                : "";
+
+    if(winnerTeam){
+
+        progressText =
+            `🏆 ${winnerPlayer} & ${winnerTeam} progress${
+                fixture.homeScore === fixture.awayScore ? " via pens" : ""
+            }`;
+
+    }
+
+}
+
+card.innerHTML = `
+
+<div class="rttf-card-header">
+
+    <span class="rttf-fixture-id">
+        ${prefix}-${
+    fixture.round===4 ? fixture.id-72 :
+    fixture.round===5 ? fixture.id-88 :
+    fixture.round===6 ? fixture.id-96 :
+    fixture.round===7 ? fixture.id-100 :
+    fixture.round===8 ? "3P" :
+    fixture.round===9 ? "F" :
+    fixture.id
+}
+    </span>
+
+    <span class="rttf-progress">
+    ${progressText}
+    </span>
+
+    <span class="rttf-kickoff">
+        ${fixture.date} • ${fixture.kickoff}
+    </span>
+
+</div>
+
+<div class="rttf-match-row">
+
+    <div class="rttf-side left">
+
+        <img class="rttf-flag"
+             src="https://flagcdn.com/${homeFlag}.svg">
+
+        <div>
+
+            <div class="rttf-country">${home}</div>
+
+            <div class="rttf-player">👤 ${fixture.homeUser}</div>
+
+        </div>
+
+    </div>
+
+    <div class="rttf-centre">
+
+        <div class="rttf-score-row">
+
+            <span class="rttf-score-box">${fixture.homeScore ?? "-"}</span>
+
+            <span class="rttf-vs">VS</span>
+
+            <span class="rttf-score-box">${fixture.awayScore ?? "-"}</span>
+
+        </div>
+
+        ${
+            fixture.status==="completed" &&
+            fixture.round>=4 &&
+            fixture.homeScore==fixture.awayScore &&
+            fixture.homePens!=null &&
+            fixture.awayPens!=null &&
+            fixture.homePens!=="" &&
+            fixture.awayPens!==""
+
+            ? `<div class="rttf-pens">
+
+                Pens ${fixture.homePens} - ${fixture.awayPens}
+
+               </div>`
+
+            : ""
+
+        }
+
+    </div>
+
+    <div class="rttf-side right">
+
+        <img class="rttf-flag"
+             src="https://flagcdn.com/${awayFlag}.svg">
+
+        <div>
+
+            <div class="rttf-country">${away}</div>
+
+            <div class="rttf-player">👤 ${fixture.awayUser}</div>
+
+        </div>
+
+    </div>
+
+</div>
+
+`;
+
+    return card;
+
+}
+// =====================================================
+// ENGINE 6.2 - ROAD TO THE FINAL (HOME RENDERER)
+// =====================================================
+
+function renderRoadToFinalHome(){
+
+    const container =
+        document.getElementById("road-to-final-pages");
+
+    if(!container)
+        return;
+
+    container.innerHTML = "";
+
+// -----------------------------------------------------
+// For now always show Page 1 (Round of 32)
+// This will become dynamic when the swipe engine is added.
+// -----------------------------------------------------
+
+const round =
+    tournament.roadToFinal.rounds[0];
+
+const fixturesToRender =
+    getDisplayFixtures().filter(f => f.round === 4);
+
+const page =
+    document.createElement("div");
+
+page.className =
+    "rttf-page";
+
+page.innerHTML =
+    `<div class="rttf-round-title">${round.title}</div>`;
+
+fixturesToRender.forEach(fixture=>{
+
+    
+
+    page.appendChild(
+    buildRTTFCard(
+        fixture,
+        "R32"
+    )
+);
+
+});
+
+container.appendChild(page);
+
+// -----------------------------------------------------
+// PAGE 2 - ROUND OF 16
+// -----------------------------------------------------
+
+const page2 = document.createElement("div");
+page2.className = "rttf-page";
+page2.classList.remove("active");
+
+const round16 =
+    tournament.roadToFinal.rounds[1];
+
+page2.innerHTML =
+    `<div class="rttf-round-title">${round16.title}</div>`;
+
+const fixturesToRender2 =
+    fixtures.filter(f => f.round === 5);
+
+fixturesToRender2.forEach(fixture=>{
+
+    const card = buildRTTFCard(fixture,"R16");
+
+    page2.appendChild(card);
+
+});
+
+container.appendChild(page2);
+
+// -----------------------------------------------------
+// PAGE 3 - QUARTER FINALS
+// -----------------------------------------------------
+
+const page3 = document.createElement("div");
+page3.className = "rttf-page";
+page3.classList.remove("active");
+
+page3.innerHTML =
+    `<div class="rttf-round-title">Quarter-finals</div>`;
+
+fixtures
+.filter(f=>f.round===6)
+.forEach(fixture=>{
+
+    page3.appendChild(
+        buildRTTFCard(fixture,"QF")
+    );
+
+});
+
+page3.insertAdjacentHTML(
+    "beforeend",
+    `<div class="rttf-round-title">Semi-finals</div>`
+);
+
+fixtures
+.filter(f=>f.round===7)
+.forEach(fixture=>{
+
+    page3.appendChild(
+        buildRTTFCard(fixture,"SF")
+    );
+
+});
+
+container.appendChild(page3);
+
+// -----------------------------------------------------
+// PAGE 4 - FINALS WEEKEND
+// -----------------------------------------------------
+
+const page4 = document.createElement("div");
+page4.className = "rttf-page";
+page4.classList.remove("active");
+
+page4.innerHTML =
+    `<div class="rttf-round-title">Finals Weekend</div>`;
+
+fixtures
+.filter(f=>f.round===8 || f.round===9)
+.forEach(fixture=>{
+
+    page4.appendChild(
+        buildRTTFCard(
+            fixture,
+            fixture.round===8 ? "3P" : "F"
+        )
+    );
+
+});
+
+container.appendChild(page4);
+
+showRTTFPage(currentRTTFPage);
+
+const pages =
+    container.querySelectorAll(".rttf-page");
+
+pages.forEach((p,index)=>{
+
+    p.style.display =
+        index===0
+            ? "grid"
+            : "none";
+
+});
+}
+
+let currentRTTFPage = 0;
+
+function showRTTFPage(pageIndex){
+
+    const pages =
+        document.querySelectorAll("#road-to-final-pages .rttf-page");
+
+    const dots =
+        document.querySelectorAll(".rttf-pagination-dot");
+
+    if(pageIndex < 0)
+        pageIndex = 0;
+
+    if(pageIndex >= pages.length)
+        pageIndex = pages.length - 1;
+
+    currentRTTFPage = pageIndex;
+
+    pages.forEach((page,index)=>{
+
+        page.style.display =
+            index === pageIndex
+                ? "grid"
+                : "none";
+
+    });
+
+    dots.forEach((dot,index)=>{
+
+        dot.classList.toggle(
+            "active",
+            index === pageIndex
+        );
+
+    });
+
+}
 // =====================================================
 
 // ENGINE 5.0 - SURVIVAL MODE
@@ -6763,12 +9127,11 @@ function updateSurvivalUI(){
 
     if (dashboardTitle) {
 
-        dashboardTitle.innerHTML = `
-            <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
-            <span id="team-arrow">▶</span>
-        `;
+    dashboardTitle.innerHTML = `
+        <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
+    `;
 
-    }
+}
 
     // Scoreboard headers
 
@@ -13331,8 +15694,8 @@ function testParticipantResolver(){
     "away":"",
     "homeUser":"",
     "awayUser":"",
-    "homeScore":"",
-    "awayScore":"",
+    "homeScore":1,
+    "awayScore":0,
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -13340,7 +15703,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"upcoming"
+    "status":"completed"
 },
 {
     "id":88,
@@ -13378,8 +15741,8 @@ function testParticipantResolver(){
     "awaySource":77,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":"",
-    "awayScore":"",
+    "homeScore":0,
+    "awayScore":1,
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -13387,7 +15750,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"upcoming"
+    "status":"completed"
 },
 {
     "id":90,
@@ -13401,8 +15764,8 @@ function testParticipantResolver(){
     "awaySource":75,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":"",
-    "awayScore":"",
+    "homeScore":0,
+    "awayScore":3,
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -13410,7 +15773,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"upcoming"
+    "status":"completed"
 },
 {
     "id":91,
@@ -14881,7 +17244,446 @@ function getLatestCompletedFixture(fixtures) {
 
 }
 
+function renderPodium(targetId, sorted){
 
+    const podium =
+        document.getElementById(targetId);
+
+    if(!podium || sorted.length < 3)
+        return;
+
+    podium.innerHTML = `
+
+        <div class="podium-card podium-gold">
+
+    <div class="podium-place">🥇</div>
+
+    <div class="podium-name">${sorted[0].name}</div>
+
+    <div class="podium-points">${sorted[0].pts} pts</div>
+
+
+
+    <div class="podium-gap">
+
+        ${
+
+    isSurvivalMode()
+    ? `❤️ ${sorted[0].alive} Alive`
+
+        : `🌟 +${sorted[0].bonus} Included`
+
+} • Leads by ${sorted[0].pts - sorted[1].pts} pts
+
+    </div>
+
+</div>
+
+
+
+        <div class="podium-card podium-silver">
+
+    <div class="podium-place">🥈</div>
+
+    <div class="podium-name">${sorted[1].name}</div>
+
+    <div class="podium-points">${sorted[1].pts} pts</div>
+
+
+
+    <div class="podium-gap">
+
+        ${
+
+    isSurvivalMode()
+    ? `❤️ ${sorted[1].alive} Alive`
+
+        : `🌟 +${sorted[1].bonus} Included`
+
+} •
+
+        ${getRankChangeText(sorted[1])}
+
+    </div>
+
+</div>
+
+
+
+        <div class="podium-card podium-bronze">
+
+    <div class="podium-place">🥉</div>
+
+    <div class="podium-name">${sorted[2].name}</div>
+
+
+    <div class="podium-points">${sorted[2].pts} pts</div>
+
+
+
+    <div class="podium-gap">
+
+        ${
+            isSurvivalMode()
+                ? `❤️ ${sorted[2].alive} Alive`
+                : `🌟 +${sorted[2].bonus} Included`
+        } •
+
+        ${getRankChangeText(sorted[2])}
+
+    </div>
+
+</div>
+
+    `;
+
+}
+
+function buildRoyalTile(title,value,subtitle,place=""){
+
+    return `
+
+<div class="royal-dashboard-tile ${place}">
+
+    <div class="royal-podium-top">
+
+        <div class="royal-podium-name">
+
+            ${title}
+
+        </div>
+
+        <div class="royal-podium-score">
+
+            ${value}
+
+        </div>
+
+    </div>
+
+    <div class="royal-podium-bottom">
+
+        ${subtitle}
+
+    </div>
+
+</div>
+
+`;
+
+}
+
+function renderRoyalPodium(sorted){
+
+    const container =
+        document.getElementById("royal-podium-content");
+
+    if(!container)
+        return;
+
+    container.innerHTML = "";
+
+    sorted.slice(0,3).forEach((player,index)=>{
+
+        const medal =
+            index===0 ? "🥇" :
+            index===1 ? "🥈" :
+            "🥉";
+
+        let status =
+            "Holding Position";
+
+        if(index===0 && sorted.length>1){
+
+            status =
+                `Leads by ${player.pts-sorted[1].pts} pts`;
+
+        }
+
+        const tile =
+            document.createElement("div");
+
+        tile.className =
+            `royal-dashboard-tile place-${index+1}`;
+
+        tile.innerHTML = `
+
+<div class="royal-podium-top">
+
+    <div class="royal-podium-name">
+
+        <span class="royal-medal">${medal}</span>
+
+        ${player.name}
+
+    </div>
+
+    <div class="royal-podium-score">
+
+        ${player.pts}
+
+    </div>
+
+</div>
+
+<div class="royal-podium-bottom">
+
+    ❤️ ${player.alive} Alive • ${status}
+
+</div>
+
+`;
+
+        container.appendChild(tile);
+
+    });
+
+}
+function renderRoyalSurvival(sorted){
+
+    const container =
+        document.getElementById("royal-survival-content");
+
+    if(!container)
+        return;
+
+    const maxAlive =
+        Math.max(...sorted.map(p=>p.alive));
+
+    const leaders =
+        sorted
+            .filter(p=>p.alive===maxAlive)
+            .map(p=>p.name);
+
+    const eliminated =
+        sorted
+            .filter(p=>p.eliminated)
+            .map(p=>p.name);
+
+    const totalAlive =
+        Object.values(tournament.aliveTable)
+            .reduce((a,b)=>a+b,0);
+
+    container.innerHTML="";
+
+
+
+    const tile1=document.createElement("div");
+
+    tile1.className=
+        "royal-dashboard-tile survival-tile";
+
+    tile1.innerHTML=`
+
+<div class="royal-survival-heading">
+
+👑 Survival Leader${leaders.length>1?"s":""}
+
+</div>
+
+<div class="royal-survival-value">
+
+${leaders.join(" • ")}
+
+</div>
+
+<div class="royal-survival-sub">
+
+❤️ ${maxAlive} Alive
+
+</div>
+
+`;
+
+
+
+    const tile2=document.createElement("div");
+
+    tile2.className=
+        "royal-dashboard-tile survival-tile";
+
+    tile2.innerHTML=`
+
+<div class="royal-survival-heading">
+
+💀 Players Eliminated
+
+</div>
+
+<div class="royal-survival-value">
+
+${eliminated.length
+    ? eliminated.join(" • ")
+    : "Nobody Yet"}
+
+</div>
+
+<div class="royal-survival-sub">
+
+${eliminated.length} Eliminated
+
+</div>
+
+`;
+
+
+
+    const tile3=document.createElement("div");
+
+    tile3.className=
+        "royal-dashboard-tile survival-tile";
+
+    tile3.innerHTML=`
+
+<div class="royal-survival-heading">
+
+❤️ Family Teams Alive
+
+</div>
+
+<div class="royal-survival-value">
+
+${totalAlive}
+
+</div>
+
+<div class="royal-survival-sub">
+
+Still Competing
+
+</div>
+
+`;
+
+
+
+    container.appendChild(tile1);
+
+    container.appendChild(tile2);
+
+    container.appendChild(tile3);
+
+}
+function renderRoyalRivalries(){
+
+    const container =
+        document.getElementById("royal-rivalries-content");
+
+    if(!container)
+        return;
+
+    const summary =
+        tournament.rivalrySummary;
+
+    if(!summary){
+
+        container.innerHTML = "";
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+
+
+    const tile1 =
+        document.createElement("div");
+
+    tile1.className =
+        "royal-dashboard-tile rivalry-tile";
+
+    tile1.innerHTML = `
+
+<div class="royal-rivalry-heading">
+
+⚔️ RIVALRY KING
+
+</div>
+
+<div class="royal-rivalry-value">
+
+${summary.king?.player || "-"}
+
+</div>
+
+<div class="royal-rivalry-sub">
+
+${summary.king?.rivalryScore || 0} Rivalry Score
+
+</div>
+
+`;
+
+
+
+    const tile2 =
+        document.createElement("div");
+
+    tile2.className =
+        "royal-dashboard-tile rivalry-tile";
+
+    tile2.innerHTML = `
+
+<div class="royal-rivalry-heading">
+
+🥊 TOP RIVALRY
+
+</div>
+
+<div class="royal-rivalry-value">
+
+${summary.topRivalry?.players || "-"}
+
+</div>
+
+<div class="royal-rivalry-sub">
+
+${summary.topRivalry?.games || 0} Meetings
+
+</div>
+
+`;
+
+
+
+    const tile3 =
+        document.createElement("div");
+
+    tile3.className =
+        "royal-dashboard-tile rivalry-tile";
+
+    tile3.innerHTML = `
+
+<div class="royal-rivalry-heading">
+
+⚖️ CLOSEST RIVALRY
+
+</div>
+
+<div class="royal-rivalry-value">
+
+${summary.closestRivalry?.players || "-"}
+
+</div>
+
+<div class="royal-rivalry-sub">
+
+${summary.closestRivalry?.record || "-"}
+
+</div>
+
+`;
+
+
+
+    container.appendChild(tile1);
+
+    container.appendChild(tile2);
+
+    container.appendChild(tile3);
+
+}
 
 function renderScoreboard(scores) {
 
@@ -14906,12 +17708,11 @@ function renderScoreboard(scores) {
     });
 
 
+    window.sortedStandings = Object.keys(scores)
+    .map(key => ({ name: key, ...scores[key] }))
+    .sort((a, b) => b.pts - a.pts);
 
-    let sorted = Object.keys(scores)
-
-        .map(key => ({ name: key, ...scores[key] }))
-
-        .sort((a, b) => b.pts - a.pts);           
+let sorted = window.sortedStandings;          
 
     
 
@@ -15054,6 +17855,16 @@ console.log(
 );
 
 */
+renderPodium(
+    "leaderboard-strip",
+    sorted
+);
+
+renderRoyalPodium(sorted);
+
+renderRoyalSurvival(sorted);
+
+renderRoyalRivalries();
 
 sorted.forEach((p, index) => {
 
@@ -15125,102 +17936,7 @@ sorted.forEach((p, index) => {
 
 });
 
-const podium =
 
-    document.getElementById("leaderboard-strip");
-
-
-
-if (podium && sorted.length >= 3) {
-
-
-
-    podium.innerHTML = `
-
-        <div class="podium-card podium-gold">
-
-    <div class="podium-place">🥇</div>
-
-    <div class="podium-name">${sorted[0].name}</div>
-
-    <div class="podium-points">${sorted[0].pts} pts</div>
-
-
-
-    <div class="podium-gap">
-
-        ${
-
-    isSurvivalMode()
-    ? `❤️ ${sorted[0].alive} Alive`
-
-        : `🌟 +${sorted[0].bonus} Included`
-
-} • Leads by ${sorted[0].pts - sorted[1].pts} pts
-
-    </div>
-
-</div>
-
-
-
-        <div class="podium-card podium-silver">
-
-    <div class="podium-place">🥈</div>
-
-    <div class="podium-name">${sorted[1].name}</div>
-
-    <div class="podium-points">${sorted[1].pts} pts</div>
-
-
-
-    <div class="podium-gap">
-
-        ${
-
-    isSurvivalMode()
-    ? `❤️ ${sorted[1].alive} Alive`
-
-        : `🌟 +${sorted[1].bonus} Included`
-
-} •
-
-        ${getRankChangeText(sorted[1])}
-
-    </div>
-
-</div>
-
-
-
-        <div class="podium-card podium-bronze">
-
-    <div class="podium-place">🥉</div>
-
-    <div class="podium-name">${sorted[2].name}</div>
-
-
-    <div class="podium-points">${sorted[2].pts} pts</div>
-
-
-
-    <div class="podium-gap">
-
-        ${
-            isSurvivalMode()
-                ? `❤️ ${sorted[2].alive} Alive`
-                : `🌟 +${sorted[2].bonus} Included`
-        } •
-
-        ${getRankChangeText(sorted[2])}
-
-    </div>
-
-</div>
-
-    `;
-
-}
 
     let biggestClimber = sorted
 
@@ -15683,6 +18399,54 @@ ${
         showBroadcast(msg);
 
     }
+renderLivePodiumCard();
+}
+
+function renderLivePodiumCard(){
+
+    const container =
+        document.getElementById("live-podium-content");
+
+    if(!container || !window.sortedStandings)
+        return;
+
+    const top3 =
+        window.sortedStandings.slice(0,3);
+
+    container.innerHTML = "";
+
+    top3.forEach((player,index)=>{
+
+        const medal =
+            index===0 ? "🥇" :
+            index===1 ? "🥈" :
+            "🥉";
+
+        container.innerHTML += `
+
+<div class="live-podium-row">
+
+    <div class="live-podium-left">
+
+        <span class="live-podium-medal">
+            ${medal}
+        </span>
+
+        <span class="live-podium-name">
+            ${player.name}
+        </span>
+
+    </div>
+
+    <div class="live-podium-points">
+        ${player.pts} pts
+    </div>
+
+</div>
+
+`;
+
+    });
 
 }
 
@@ -16387,11 +19151,10 @@ const rivalryLeader =
 
         )[0];
 
+
 cards.sort(
 
     (a,b) => {
-
-
 
         if (
 
@@ -16401,8 +19164,6 @@ cards.sort(
 
         ) {
 
-
-
             return (
 
                 b.rivalryScore -
@@ -16411,11 +19172,7 @@ cards.sort(
 
             );
 
-
-
         }
-
-
 
         return (
 
@@ -16425,13 +19182,97 @@ cards.sort(
 
         );
 
-
-
     }
 
 );
 
+let topRivalry = null;
 
+let closestRivalry = null;
+
+players.forEach(player=>{
+
+    players.forEach(opponent=>{
+
+        if(player >= opponent) return;
+
+        const data = map[player]?.[opponent];
+
+        if(!data) return;
+
+        const games =
+            data.wins +
+            data.draws +
+            data.losses;
+
+        if(games < 2) return;
+
+        if(
+            !topRivalry ||
+            games > topRivalry.games
+        ){
+
+            topRivalry = {
+
+                players:`${player} vs ${opponent}`,
+
+                games
+
+            };
+
+        }
+
+        const gap =
+            Math.abs(
+                data.wins -
+                data.losses
+            );
+
+        if(
+
+            !closestRivalry ||
+
+            gap < closestRivalry.gap ||
+
+            (
+
+                gap === closestRivalry.gap &&
+
+                games > closestRivalry.games
+
+            )
+
+        ){
+
+            closestRivalry = {
+
+                players:`${player} vs ${opponent}`,
+
+                record:`${data.wins}W • ${data.draws}D • ${data.losses}L`,
+
+                gap,
+
+                games
+
+            };
+
+        }
+
+    });
+
+});
+
+tournament.rivalryCards = cards;
+
+tournament.rivalrySummary = {
+
+    king: cards[0],
+
+    topRivalry,
+
+    closestRivalry
+
+};
 
 const rivalryGold =
 
@@ -16523,41 +19364,21 @@ console.table(
 
     container.innerHTML = `
 
-    <div class="rivalry-header dashboard-header"
+    <div class="rivalry-header dashboard-header">
 
-     onclick="toggleSection('rivalry-content','rivalry-arrow')">
+        <h3 class="section-title-row">
 
+            <span>
 
+                ⚔️ Family Rivalries
 
-    <h3 class="section-title-row">
+            </span>
 
+        </h3>
 
+    </div>
 
-        <span>
-
-            ⚔️ Family Rivalries
-
-        </span>
-
-
-
-        <span id="rivalry-arrow">
-
-            ▶
-
-        </span>
-
-
-
-    </h3>
-
-
-
-</div>
-
-
-
-    <div id="rivalry-content" style="display:none;">
+    <div id="rivalry-content">
 
 
 
@@ -16854,7 +19675,7 @@ function getDisplayFixtures(){
 
 }
 
-    function renderFixtures() {
+function renderFixtures() {
 
         let container = document.getElementById("fixtures-container");
 
@@ -17352,15 +20173,15 @@ let pending = fixtures.filter(f => {
     // Core calculations
     calculateScores();
 
-    // Main UI
-    renderDashboard();
-    renderFixtures();
-    renderRoadToFinal();
-    renderQuickUpdate();
-
     // Tournament Centre
-    renderHallOfInfamy();
-    renderRivalryMatrix(fixtures);
+renderHallOfInfamy();
+renderRivalryMatrix(fixtures);
+
+// Main UI
+renderDashboard();
+renderFixtures();
+renderRoadToFinal();
+renderQuickUpdate();
 
     // Narrative
     rebuildChronicle();
@@ -18193,6 +21014,8 @@ generateRoundOf32Fixtures();
 updateKnockoutBracket();
 
 buildRoadToFinal();
+
+renderRoadToFinalHome();
 
 buildAliveTable();
 
