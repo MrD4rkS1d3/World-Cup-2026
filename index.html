@@ -1377,20 +1377,19 @@ body{
 /* ======================================================
    APPLICATION FOOTER
 ====================================================== */
-
 .footer-button{
 
     flex:1;
 
     display:flex;
 
-    flex-direction:column;
+    flex-direction:row;
 
     align-items:center;
 
     justify-content:center;
 
-    gap:4px;
+    gap:10px;
 
     border:none;
 
@@ -1404,7 +1403,7 @@ body{
 
     border-radius:12px;
 
-    padding:8px;
+    padding:12px 16px;
 
 }
 
@@ -1426,19 +1425,23 @@ body{
 
 .footer-icon{
 
-    font-size:22px;
+    font-size:26px;
 
     line-height:1;
+
+    flex-shrink:0;
 
 }
 
 .footer-label{
 
-    font-size:.72rem;
+    font-size:.9rem;
 
-    font-weight:600;
+    font-weight:700;
 
-    letter-spacing:.4px;
+    letter-spacing:.3px;
+
+    white-space:nowrap;
 
 }
 
@@ -2797,6 +2800,31 @@ white-space:nowrap;
 }
 
         .fixture-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #edf2f7; background:#fff; border-radius:6px; margin-bottom:6px; box-shadow:0 1px 3px rgba(0,0,0,0.02); font-size:0.88rem; }
+.fixture-row.completed{
+
+    background:#ecfdf5;
+
+    border-left:5px solid #22c55e;
+
+    box-shadow:0 2px 8px rgba(34,197,94,.15);
+
+}
+
+.fixture-row.completed .match-date{
+
+    color:#15803d;
+
+    font-weight:700;
+
+}
+
+.fixture-row.completed .team-winner{
+
+    color:#15803d;
+
+    font-weight:700;
+
+}
 
         .completed { background-color: #f0fff4; border-left: 4px solid #38a169; }
 
@@ -8614,7 +8642,7 @@ function buildRTTFCard(fixture,prefix){
         document.createElement("div");
 
     card.className =
-        "rttf-match";
+    `rttf-match ${fixture.status}`;
 
     const home =
         fixture.home ||
@@ -8629,30 +8657,14 @@ const awayFlag = flagCodes[fixture.away] || "";
 
 let progressText = "";
 
-if(fixture.winner){
+const winner = getMatchWinner(fixture.id);
 
-    const winnerTeam =
-    fixture.winner === "home"
-        ? fixture.home
-        : fixture.winner === "away"
-            ? fixture.away
-            : "";
+if(winner){
 
-    const winnerPlayer =
-        fixture.winner === "home"
-            ? fixture.homeUser
-            : fixture.winner === "away"
-                ? fixture.awayUser
-                : "";
-
-    if(winnerTeam){
-
-        progressText =
-            `🏆 ${winnerPlayer} & ${winnerTeam} progress${
-                fixture.homeScore === fixture.awayScore ? " via pens" : ""
-            }`;
-
-    }
+    progressText =
+        `🏆 ${winner.user} & ${winner.team} progress${
+            fixture.homeScore == fixture.awayScore ? " via pens" : ""
+        }`;
 
 }
 
@@ -17714,7 +17726,13 @@ function renderScoreboard(scores) {
 
 let sorted = window.sortedStandings;          
 
-    
+const leader = sorted[0];
+const runnerUp = sorted[1];
+const lead = leader && runnerUp ? leader.pts - runnerUp.pts : 0;
+
+document.querySelector("#header-leader-chip .leader-name").innerText = leader.name;
+document.querySelector("#header-leader-chip .leader-points").innerText = `${leader.pts} pts`;
+document.querySelector("#header-leader-chip .leader-lead").innerText = `⭐ +${lead}`;    
 
     document.getElementById("centre-leader-points").innerText =
 
@@ -18015,14 +18033,6 @@ document.getElementById("centre-watch-sub").innerHTML =
 document.getElementById("centre-leader").innerText =
 
     sorted[0].name;
-
-    
-
-
-
-document.getElementById("centre-leader-points").innerText =
-
-    `${sorted[0].pts} points`;
 
 
 
@@ -20074,7 +20084,7 @@ if (f.round !== activeRound) {
         if (side === 'away') f.awayScore = val;
 
         f.status = (f.homeScore === "" || f.awayScore === "") ? "upcoming" : "completed";
-
+updateKnockoutWinner(f);
     }
 
 
@@ -20170,18 +20180,22 @@ let pending = fixtures.filter(f => {
         buildAliveTable();
     }
 
+    // Populate knockout winners
+    fixtures.forEach(updateKnockoutWinner);
+updateKnockoutBracket();
+
     // Core calculations
     calculateScores();
 
     // Tournament Centre
-renderHallOfInfamy();
-renderRivalryMatrix(fixtures);
+    renderHallOfInfamy();
+    renderRivalryMatrix(fixtures);
 
-// Main UI
-renderDashboard();
-renderFixtures();
-renderRoadToFinal();
-renderQuickUpdate();
+    // Main UI
+    renderDashboard();
+    renderFixtures();
+    renderRoadToFinal();
+    renderQuickUpdate();
 
     // Narrative
     rebuildChronicle();
