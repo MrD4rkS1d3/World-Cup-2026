@@ -4,7 +4,7 @@
 
 <head>
 
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
 
     <title>Family World Cup Group Stage Score Tracker</title>
 
@@ -12,29 +12,11 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; }
 
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-
+       
 /* =====================================================
    SURVIVAL MODE V2
 ===================================================== */
 
-#app-header{
-
-    display:grid;
-
-    grid-template-columns:auto 1fr auto;
-
-    align-items:center;
-
-    gap:clamp(10px,2vw,24px);
-
-    padding:clamp(8px,1.5vw,14px) clamp(12px,2vw,22px);
-
-    background:#071224;
-
-    color:white;
-
-}
 
 #hero-banner{
 
@@ -240,7 +222,7 @@
 
     justify-content:space-between;
 
-    gap:12px;
+    gap:16px;
 
 }
 
@@ -259,8 +241,12 @@
 .timeline-dot{
 
     width:28px;
-
     height:28px;
+
+    min-width:28px;
+    min-height:28px;
+
+    flex:0 0 28px;
 
     border-radius:50%;
 
@@ -294,6 +280,13 @@
 
 }
 
+.timeline-stage.current .timeline-text span{
+
+    color:#7c3aed;
+    font-weight:600;
+
+}
+
 .timeline-text strong{
 
     font-size:.82rem;
@@ -320,7 +313,20 @@
 
 }
 
+.timeline-text .fixture-flag{
+    width:14px;
+    height:10px;
+    object-fit:cover;
+    vertical-align:-1px;
+    margin:0 2px;
+    border-radius:2px;
+}
+
 .timeline-arrow{
+
+    flex:0 0 20px;
+
+    text-align:center;
 
     color:#94a3b8;
 
@@ -331,19 +337,22 @@
 .timeline-finale{
 
     display:flex;
-
     flex-direction:column;
-
+    justify-content:center;
     align-items:center;
-
-    color:#7c3aed;
-
-    font-weight:700;
+    gap:4px;
 
     min-width:70px;
 
-    justify-content:center;
+    color:#7c3aed;
+    font-weight:700;
+    text-align:center;
 
+}
+
+.timeline-finale span{
+
+    line-height:1.1;
 }
 
 .timeline-scroll{
@@ -797,7 +806,7 @@
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
 
     gap:20px;
 
@@ -1202,26 +1211,159 @@
 }
 
 /* =====================================================
-   APPLICATION SHELL
+   APPLICATION LAYOUT
 ===================================================== */
 
-#app-shell{
+html,
+body{
 
-    display:flex;
+    margin:0;
 
-    flex-direction:column;
+    padding:0;
+
+    height:100%;
+
+}
+
+body{
+
+    background:#dfe3ea;
+
+}
+
+.container{
+
+    max-width:1000px;
+
+    margin:0 auto;
+
+    background:white;
+
+    padding:0;
+
+    border-radius:12px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+#app-header{
+
+    position:fixed;
+
+    top:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:100%;
+
+    max-width:1000px;
+
+    height:72px;
+
+    display:grid;
+
+    grid-template-columns:auto 1fr auto;
+
+    align-items:center;
+
+    gap:clamp(10px,2vw,24px);
+
+    padding:0 clamp(12px,2vw,22px);
+
+    background:#071224;
+
+    color:white;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+    box-sizing:border-box;
+
+    box-shadow:0 4px 16px rgba(0,0,0,.25);
+
+    z-index:1000;
+
+}
+
+#app-pages{
+
+    padding-top:72px;
+
+    padding-bottom:72px;
 
     min-height:100vh;
 
 }
 
-#app-viewport{
+.app-page .dashboard-header{
 
-    flex:1;
+    cursor:default;
 
-    position:relative;
+}
 
-    overflow:hidden;
+.app-page .dashboard-header:hover{
+
+    background:#f8fafc;
+
+    transform:none;
+
+}
+
+.app-page .dashboard-header .section-title-row{
+
+    justify-content:flex-start;
+
+}
+
+.page-title{
+
+    justify-content:flex-start;
+
+}
+
+.page-content{
+
+    padding:20px;
+
+}
+
+#app-footer{
+
+    position:fixed;
+
+    bottom:20px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:100%;
+
+    max-width:1000px;
+
+    height:72px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    background:#071224;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    box-shadow:0 -4px 16px rgba(0,0,0,.25);
+
+    box-sizing:border-box;
+
+    z-index:1000;
 
 }
 
@@ -1259,6 +1401,82 @@
 
 }
 
+/* ======================================================
+   APPLICATION FOOTER
+====================================================== */
+.footer-button{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:row;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:10px;
+
+    border:none;
+
+    background:none;
+
+    color:#94a3b8;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    border-radius:12px;
+
+    padding:12px 16px;
+
+}
+
+.footer-button:hover{
+
+    color:white;
+
+    background:rgba(255,255,255,.06);
+
+}
+
+.footer-button.active{
+
+    color:#38bdf8;
+
+    background:rgba(56,189,248,.15);
+
+}
+
+.footer-icon{
+
+    font-size:26px;
+
+    line-height:1;
+
+    flex-shrink:0;
+
+}
+
+.footer-label{
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    letter-spacing:.3px;
+
+    white-space:nowrap;
+
+}
+
+.hidden{
+
+    display:none !important;
+
+}
 /* =====================================================
    UI V1
 ===================================================== */
@@ -2609,6 +2827,31 @@ white-space:nowrap;
 }
 
         .fixture-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #edf2f7; background:#fff; border-radius:6px; margin-bottom:6px; box-shadow:0 1px 3px rgba(0,0,0,0.02); font-size:0.88rem; }
+.fixture-row.completed{
+
+    background:#ecfdf5;
+
+    border-left:5px solid #22c55e;
+
+    box-shadow:0 2px 8px rgba(34,197,94,.15);
+
+}
+
+.fixture-row.completed .match-date{
+
+    color:#15803d;
+
+    font-weight:700;
+
+}
+
+.fixture-row.completed .team-winner{
+
+    color:#15803d;
+
+    font-weight:700;
+
+}
 
         .completed { background-color: #f0fff4; border-left: 4px solid #38a169; }
 
@@ -4025,11 +4268,11 @@ border:1px solid #f5c2c7;
 
 <div class="container">
 
-<!--=====================================================
-     SURVIVAL MODE V2
-=====================================================-->
+ <!--=====================================================
+         APPLICATION HEADER
+    ======================================================-->
 
-<header id="app-header">
+    <header id="app-header">
 
     <div id="header-brand">
 
@@ -4077,228 +4320,356 @@ border:1px solid #f5c2c7;
 
 </header>
 
-<div id="app-shell">
+ <!--=====================================================
+         APPLICATION PAGES
+    ======================================================-->
 
-<div id="app-viewport">
+<main id="app-pages">
+
+    <!-- ======================================================
+         HOME PAGE
+    ====================================================== -->        
 
 <section id="page-home" class="app-page active">
+    <div class="page-content">
 
-<div class="timeline-scroll">
+    <!-- ======================================================
+         TOURNAMENT TIMELINE
+    ====================================================== -->
 
-    <div class="timeline-track">
-    <section id="tournament-timeline">
-
-    <div class="timeline-card">
-
-        <div class="timeline-title">
-            TOURNAMENT TIMELINE
-        </div>
+    <div class="timeline-scroll">
 
         <div class="timeline-track">
 
-            <div class="timeline-stage complete">
+            <section id="tournament-timeline">
 
-                <div class="timeline-dot">✓</div>
+            <!-- Rendered by Engine 6.4 -->
 
-                <div class="timeline-text">
-                    <strong>GROUP STAGE</strong>
-                    <span>72 / 72</span>
-                </div>
-
-            </div>
-
-            <div class="timeline-arrow">→</div>
-
-            <div class="timeline-stage current">
-
-                <div class="timeline-dot"></div>
-
-                <div class="timeline-text">
-                    <strong>ROUND OF 32</strong>
-                    <span>In Progress</span>
-                </div>
-
-            </div>
-
-            <div class="timeline-arrow">→</div>
-
-            <div class="timeline-stage">
-
-                <div class="timeline-dot"></div>
-
-                <div class="timeline-text">
-                    <strong>ROUND OF 16</strong>
-                    <span>Locked</span>
-                </div>
-
-            </div>
-
-            <div class="timeline-arrow">→</div>
-
-            <div class="timeline-stage">
-
-                <div class="timeline-dot"></div>
-
-                <div class="timeline-text">
-                    <strong>QUARTER FINALS</strong>
-                    <span>Locked</span>
-                </div>
-
-            </div>
-
-            <div class="timeline-arrow">→</div>
-
-            <div class="timeline-stage">
-
-                <div class="timeline-dot"></div>
-
-                <div class="timeline-text">
-                    <strong>SEMI FINALS</strong>
-                    <span>Locked</span>
-                </div>
-
-            </div>
-
-            <div class="timeline-arrow">→</div>
-
-            <div class="timeline-finale">
-
-                🏆
-
-                <span>THE FINAL</span>
-
-            </div>
+            </section>
 
         </div>
 
     </div>
+
+    <!-- ======================================================
+         ROAD TO THE FINAL
+    ====================================================== -->
+
+    <section id="road-to-final-container">
+
+        <div class="rttf-card">
+
+            <div class="rttf-header">
+
+                <div class="rttf-title">
+
+                    <span class="rttf-icon">🏆</span>
+
+                    <div>
+
+                        <div class="rttf-heading">
+                            ROAD TO THE FINAL
+                        </div>
+
+                        <div class="rttf-subheading">
+                            SURVIVAL MODE
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="road-to-final-pages">
+
+                <!-- RTTF Pages Render Here -->
+
+            </div>
+
+            <div class="rttf-pagination">
+
+                <span class="rttf-pagination-dot active"
+                      onclick="showRTTFPage(0)"></span>
+
+                <span class="rttf-pagination-dot"
+                      onclick="showRTTFPage(1)"></span>
+
+                <span class="rttf-pagination-dot"
+                      onclick="showRTTFPage(2)"></span>
+
+                <span class="rttf-pagination-dot"
+                      onclick="showRTTFPage(3)"></span>
+
+            </div>
+
+        </div>
 
     </section>
-    </div>
 
-</div>
+    <!-- ======================================================
+         ROYAL DASHBOARD
+    ====================================================== -->
 
-<section id="road-to-final-container">
+    <section id="royal-dashboard">
 
-    <div class="rttf-card">
+        <div id="royal-podium-card"
+             class="royal-dashboard-card">
 
-        <div class="rttf-header">
+            <div class="royal-dashboard-header podium">
 
-            <div class="rttf-title">
+                <div class="royal-dashboard-title">
 
-                <span class="rttf-icon">🏆</span>
-
-                <div>
-
-                    <div class="rttf-heading">ROAD TO THE FINAL</div>
-
-                    <div class="rttf-subheading">SURVIVAL MODE</div>
+                    🏆 LIVE PODIUM
 
                 </div>
 
             </div>
 
+            <div id="royal-podium-content"></div>
+
+            <button class="royal-dashboard-button"
+                    onclick="showPage('page-standings')">
+
+                View Full Standings →
+
+            </button>
+
         </div>
 
-        <div id="road-to-final-pages">
+        <div id="royal-survival-card"
+             class="royal-dashboard-card">
 
-            <!-- RTTF Pages Render Here -->
+            <div class="royal-dashboard-header survival">
+
+                ❤️ SURVIVAL TRACKER
+
+            </div>
+
+            <div id="royal-survival-content"></div>
+
+            <button class="royal-dashboard-button"
+                    onclick="showPage('page-assignments')">
+
+                View Team Assignments →
+
+            </button>
 
         </div>
 
-        <div class="rttf-pagination">
+        <div id="royal-rivalries-card"
+             class="royal-dashboard-card">
 
-    <span class="rttf-pagination-dot active"
-          onclick="showRTTFPage(0)"></span>
+            <div class="royal-dashboard-header rivalry">
 
-    <span class="rttf-pagination-dot"
-          onclick="showRTTFPage(1)"></span>
+                ⚔️ FAMILY RIVALRIES
 
-    <span class="rttf-pagination-dot"
-          onclick="showRTTFPage(2)"></span>
+            </div>
 
-    <span class="rttf-pagination-dot"
-          onclick="showRTTFPage(3)"></span>
+            <div id="royal-rivalries-content"></div>
 
+            <button class="royal-dashboard-button"
+                    onclick="showPage('page-rivalries')">
+
+                View Rivalry Matrix →
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- ======================================================
+         CHRONICLE
+    ====================================================== -->
+
+    <section id="chronicle-ticker"></section>
 </div>
+</section>
+
+ <section id="page-fixtures"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+        <section id="page-centre"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+        <section id="page-standings" class="app-page" hidden>
+
+    <div id="live-scoreboard">
+
+        <div class="dashboard-header">
+
+            <h3 class="section-title-row">
+
+                <span>
+                    🏆 Live Scoreboard
+                </span>
+
+            </h3>
+
+        </div>
+
+        <div id="scoreboard-content">
+
+            <div class="rules-box-header section-title-row"
+                 onclick="toggleSection('score-rules','score-rules-arrow')"
+                 style="cursor:pointer; margin-bottom:10px;">
+
+                <span>📊 Scoring Rules</span>
+
+                <span id="score-rules-arrow">▶</span>
+
+            </div>
+
+            <div id="score-rules"
+                 class="rules-box"
+                 style="display:none; background:#f0f7ff; border:1px solid #bee3f8; padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.85rem; color:#2c5282;">
+
+                <div id="scoring-rules-content"></div>
+
+            </div>
+
+            <div class="scoreboard-wrapper">
+
+                <table id="scoreboard">
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="width:35%;">👤 Player</th>
+                            <th style="text-align:center;">🏆 Wins</th>
+                            <th style="text-align:center;">🤝 Draws</th>
+                            <th style="text-align:center;">⚽ Goals</th>
+                            <th style="text-align:center;">🧤 CS</th>
+                            <th id="bonus-header" style="text-align:center;"></th>
+                            <th id="progression-header" style="text-align:center;"></th>
+                            <th style="text-align:center;">🏆 Total</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
 
     </div>
 
 </section>
 
-<section id="royal-dashboard">
+        <section id="page-assignments" class="app-page" hidden>
 
-    <div id="royal-podium-card" class="royal-dashboard-card">
+    <div class="dashboard-header"
+         id="dashboard-section">
 
-    <div class="royal-dashboard-header podium">
+        <h3 id="dashboard-title"
+             class="section-title-row page-title">
 
-        <div class="royal-dashboard-title">
-            🏆 LIVE PODIUM
+            <span>
+
+                📋 Team Assignments & Favourites
+
+            </span>
+
+        </h3>
+
+    </div>
+
+    <div id="team-content">
+
+        <div class="rules-box"
+             id="team-guide-box"
+             style="background:#ebf8ff; border:1px solid #bee3f8; padding:12px; border-radius:8px; margin:15px 0; font-size:0.85rem; color:#2c5282;">
+
+        </div>
+
+        <div class="config-grid"
+             id="star-configurator">
+
+            <!-- Cards generated dynamically -->
+
         </div>
 
     </div>
 
-    <div id="royal-podium-content"></div>
-
-    <button class="royal-dashboard-button"
-            onclick="jumpToStandings()">
-
-        View Full Standings →
-
-    </button>
-
-</div>
-
-<div id="royal-survival-card"
-     class="royal-dashboard-card">
-
-    <div class="royal-dashboard-header survival">
-
-        ❤️ SURVIVAL TRACKER
-
-    </div>
-
-    <div id="royal-survival-content"></div>
-
-    <button class="royal-dashboard-button"
-            onclick="jumpToAssignments()">
-
-        View Team Assignments →
-
-    </button>
-
-</div>
-
-<div id="royal-rivalries-card"
-     class="royal-dashboard-card">
-
-    <div class="royal-dashboard-header rivalry">
-
-        ⚔️ FAMILY RIVALRIES
-
-    </div>
-
-    <div id="royal-rivalries-content"></div>
-
-    <button class="royal-dashboard-button"
-            onclick="jumpToRivalries()">
-
-        View Rivalry Matrix →
-
-    </button>
-
-</div>
-
 </section>
 
-<section id="chronicle-ticker"></section>
+        <section id="page-rivalries"
+                 class="app-page"
+                 hidden>
+<div id="rivalry-matrix"></div>
+        </section>
 
-</section>
+        <section id="page-infamy"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+        <section id="page-chronicle"
+                 class="app-page"
+                 hidden>
+
+        </section>
+
+    </main>
+
+<!-- ======================================================
+     APPLICATION FOOTER
+====================================================== -->
+
+<footer id="app-footer">
+
+    <button id="footer-fixtures"
+            class="footer-button">
+
+        <span class="footer-icon">⚽</span>
+
+        <span class="footer-label">
+            Fixtures
+        </span>
+
+    </button>
+
+    <button id="footer-centre"
+            class="footer-button">
+
+        <span class="footer-icon">🏟️</span>
+
+        <span class="footer-label">
+            Centre
+        </span>
+
+    </button>
+
+    <button id="footer-infamy"
+            class="footer-button">
+
+        <span class="footer-icon">😂</span>
+
+        <span class="footer-label">
+            Infamy
+        </span>
+
+    </button>
+
+</footer>    
 
 <!--======================================================
      V1 UI
 ======================================================-->
-
+<div id="legacy-ui" class="hidden">
 <div class="admin-bar">
 
     <div>Tournament Mode: <span id="admin-status-badge" class="admin-status status-viewer">Viewer Mode (Read-Only)</span></div>
@@ -4555,7 +4926,7 @@ font-size:12px;
     </div>-->
 
 
-
+<div id="legacy-team-assignments" hidden>
 <div class="dashboard-header" 
 
     id="dashboard-section"    
@@ -4608,7 +4979,7 @@ font-size:12px;
 
 
 </div> <!-- team-content -->
-
+</div>
     
 
    
@@ -5012,6 +5383,7 @@ font-size:12px;
 
 </div>
 
+<div id="legacy-scoreboard" hidden>
 <div id="live-scoreboard">
 
 
@@ -5121,7 +5493,7 @@ font-size:12px;
     </table>
 
     </div>
-
+</div>
 </div>
 
 
@@ -5144,83 +5516,229 @@ font-size:12px;
 
 
 
-<div id="fixtures-anchor"></div>
+<section id="page-fixtures" class="app-page">
 
+    <!-- ======================================================
+         TOURNAMENT FIXTURES
+    ====================================================== -->
 
+    <div id="fixtures-anchor"></div>
 
-<div class="dashboard-header"
+    <div class="dashboard-header">
 
-     onclick="toggleSection('fixtures-content','fixtures-arrow')">
+        <h3 class="section-title-row">
 
+            <span>
+                🗓️ Full Tournament Fixtures
+            </span>
 
+        </h3>
 
-    <h3 class="section-title-row">
+    </div>
 
+    <div id="fixtures-content">
 
+        <div id="fixtures-container">
 
-        <span>
+            <!-- Loaded dynamically -->
 
-            🗓️ Full Tournament Fixtures
+        </div>
 
-        </span>
-
-
-
-        <span id="fixtures-arrow">
-
-            ▼
-
-        </span>
-
-
-
-    </h3>
-
-
-
+    </div>
 </div>
-
-
-
-<div id="fixtures-content">
-
-
-
-    <div id="fixtures-container">
-
-    <!-- Loaded dynamically -->
-
-</div>
-
-
-
-</div> <!-- fixtures-content -->
-
-</div>
+</section>
 
 
 
 <script>
 
-    const flagCodes = {
+    const teamInfo = {
 
-    "Canada":"ca","Belgium":"be","Uzbekistan":"uz","Norway":"no","South Korea":"kr","Spain":"es",
+    // ===== SPECIAL TEAMS =====
 
-    "Czechia":"cz","Japan":"jp","Australia":"au","France":"fr","Tunisia":"tn","Switzerland":"ch",
+"Argentina": {
 
-    "England":"gb-eng","Germany":"de","Haiti":"ht","Iraq":"iq","Ghana":"gh","Algeria":"dz",
+    rank: 1,
 
-    "Uruguay":"uy","Turkey":"tr","Jordan":"jo","Iran":"ir","New Zealand":"nz","Mexico":"mx",
+    flag: "ar",
 
-    "Morocco":"ma","Egypt":"eg","Argentina":"ar","USA":"us","DR Congo":"cd","Sweden":"se",
+    code: "ARG",
 
-    "Bosnia and Herzegovina":"ba","Portugal":"pt","Paraguay":"py","Qatar":"qa","Senegal":"sn","Colombia":"co",
+    badges: [
 
-    "Brazil":"br","Austria":"at","Croatia":"hr","Netherlands":"nl","Ecuador":"ec","Cape Verde":"cv",
+        "👑 World Champions",
 
-    "South Africa":"za","Ivory Coast":"ci","Scotland":"gb-sct","Saudi Arabia":"sa","Curacao":"cw","Panama":"pa"
+        "🏆 Copa América Champions"
 
-    };
+    ]
+
+},
+
+"Spain": {
+
+    rank: 2,
+
+    flag: "es",
+
+    code: "ESP",
+
+    badges: [
+
+        "🏆 European Champions"
+
+    ]
+
+},
+
+"Morocco": {
+
+    rank: 7,
+
+    flag: "ma",
+
+    code: "MAR",
+
+    badges: [
+
+        "🏆 African Champions"
+
+    ]
+
+},
+
+"USA": {
+
+    rank: 17,
+
+    flag: "us",
+
+    code: "USA",
+
+    badges: [
+
+        "🏠 Host Nation"
+
+    ]
+
+},
+
+"Mexico": {
+
+    rank: 14,
+
+    flag: "mx",
+
+    code: "MEX",
+
+    badges: [
+
+        "🏠 Host Nation"
+
+    ]
+
+},
+
+"Canada": {
+
+    rank: 30,
+
+    flag: "ca",
+
+    code: "CAN",
+
+    badges: [
+
+        "🏠 Host Nation"
+
+    ]
+
+},
+
+"France": { rank:3, flag:"fr", code:"FRA", badges:[] },
+
+"England": { rank:4, flag:"gb-eng", code:"ENG", badges:[] },
+
+"Portugal": { rank:5, flag:"pt", code:"POR", badges:[] },
+
+"Brazil": { rank:6, flag:"br", code:"BRA", badges:[] },
+
+"Netherlands": { rank:8, flag:"nl", code:"NED", badges:[] },
+
+"Belgium": { rank:9, flag:"be", code:"BEL", badges:[] },
+
+"Germany": { rank:10, flag:"de", code:"GER", badges:[] },
+
+"Croatia": { rank:11, flag:"hr", code:"CRO", badges:[] },
+
+"Colombia": { rank:13, flag:"co", code:"COL", badges:[] },
+
+"Senegal": { rank:15, flag:"sn", code:"SEN", badges:[] },
+
+"Uruguay": { rank:16, flag:"uy", code:"URU", badges:[] },
+
+"Japan": { rank:18, flag:"jp", code:"JPN", badges:[] },
+
+"Switzerland": { rank:19, flag:"ch", code:"SUI", badges:[] },
+
+"Iran": { rank:20, flag:"ir", code:"IRN", badges:[] },
+
+"Turkey": { rank:22, flag:"tr", code:"TUR", badges:[] },
+
+"Ecuador": { rank:23, flag:"ec", code:"ECU", badges:[] },
+
+"Austria": { rank:24, flag:"at", code:"AUT", badges:[] },
+
+"South Korea": { rank:25, flag:"kr", code:"KOR", badges:[] },
+
+"Australia": { rank:27, flag:"au", code:"AUS", badges:[] },
+
+"Algeria": { rank:28, flag:"dz", code:"ALG", badges:[] },
+
+"Egypt": { rank:29, flag:"eg", code:"EGY", badges:[] },
+
+"Norway": { rank:31, flag:"no", code:"NOR", badges:[] },
+
+"Ivory Coast": { rank:33, flag:"ci", code:"CIV", badges:[] },
+
+"Panama": { rank:34, flag:"pa", code:"PAN", badges:[] },
+
+"Sweden": { rank:38, flag:"se", code:"SWE", badges:[] },
+
+"Czechia": { rank:40, flag:"cz", code:"CZE", badges:[] },
+
+"Paraguay": { rank:41, flag:"py", code:"PAR", badges:[] },
+
+"Scotland": { rank:42, flag:"gb-sct", code:"SCO", badges:[] },
+
+"Tunisia": { rank:45, flag:"tn", code:"TUN", badges:[] },
+
+"DR Congo": { rank:46, flag:"cd", code:"COD", badges:[] },
+
+"Uzbekistan": { rank:50, flag:"uz", code:"UZB", badges:[] },
+
+"Qatar": { rank:56, flag:"qa", code:"QAT", badges:[] },
+
+"Iraq": { rank:57, flag:"iq", code:"IRQ", badges:[] },
+
+"South Africa": { rank:60, flag:"za", code:"RSA", badges:[] },
+
+"Saudi Arabia": { rank:61, flag:"sa", code:"KSA", badges:[] },
+
+"Jordan": { rank:63, flag:"jo", code:"JOR", badges:[] },
+
+"Bosnia and Herzegovina": { rank:64, flag:"ba", code:"BIH", badges:[] },
+
+"Cape Verde": { rank:67, flag:"cv", code:"CPV", badges:[] },
+
+"Ghana": { rank:73, flag:"gh", code:"GHA", badges:[] },
+
+"Curacao": { rank:82, flag:"cw", code:"CUW", badges:[] },
+
+"Haiti": { rank:83, flag:"ht", code:"HAI", badges:[] },
+
+"New Zealand": { rank:85, flag:"nz", code:"NZL", badges:[] }
+
+};
 
 // =====================================================
 // GLOBAL DATE HELPERS
@@ -5236,8 +5754,6 @@ const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
     let isAdmin = false;
 
     let activePlayer = null;
-
-
 
     let assignments = {
 
@@ -5258,206 +5774,6 @@ const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
         Tom: ["South Africa", "Ivory Coast", "Scotland", "Saudi Arabia", "Curacao", "Panama"]
 
     };
-
-
-
-    const teamInfo = {
-
-
-
-
-
-// ===== SPECIAL TEAMS =====
-
-
-
-"Argentina": {
-
-    rank: 1,
-
-    badges: [
-
-        "👑 World Champions",
-
-        "🏆 Copa América Champions"
-
-    ]
-
-},
-
-
-
-"Spain": {
-
-    rank: 2,
-
-    badges: [
-
-        "🏆 European Champions"
-
-    ]
-
-},
-
-
-
-"Morocco": {
-
-    rank: 7,
-
-    badges: [
-
-        "🏆 African Champions"
-
-    ]
-
-},
-
-
-
-"USA": {
-
-    rank: 17,
-
-    badges: [
-
-        "🏠 Host Nation"
-
-    ]
-
-},
-
-
-
-"Mexico": {
-
-    rank: 14,
-
-    badges: [
-
-        "🏠 Host Nation"
-
-    ]
-
-},
-
-
-
-"Canada": {
-
-    rank: 30,
-
-    badges: [
-
-        "🏠 Host Nation"
-
-    ]
-
-},
-
-
-
-// ===== REMAINING TOURNAMENT TEAMS =====
-
-
-
-"France": { rank: 3, badges: [] },
-
-"England": { rank: 4, badges: [] },
-
-"Portugal": { rank: 5, badges: [] },
-
-"Brazil": { rank: 6, badges: [] },
-
-"Netherlands": { rank: 8, badges: [] },
-
-"Belgium": { rank: 9, badges: [] },
-
-"Germany": { rank: 10, badges: [] },
-
-"Croatia": { rank: 11, badges: [] },
-
-
-
-"Colombia": { rank: 13, badges: [] },
-
-"Senegal": { rank: 15, badges: [] },
-
-"Uruguay": { rank: 16, badges: [] },
-
-"Japan": { rank: 18, badges: [] },
-
-"Switzerland": { rank: 19, badges: [] },
-
-"Iran": { rank: 20, badges: [] },
-
-"Turkey": { rank: 22, badges: [] },
-
-"Ecuador": { rank: 23, badges: [] },
-
-"Austria": { rank: 24, badges: [] },
-
-"South Korea": { rank: 25, badges: [] },
-
-"Australia": { rank: 27, badges: [] },
-
-"Algeria": { rank: 28, badges: [] },
-
-"Egypt": { rank: 29, badges: [] },
-
-"Norway": { rank: 31, badges: [] },
-
-
-
-"Ivory Coast": { rank: 33, badges: [] },
-
-"Panama": { rank: 34, badges: [] },
-
-"Sweden": { rank: 38, badges: [] },
-
-"Czechia": { rank: 40, badges: [] },
-
-"Paraguay": { rank: 41, badges: [] },
-
-"Scotland": { rank: 42, badges: [] },
-
-"Tunisia": { rank: 45, badges: [] },
-
-"DR Congo": { rank: 46, badges: [] },
-
-"Uzbekistan": { rank: 50, badges: [] },
-
-
-
-"Qatar": { rank: 56, badges: [] },
-
-"Iraq": { rank: 57, badges: [] },
-
-"South Africa": { rank: 60, badges: [] },
-
-"Saudi Arabia": { rank: 61, badges: [] },
-
-"Jordan": { rank: 63, badges: [] },
-
-"Bosnia and Herzegovina": { rank: 64, badges: [] },
-
-"Cape Verde": { rank: 67, badges: [] },
-
-
-
-"Ghana": { rank: 73, badges: [] },
-
-"Curacao": { rank: 82, badges: [] },
-
-"Haiti": { rank: 83, badges: [] },
-
-"New Zealand": { rank: 85, badges: [] }
-
-
-
-
-
-};
 
 // =====================================================
 // NARRATIVE LIBRARY
@@ -5491,6 +5807,8 @@ const narrativeLibrary = {
     ]
 
 };
+
+
 
 function getNarrative(category){
 
@@ -8143,6 +8461,49 @@ function getRTTFPlaceholder(fixtureId, side){
 
 }
 
+/* =====================================================
+   APPLICATION NAVIGATION
+===================================================== */
+
+function showPage(pageId){
+
+    document
+        .querySelectorAll(".app-page")
+        .forEach(page =>{
+
+            page.classList.remove("active");
+            page.hidden = true;
+
+        });
+
+    const page = document.getElementById(pageId);
+
+    if(page){
+
+        page.hidden = false;
+        page.classList.add("active");
+if(pageId === "page-rivalries"){
+
+    renderRivalryMatrix(fixtures);
+
+}
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+    }
+
+}
+
+document
+    .getElementById("header-home-btn")
+    .addEventListener("click",()=>{
+
+        showPage("page-home");
+
+});
+
 // =====================================================
 // ENGINE 6.1 - ROAD TO THE FINAL RENDERER
 // =====================================================
@@ -8193,7 +8554,7 @@ function buildRTTFCard(fixture,prefix){
         document.createElement("div");
 
     card.className =
-        "rttf-match";
+    `rttf-match ${fixture.status}`;
 
     const home =
         fixture.home ||
@@ -8203,35 +8564,19 @@ function buildRTTFCard(fixture,prefix){
         fixture.away ||
         getRTTFPlaceholder(fixture.id,"away");
 
-    const homeFlag = teamInfo[fixture.home]?.flag || "";
-const awayFlag = teamInfo[fixture.away]?.flag || "";
+    const homeFlag = getTeamFlag(fixture.home) || "";
+const awayFlag = getTeamFlag(fixture.away) || "";
 
 let progressText = "";
 
-if(fixture.winner){
+const winner = getMatchWinner(fixture.id);
 
-    const winnerTeam =
-    fixture.winner === "home"
-        ? fixture.home
-        : fixture.winner === "away"
-            ? fixture.away
-            : "";
+if(winner){
 
-    const winnerPlayer =
-        fixture.winner === "home"
-            ? fixture.homeUser
-            : fixture.winner === "away"
-                ? fixture.awayUser
-                : "";
-
-    if(winnerTeam){
-
-        progressText =
-            `🏆 ${winnerPlayer} & ${winnerTeam} progress${
-                fixture.homeScore === fixture.awayScore ? " via pens" : ""
-            }`;
-
-    }
+    progressText =
+        `🏆 ${winner.user} & ${winner.team} progress${
+            fixture.homeScore == fixture.awayScore ? " via pens" : ""
+        }`;
 
 }
 
@@ -8473,22 +8818,20 @@ fixtures
 
 container.appendChild(page4);
 
+const stage = getTournamentStage();
+
+currentRTTFPage = stage.page;
+
 showRTTFPage(currentRTTFPage);
 
-const pages =
-    container.querySelectorAll(".rttf-page");
-
-pages.forEach((p,index)=>{
-
-    p.style.display =
-        index===0
-            ? "grid"
-            : "none";
-
-});
 }
 
 let currentRTTFPage = 0;
+
+let rttfTouchStartX = 0;
+let rttfTouchStartY = 0;
+
+let rttfSwipeInitialised = false;
 
 function showRTTFPage(pageIndex){
 
@@ -8525,6 +8868,314 @@ function showRTTFPage(pageIndex){
     });
 
 }
+
+// =====================================================
+// ENGINE 6.3 - Tournament stage engine
+// =====================================================
+
+function getTournamentStage(){
+
+    const knockoutRounds = [4,5,6,7,8,9];
+
+    // Still in the group stage
+    if (!isSurvivalMode()){
+
+        const currentGroupRound =
+            fixtures.find(f =>
+                f.round <= 3 &&
+                f.status !== "completed"
+            )?.round || 3;
+
+        const nextFixture =
+            fixtures.find(f =>
+                f.round === currentGroupRound &&
+                f.status !== "completed"
+            );
+
+        return {
+
+            round: currentGroupRound,
+
+            page: 0,
+
+            complete: false,
+
+            nextFixture
+
+        };
+
+    }
+
+    // Knockout rounds
+    for(const round of knockoutRounds){
+
+        const roundFixtures =
+            fixtures.filter(f => f.round === round);
+
+        if(!roundFixtures.length)
+            continue;
+
+        const nextFixture =
+            roundFixtures.find(f =>
+                f.status !== "completed"
+            );
+
+        if(nextFixture){
+
+            return{
+
+                round,
+
+                page: round - 4,
+
+                complete:false,
+
+                nextFixture
+
+            };
+
+        }
+
+    }
+
+    // Tournament finished
+    return{
+
+        round:9,
+
+        page:3,
+
+        complete:true,
+
+        nextFixture:null
+
+    };
+
+}
+
+// =====================================================
+// ENGINE 6.4 - Tournament Timeline Renderer
+// =====================================================
+
+function renderTournamentTimeline(){
+
+    const container =
+        document.getElementById("tournament-timeline");
+
+    if(!container) return;
+
+    const stage =
+        getTournamentStage();
+
+    const groupComplete =
+        fixtures.filter(f =>
+            f.id <= 72 &&
+            f.status === "completed"
+        ).length;
+
+    const rounds = [
+
+        {
+            round:3,
+            title:"GROUP STAGE",
+            subtitle:`${groupComplete} / 72`
+        },
+
+        {
+            round:4,
+            title:"ROUND OF 32"
+        },
+
+        {
+            round:5,
+            title:"ROUND OF 16"
+        },
+
+        {
+            round:6,
+            title:"QTR FINALS"
+        },
+
+        {
+            round:7,
+            title:"SEMI FINALS"
+        }
+
+    ];
+
+    let html = `
+
+<div class="timeline-card">
+
+<div class="timeline-title">
+
+TOURNAMENT TIMELINE
+
+</div>
+
+<div class="timeline-track">
+
+`;
+
+    rounds.forEach((r,index)=>{
+
+        let stageClass = "";
+
+        let dot = "";
+
+        let subtitle = "Locked";
+
+        if(r.round < stage.round){
+
+            stageClass = "complete";
+
+            dot = "✓";
+
+            subtitle =
+                r.round === 3
+                    ? `${groupComplete} / 72`
+                    : "Complete ✓";
+
+        }
+        else if(r.round === stage.round){
+
+            stageClass = "current";
+
+            if(stage.nextFixture){
+
+    subtitle = `
+${getTeamCode(stage.nextFixture.home)} v ${getTeamCode(stage.nextFixture.away)}
+`;
+
+}else{
+
+    subtitle = "Complete ✓";
+
+}
+
+        }
+
+        html += `
+
+<div class="timeline-stage ${stageClass}">
+
+<div class="timeline-dot">${dot}</div>
+
+<div class="timeline-text">
+
+<strong>${r.title}</strong>
+
+<span>${subtitle}</span>
+
+</div>
+
+</div>
+
+`;
+
+        if(index < rounds.length-1){
+
+            html += `
+
+<div class="timeline-arrow">→</div>
+
+`;
+
+        }
+
+    });
+
+    html += `
+
+<div class="timeline-arrow">→</div>
+
+<div class="timeline-finale">
+
+🏆
+
+<span>THE FINAL</span>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+    container.innerHTML = html;
+
+}
+
+// =====================================================
+// ENGINE 6.5 - RTTF SWIPE ENGINE
+// =====================================================
+
+function initialiseRTTFSwipe(){
+
+    if(rttfSwipeInitialised)
+        return;
+
+    const container =
+        document.getElementById("road-to-final-pages");
+
+    if(!container)
+        return;
+
+    rttfSwipeInitialised = true;
+
+    container.addEventListener("touchstart",e=>{
+
+        rttfTouchStartX =
+            e.touches[0].clientX;
+
+        rttfTouchStartY =
+            e.touches[0].clientY;
+
+    },{passive:true});
+
+    container.addEventListener("touchend",e=>{
+
+        const endX =
+            e.changedTouches[0].clientX;
+
+        const endY =
+            e.changedTouches[0].clientY;
+
+        const dx =
+            endX - rttfTouchStartX;
+
+        const dy =
+            endY - rttfTouchStartY;
+
+        // Ignore vertical scrolling
+
+        if(Math.abs(dy) > Math.abs(dx))
+            return;
+
+        // Ignore small swipes
+
+        if(Math.abs(dx) < 50)
+            return;
+
+        if(dx < 0){
+
+            showRTTFPage(
+                currentRTTFPage + 1
+            );
+
+        }else{
+
+            showRTTFPage(
+                currentRTTFPage - 1
+            );
+
+        }
+
+    },{passive:true});
+
+}
+
 // =====================================================
 
 // ENGINE 5.0 - SURVIVAL MODE
@@ -8577,25 +9228,33 @@ function isTeamAlive(team){
         return true;
     }
 
-    const knockoutFixture = fixtures.find(f =>
-        f.id >= 73 &&
-        (f.home === team || f.away === team)
-    );
+    const knockoutFixtures = fixtures
+        .filter(f =>
+            f.id >= 73 &&
+            (f.home === team || f.away === team)
+        )
+        .sort((a,b) => a.round - b.round);
 
-    console.log(team, knockoutFixture);
-
-    if (!knockoutFixture)
+    if (!knockoutFixtures.length)
         return false;
 
-    if (knockoutFixture.status !== "completed")
-        return true;
+    for (const fixture of knockoutFixtures){
 
-    const winner = getMatchWinner(knockoutFixture.id);
+        if (fixture.status !== "completed"){
+            return true;
+        }
 
-    return winner?.team === team;
+        const winner = getMatchWinner(fixture.id);
+
+        if (!winner || winner.team !== team){
+            return false;
+        }
+
+    }
+
+    return true;
 
 }
-
 
 
 function getAliveTeams(player){
@@ -8706,12 +9365,11 @@ function updateSurvivalUI(){
 
     if (dashboardTitle) {
 
-        dashboardTitle.innerHTML = `
-            <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
-            <span id="team-arrow">▶</span>
-        `;
+    dashboardTitle.innerHTML = `
+        <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
+    `;
 
-    }
+}
 
     // Scoreboard headers
 
@@ -9648,37 +10306,41 @@ function highlightPlayer(player, text) {
 
 }
 
-function getTeamRank(team) {
+function getTeamRank(team){
 
-return teamInfo[team]?.rank || 999;
-
-}
-
-
-
-function getTeamBadges(team) {
-
-return teamInfo[team]?.badges || [];
+    return teamInfo[team]?.rank ?? 999;
 
 }
 
+function getTeamFlag(team){
 
-
-function getPrimaryBadge(team) {
-
-return teamInfo[team]?.badges?.[0] || "";
+    return teamInfo[team]?.flag ?? "";
 
 }
 
+function getTeamCode(team){
 
-
-function hasBadge(team, text) {
-
-    return teamInfo[team]?.badges?.some(b => b.includes(text));
+    return teamInfo[team]?.code ?? team;
 
 }
 
+function getTeamBadges(team){
 
+    return teamInfo[team]?.badges ?? [];
+
+}
+
+function getPrimaryBadge(team){
+
+    return teamInfo[team]?.badges?.[0] ?? "";
+
+}
+
+function hasBadge(team, text){
+
+    return teamInfo[team]?.badges?.some(b => b.includes(text)) ?? false;
+
+}
 
 function renderTeamAssignment(team) {
 
@@ -15367,8 +16029,8 @@ function testParticipantResolver(){
     "awaySource":78,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":"",
-    "awayScore":"",
+    "homeScore":1,
+    "awayScore":2,
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -15376,7 +16038,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"upcoming"
+    "status":"completed"
 },
 {
     "id":92,
@@ -15390,16 +16052,16 @@ function testParticipantResolver(){
     "awaySource":80,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":"",
-    "awayScore":"",
+    "homeScore":2,
+    "awayScore":3,
     "homePens":null,
     "awayPens":null,
     "winner":null,
     "homeRedCards":0,
-    "awayRedCards":0,
+    "awayRedCards":1,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"upcoming"
+    "status":"completed"
 },
 {
     "id":93,
@@ -15923,7 +16585,7 @@ if (
 
                 chip.id = `chip-${user}-${team.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
-        const flagCode = teamInfo[team]?.flag;
+        const flagCode = getTeamFlag(team); 
 
                 const badge = getPrimaryBadge(team);
 
@@ -16433,8 +17095,8 @@ Object.keys(scores).forEach(p => {
 
     // Survival Mode
     scores[p].progression = progression[p] || 0;
-    scores[p].alive = getAliveTeams(p);
-    scores[p].eliminated = scores[p].alive === 0;
+scores[p].alive = getAliveTeams(p);
+scores[p].eliminated = scores[p].alive === 0;
 
     // Tournament Points
     scores[p].pts =
@@ -17264,6 +17926,7 @@ ${summary.closestRivalry?.record || "-"}
     container.appendChild(tile3);
 
 }
+
 function renderScoreboard(scores) {
 
 
@@ -17293,7 +17956,13 @@ function renderScoreboard(scores) {
 
 let sorted = window.sortedStandings;          
 
-    
+const leader = sorted[0];
+const runnerUp = sorted[1];
+const lead = leader && runnerUp ? leader.pts - runnerUp.pts : 0;
+
+document.querySelector("#header-leader-chip .leader-name").innerText = leader.name;
+document.querySelector("#header-leader-chip .leader-points").innerText = `${leader.pts} pts`;
+document.querySelector("#header-leader-chip .leader-lead").innerText = `⭐ +${lead}`;    
 
     document.getElementById("centre-leader-points").innerText =
 
@@ -17594,14 +18263,6 @@ document.getElementById("centre-watch-sub").innerHTML =
 document.getElementById("centre-leader").innerText =
 
     sorted[0].name;
-
-    
-
-
-
-document.getElementById("centre-leader-points").innerText =
-
-    `${sorted[0].pts} points`;
 
 
 
@@ -18943,41 +19604,21 @@ console.table(
 
     container.innerHTML = `
 
-    <div class="rivalry-header dashboard-header"
+    <div class="rivalry-header dashboard-header">
 
-     onclick="toggleSection('rivalry-content','rivalry-arrow')">
+        <h3 class="section-title-row">
 
+            <span>
 
+                ⚔️ Family Rivalries
 
-    <h3 class="section-title-row">
+            </span>
 
+        </h3>
 
+    </div>
 
-        <span>
-
-            ⚔️ Family Rivalries
-
-        </span>
-
-
-
-        <span id="rivalry-arrow">
-
-            ▶
-
-        </span>
-
-
-
-    </h3>
-
-
-
-</div>
-
-
-
-    <div id="rivalry-content" style="display:none;">
+    <div id="rivalry-content">
 
 
 
@@ -19470,7 +20111,7 @@ isSurvivalMode()
 
 
             const homeFlag = teamInfo[f.home]?.flag;
-const awayFlag = teamInfo[f.away]?.flag;
+const awayFlag = getTeamFlag(f.away);
 
 
 
@@ -19672,7 +20313,7 @@ if (f.round !== activeRound) {
         if (side === 'away') f.awayScore = val;
 
         f.status = (f.homeScore === "" || f.awayScore === "") ? "upcoming" : "completed";
-
+updateKnockoutWinner(f);
     }
 
 
@@ -19768,18 +20409,24 @@ let pending = fixtures.filter(f => {
         buildAliveTable();
     }
 
+    // Populate knockout winners
+    fixtures.forEach(updateKnockoutWinner);
+updateKnockoutBracket();
+
     // Core calculations
     calculateScores();
 
     // Tournament Centre
-renderHallOfInfamy();
-renderRivalryMatrix(fixtures);
+    renderHallOfInfamy();
+    renderRivalryMatrix(fixtures);
 
-// Main UI
-renderDashboard();
-renderFixtures();
-renderRoadToFinal();
-renderQuickUpdate();
+    // Main UI
+    renderDashboard();
+    renderFixtures();
+    renderRoadToFinal();
+    initialiseRTTFSwipe();
+    renderTournamentTimeline();
+    renderQuickUpdate();
 
     // Narrative
     rebuildChronicle();
@@ -19792,7 +20439,9 @@ renderQuickUpdate();
     renderScoringRules();
 
     console.log("Round of 32 generated.");
-
+console.log(
+    getTournamentStage()
+);
     // Admin
     let adminPanel = document.getElementById("admin-management-panel");
 
