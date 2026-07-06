@@ -24,7 +24,31 @@
 
 }
 
+#header-navigation{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:flex-end;
+
+    gap:8px;
+
+    flex:0 0 auto;
+
+}
+
 .header-icon-btn{
+
+    width:44px;
+
+    height:44px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
 
     background:none;
 
@@ -32,9 +56,19 @@
 
     color:white;
 
-    font-size:clamp(1rem,2vw,1.4rem);
+    font-size:1.6rem;
 
     cursor:pointer;
+
+    border-radius:10px;
+
+    transition:.2s;
+
+}
+
+.header-icon-btn:hover{
+
+    background:rgba(255,255,255,.08);
 
 }
 
@@ -109,6 +143,18 @@
     display:flex;
 
     justify-content:center;
+
+    cursor:pointer;
+
+}
+
+#header-leader-chip:hover .leader-chip{
+
+    transform:translateY(-1px);
+
+    box-shadow:0 8px 22px rgba(230,179,37,.45);
+
+    transition:.2s;
 
 }
 
@@ -4308,9 +4354,7 @@ border:1px solid #f5c2c7;
 
     </div>
 
-    <div id="header-navigation">
-
-        <button id="header-awards-btn" class="header-icon-btn">🏅</button>
+    <div id="header-navigation">       
 
         <button id="header-home-btn" class="header-icon-btn">🏠</button>
 
@@ -4487,17 +4531,166 @@ border:1px solid #f5c2c7;
 </div>
 </section>
 
- <section id="page-fixtures"
-                 class="app-page"
-                 hidden>
+<section id="page-fixtures"
+         class="app-page"
+         hidden>
 
-        </section>
+<div class="page-content">
+
+    <!-- ======================================================
+         TOURNAMENT FIXTURES
+    ====================================================== -->
+
+    <div id="fixtures-anchor"></div>
+
+    <div class="dashboard-header">
+
+        <h3 class="section-title-row page-title">
+
+            <span>
+                🗓️ Full Tournament Fixtures
+            </span>
+
+        </h3>
+
+    </div>
+
+    <div id="fixtures-content">
+
+        <div id="fixtures-container">
+
+            <!-- Loaded dynamically -->
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
 
         <section id="page-centre"
-                 class="app-page"
-                 hidden>
+         class="app-page"
+         hidden>
 
-        </section>
+<div class="page-content">
+
+<div id="tournament-centre">
+
+    <div class="dashboard-header">         
+
+        <h3 class="section-title-row">
+
+            <span>
+                🏟️ Tournament Centre
+            </span>
+
+        </h3>
+
+    </div>
+
+    <div id="centre-content">
+
+        <div class="centre-grid">
+
+            <div class="centre-card leader-card">
+
+                <div class="centre-label">🏆 Current Leader</div>
+
+                <div id="centre-leader" class="centre-value">-</div>
+
+                <div id="centre-leader-points" class="centre-sub">0 pts</div>
+
+            </div>
+
+            <div class="centre-card mvp-card">
+
+                <div class="centre-label">⭐ Latest MVP</div>
+
+                <div id="centre-mvp" class="centre-value">-</div>
+
+                <div id="centre-mvp-points" class="centre-sub">-</div>
+
+            </div>
+
+            <div class="centre-card rivalry-centre-card">
+
+                <div class="centre-label">⚔️ Rivalry King</div>
+
+                <div id="centre-rivalry" class="centre-value">Coming Soon</div>
+
+                <div id="centre-rivalry-sub" class="centre-sub"></div>
+
+            </div>
+
+            <div class="centre-card form-card">
+
+                <div class="centre-label">🔥 Hottest Streak</div>
+
+                <div id="centre-streak" class="centre-value">-</div>
+
+                <div id="centre-streak-sub" class="centre-sub">-</div>
+
+            </div>
+
+            <div class="centre-card climber-card">
+
+                <div class="centre-label">📈 Biggest Climber</div>
+
+                <div id="centre-climber" class="centre-value">-</div>
+
+                <div id="centre-climber-points" class="centre-sub">-</div>
+
+                <div id="centre-climber-story"
+                     class="centre-sub centre-family-sub">-</div>
+
+            </div>
+
+            <div class="centre-card faller-card">
+
+                <div class="centre-label">📉 Biggest Faller</div>
+
+                <div id="centre-faller" class="centre-value">-</div>
+
+                <div id="centre-faller-points" class="centre-sub">-</div>
+
+                <div id="centre-faller-story"
+                     class="centre-sub centre-family-sub">-</div>
+
+            </div>
+
+            <div class="centre-card shakeup-card">
+
+                <div class="centre-label">🔥 Matchday Shake-Up</div>
+
+                <div id="centre-shakeup" class="centre-value">Awaiting Action</div>
+
+                <div id="centre-shakeup-sub" class="centre-sub">No movement yet</div>
+
+            </div>
+
+            <div class="centre-card watch-card">
+
+                <div class="centre-label">👀 One To Watch</div>
+
+                <div id="centre-watch" class="centre-value">-</div>
+
+                <div id="centre-watch-sub" class="centre-sub">-</div>
+
+                <div id="centre-watch-family"
+                     class="centre-sub centre-family-sub"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</section>
 
         <section id="page-standings" class="app-page" hidden>
 
@@ -4605,6 +4798,191 @@ border:1px solid #f5c2c7;
 
 </section>
 
+<section id="page-awards"
+         class="app-page"
+         hidden>      
+
+<div class="page-content">
+
+<div id="tournament-awards">
+
+    <div class="dashboard-header">
+
+        <h3 class="section-title-row page-title">
+
+            <span>
+
+                🏅 Tournament Awards
+
+            </span>
+
+        </h3>
+
+    </div>
+
+    <div id="awards-content">
+
+        <div class="awards-grid">
+
+            <div class="award-card shock-award">
+
+                <div class="award-label">🔥 Shock Result</div>
+
+                <div id="award-upset"
+                     class="award-value">
+
+                    Awaiting Shock
+
+                </div>
+
+                <div id="award-upset-sub"
+                     class="award-sub">
+
+                    No ranking upset yet
+
+                </div>
+
+            </div>
+
+            <div class="award-card match-award">
+
+                <div class="award-label">
+
+                    🎯 Match of the Tournament
+
+                </div>
+
+                <div id="award-match"
+                     class="award-value">
+
+                    Awaiting Classic
+
+                </div>
+
+                <div id="award-match-sub"
+                     class="award-sub"></div>
+
+            </div>
+
+            <div class="award-card honours-award">
+
+                <div class="award-label">
+
+                    🏆 HONOURS BOARD
+
+                </div>
+
+                <div id="award-honours-header"></div>
+
+                <div id="award-honours-list"
+                     class="honours-list"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="hall-of-infamy">
+
+    <div class="dashboard-header">
+
+        <h3 class="section-title-row page-title">
+
+            <span>
+
+                😂 Hall of Infamy
+
+            </span>
+
+        </h3>
+
+    </div>
+
+    <div id="infamy-content">
+
+        <div class="centre-grid">
+
+            <div class="centre-card infamy-card">
+
+                <div class="centre-label">
+
+                    🟥 RED CARD ROYALTY
+
+                </div>
+
+                <div id="red-card-holder"
+                     class="centre-value">
+
+                    -
+
+                </div>
+
+                <div id="red-card-total"
+                     class="centre-sub">
+
+                    -
+
+                </div>
+
+                <div id="red-card-runners"
+                     class="centre-sub">
+
+                    -
+
+                </div>
+
+            </div>
+
+            <div class="centre-card infamy-card">
+
+                <div class="centre-label">
+
+                    ⚽ OWN GOAL KING
+
+                </div>
+
+                <div id="own-goal-holder"
+                     class="centre-value">
+
+                    -
+
+                </div>
+
+                <div id="own-goal-total"
+                     class="centre-sub">
+
+                    No Own Goals
+
+                </div>
+
+                <div id="own-goal-runners"
+                     class="centre-sub">
+
+                    -
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="page-admin"
+         class="app-page"
+         hidden>
+
+</section>
+
         <section id="page-rivalries"
                  class="app-page"
                  hidden>
@@ -4622,6 +5000,7 @@ border:1px solid #f5c2c7;
                  hidden>
 
         </section>
+        
 
     </main>
 
@@ -4653,14 +5032,14 @@ border:1px solid #f5c2c7;
 
     </button>
 
-    <button id="footer-infamy"
-            class="footer-button">
+    <button id="footer-awards"
+        class="footer-button">
 
-        <span class="footer-icon">😂</span>
+    <span class="footer-icon">🏅</span>
 
-        <span class="footer-label">
-            Infamy
-        </span>
+    <span class="footer-label">
+        Awards
+    </span>
 
     </button>
 
@@ -5807,7 +6186,6 @@ const narrativeLibrary = {
     ]
 
 };
-
 
 
 function getNarrative(category){
@@ -8462,7 +8840,7 @@ function getRTTFPlaceholder(fixtureId, side){
 }
 
 /* =====================================================
-   APPLICATION NAVIGATION
+   APPLICATION NAVIGATION - Wires
 ===================================================== */
 
 function showPage(pageId){
@@ -8503,6 +8881,51 @@ document
         showPage("page-home");
 
 });
+
+document
+    .getElementById("header-leader-chip")
+    .addEventListener("click", jumpToPodium);
+ 
+
+document
+    .getElementById("header-menu-btn")
+    .addEventListener("click",()=>{
+
+        showPage("page-admin");
+
+});
+
+document
+    .getElementById("footer-fixtures")
+    .addEventListener("click",()=>{
+
+        showPage("page-fixtures");
+
+});
+
+document
+    .getElementById("footer-centre")
+    .addEventListener("click",()=>{
+
+        showPage("page-centre");
+
+});
+
+document
+    .getElementById("footer-awards")
+    .addEventListener("click",()=>{
+
+        showPage("page-awards");
+
+});
+
+
+
+function jumpToPodium(){
+
+    showPage("page-standings");
+
+}
 
 // =====================================================
 // ENGINE 6.1 - ROAD TO THE FINAL RENDERER
@@ -21227,8 +21650,8 @@ function runTournamentDiagnostics() {
 
     console.log("======================================");
 
-console.log(buildScores(72));
-console.log(getCurrentLeader(buildScores(72)));
+console.log(buildScores(104));
+console.log(getCurrentLeader(buildScores(104)));
 
     validateTournamentGroups();
 
