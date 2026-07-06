@@ -222,7 +222,7 @@
 
     justify-content:space-between;
 
-    gap:12px;
+    gap:16px;
 
 }
 
@@ -241,8 +241,12 @@
 .timeline-dot{
 
     width:28px;
-
     height:28px;
+
+    min-width:28px;
+    min-height:28px;
+
+    flex:0 0 28px;
 
     border-radius:50%;
 
@@ -276,6 +280,13 @@
 
 }
 
+.timeline-stage.current .timeline-text span{
+
+    color:#7c3aed;
+    font-weight:600;
+
+}
+
 .timeline-text strong{
 
     font-size:.82rem;
@@ -302,7 +313,20 @@
 
 }
 
+.timeline-text .fixture-flag{
+    width:14px;
+    height:10px;
+    object-fit:cover;
+    vertical-align:-1px;
+    margin:0 2px;
+    border-radius:2px;
+}
+
 .timeline-arrow{
+
+    flex:0 0 20px;
+
+    text-align:center;
 
     color:#94a3b8;
 
@@ -313,19 +337,22 @@
 .timeline-finale{
 
     display:flex;
-
     flex-direction:column;
-
+    justify-content:center;
     align-items:center;
-
-    color:#7c3aed;
-
-    font-weight:700;
+    gap:4px;
 
     min-width:70px;
 
-    justify-content:center;
+    color:#7c3aed;
+    font-weight:700;
+    text-align:center;
 
+}
+
+.timeline-finale span{
+
+    line-height:1.1;
 }
 
 .timeline-scroll{
@@ -4316,90 +4343,7 @@ border:1px solid #f5c2c7;
 
             <section id="tournament-timeline">
 
-                <div class="timeline-card">
-
-                    <div class="timeline-title">
-                        TOURNAMENT TIMELINE
-                    </div>
-
-                    <div class="timeline-track">
-
-                        <div class="timeline-stage complete">
-
-                            <div class="timeline-dot">✓</div>
-
-                            <div class="timeline-text">
-                                <strong>GROUP STAGE</strong>
-                                <span>72 / 72</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage current">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>ROUND OF 32</strong>
-                                <span>In Progress</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>ROUND OF 16</strong>
-                                <span>Locked</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>QUARTER FINALS</strong>
-                                <span>Locked</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>SEMI FINALS</strong>
-                                <span>Locked</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-finale">
-
-                            🏆
-
-                            <span>THE FINAL</span>
-
-                        </div>
-
-                    </div>
-
-                </div>
+            <!-- Rendered by Engine 6.4 -->
 
             </section>
 
@@ -5897,6 +5841,8 @@ const narrativeLibrary = {
     ]
 
 };
+
+
 
 function getNarrative(category){
 
@@ -8906,22 +8852,20 @@ fixtures
 
 container.appendChild(page4);
 
+const stage = getTournamentStage();
+
+currentRTTFPage = stage.page;
+
 showRTTFPage(currentRTTFPage);
 
-const pages =
-    container.querySelectorAll(".rttf-page");
-
-pages.forEach((p,index)=>{
-
-    p.style.display =
-        index===0
-            ? "grid"
-            : "none";
-
-});
 }
 
 let currentRTTFPage = 0;
+
+let rttfTouchStartX = 0;
+let rttfTouchStartY = 0;
+
+let rttfSwipeInitialised = false;
 
 function showRTTFPage(pageIndex){
 
@@ -8958,6 +8902,320 @@ function showRTTFPage(pageIndex){
     });
 
 }
+
+// =====================================================
+// ENGINE 6.3 - Tournament stage engine
+// =====================================================
+
+function getTournamentStage(){
+
+    const knockoutRounds = [4,5,6,7,8,9];
+
+    // Still in the group stage
+    if (!isSurvivalMode()){
+
+        const currentGroupRound =
+            fixtures.find(f =>
+                f.round <= 3 &&
+                f.status !== "completed"
+            )?.round || 3;
+
+        const nextFixture =
+            fixtures.find(f =>
+                f.round === currentGroupRound &&
+                f.status !== "completed"
+            );
+
+        return {
+
+            round: currentGroupRound,
+
+            page: 0,
+
+            complete: false,
+
+            nextFixture
+
+        };
+
+    }
+
+    // Knockout rounds
+    for(const round of knockoutRounds){
+
+        const roundFixtures =
+            fixtures.filter(f => f.round === round);
+
+        if(!roundFixtures.length)
+            continue;
+
+        const nextFixture =
+            roundFixtures.find(f =>
+                f.status !== "completed"
+            );
+
+        if(nextFixture){
+
+            return{
+
+                round,
+
+                page: round - 4,
+
+                complete:false,
+
+                nextFixture
+
+            };
+
+        }
+
+    }
+
+    // Tournament finished
+    return{
+
+        round:9,
+
+        page:3,
+
+        complete:true,
+
+        nextFixture:null
+
+    };
+
+}
+
+// =====================================================
+// ENGINE 6.4 - Tournament Timeline Renderer
+// =====================================================
+
+function renderTournamentTimeline(){
+
+    const container =
+        document.getElementById("tournament-timeline");
+
+    if(!container) return;
+
+    const stage =
+        getTournamentStage();
+
+    const groupComplete =
+        fixtures.filter(f =>
+            f.id <= 72 &&
+            f.status === "completed"
+        ).length;
+
+    const rounds = [
+
+        {
+            round:3,
+            title:"GROUP STAGE",
+            subtitle:`${groupComplete} / 72`
+        },
+
+        {
+            round:4,
+            title:"ROUND OF 32"
+        },
+
+        {
+            round:5,
+            title:"ROUND OF 16"
+        },
+
+        {
+            round:6,
+            title:"QTR FINALS"
+        },
+
+        {
+            round:7,
+            title:"SEMI FINALS"
+        }
+
+    ];
+
+    let html = `
+
+<div class="timeline-card">
+
+<div class="timeline-title">
+
+TOURNAMENT TIMELINE
+
+</div>
+
+<div class="timeline-track">
+
+`;
+
+    rounds.forEach((r,index)=>{
+
+        let stageClass = "";
+
+        let dot = "";
+
+        let subtitle = "Locked";
+
+        if(r.round < stage.round){
+
+            stageClass = "complete";
+
+            dot = "✓";
+
+            subtitle =
+                r.round === 3
+                    ? `${groupComplete} / 72`
+                    : "Complete ✓";
+
+        }
+        else if(r.round === stage.round){
+
+            stageClass = "current";
+
+            if(stage.nextFixture){
+
+                const homeFlag =
+                    flagCodes[stage.nextFixture.home];
+
+                const awayFlag =
+                    flagCodes[stage.nextFixture.away];
+
+                subtitle = `
+${getTeamCode(stage.nextFixture.home)} v ${getTeamCode(stage.nextFixture.away)}
+`;
+
+            }else{
+
+                subtitle = "Complete ✓";
+
+            }
+
+        }
+
+        html += `
+
+<div class="timeline-stage ${stageClass}">
+
+<div class="timeline-dot">${dot}</div>
+
+<div class="timeline-text">
+
+<strong>${r.title}</strong>
+
+<span>${subtitle}</span>
+
+</div>
+
+</div>
+
+`;
+
+        if(index < rounds.length-1){
+
+            html += `
+
+<div class="timeline-arrow">→</div>
+
+`;
+
+        }
+
+    });
+
+    html += `
+
+<div class="timeline-arrow">→</div>
+
+<div class="timeline-finale">
+
+🏆
+
+<span>THE FINAL</span>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+    container.innerHTML = html;
+
+}
+
+// =====================================================
+// ENGINE 6.5 - RTTF SWIPE ENGINE
+// =====================================================
+
+function initialiseRTTFSwipe(){
+
+    if(rttfSwipeInitialised)
+        return;
+
+    const container =
+        document.getElementById("road-to-final-pages");
+
+    if(!container)
+        return;
+
+    rttfSwipeInitialised = true;
+
+    container.addEventListener("touchstart",e=>{
+
+        rttfTouchStartX =
+            e.touches[0].clientX;
+
+        rttfTouchStartY =
+            e.touches[0].clientY;
+
+    },{passive:true});
+
+    container.addEventListener("touchend",e=>{
+
+        const endX =
+            e.changedTouches[0].clientX;
+
+        const endY =
+            e.changedTouches[0].clientY;
+
+        const dx =
+            endX - rttfTouchStartX;
+
+        const dy =
+            endY - rttfTouchStartY;
+
+        // Ignore vertical scrolling
+
+        if(Math.abs(dy) > Math.abs(dx))
+            return;
+
+        // Ignore small swipes
+
+        if(Math.abs(dx) < 50)
+            return;
+
+        if(dx < 0){
+
+            showRTTFPage(
+                currentRTTFPage + 1
+            );
+
+        }else{
+
+            showRTTFPage(
+                currentRTTFPage - 1
+            );
+
+        }
+
+    },{passive:true});
+
+}
+
 // =====================================================
 
 // ENGINE 5.0 - SURVIVAL MODE
@@ -10118,7 +10376,32 @@ function hasBadge(team, text) {
 
 }
 
+function getTeamCode(team){
 
+    const codes = {
+
+        "Portugal":"POR",
+        "Spain":"ESP",
+        "Brazil":"BRA",
+        "France":"FRA",
+        "England":"ENG",
+        "Mexico":"MEX",
+        "Canada":"CAN",
+        "Morocco":"MAR",
+        "Argentina":"ARG",
+        "Belgium":"BEL",
+        "Switzerland":"SUI",
+        "Colombia":"COL",
+        "Norway":"NOR",
+        "Egypt":"EGY",
+        "USA":"USA"
+
+        // ...same source as your flagCodes
+    };
+
+    return codes[team] || team.substring(0,3).toUpperCase();
+
+}
 
 function renderTeamAssignment(team) {
 
@@ -20203,6 +20486,8 @@ updateKnockoutBracket();
     renderDashboard();
     renderFixtures();
     renderRoadToFinal();
+    initialiseRTTFSwipe();
+    renderTournamentTimeline();
     renderQuickUpdate();
 
     // Narrative
@@ -20216,7 +20501,9 @@ updateKnockoutBracket();
     renderScoringRules();
 
     console.log("Round of 32 generated.");
-
+console.log(
+    getTournamentStage()
+);
     // Admin
     let adminPanel = document.getElementById("admin-management-panel");
 
