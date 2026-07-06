@@ -6155,9 +6155,14 @@ const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
     };
 
 // =====================================================
-// NARRATIVE LIBRARY
-// Central repository for Family Championship banter.
+// ENGINE 7 - TOURNAMENT NARRATIVE ENGINE
+// Central repository for tournament stories and banter.
 // =====================================================
+
+
+// -----------------------------------------------------
+// Narrative Templates
+// -----------------------------------------------------
 
 const narrativeLibrary = {
 
@@ -6188,11 +6193,22 @@ const narrativeLibrary = {
 };
 
 
+// -----------------------------------------------------
+// Live Tournament Narratives
+// -----------------------------------------------------
+
+let tournamentNarratives = [];
+
+
+// -----------------------------------------------------
+// Narrative Library Helpers
+// -----------------------------------------------------
+
 function getNarrative(category){
 
     const entries = narrativeLibrary[category];
 
-    if (!entries || entries.length === 0)
+    if(!entries || entries.length === 0)
         return "";
 
     return entries[
@@ -6204,6 +6220,77 @@ function getNarrative(category){
 function getEliminationNarrative(){
 
     return getNarrative("elimination");
+
+}
+
+
+// -----------------------------------------------------
+// Tournament Narrative Helpers
+// -----------------------------------------------------
+
+function updateNarrative(category, icon, title, text, priority = 50){
+
+    const existing = tournamentNarratives.find(
+        narrative => narrative.category === category
+    );
+
+    if(existing){
+
+        existing.icon = icon;
+        existing.title = title;
+        existing.text = text;
+        existing.priority = priority;
+        existing.timestamp = Date.now();
+
+        return;
+
+    }
+
+    tournamentNarratives.push({
+
+        category,
+
+        icon,
+
+        title,
+
+        text,
+
+        priority,
+
+        timestamp: Date.now()
+
+    });
+
+}
+
+function removeNarrative(category){
+
+    tournamentNarratives =
+        tournamentNarratives.filter(
+            narrative => narrative.category !== category
+        );
+
+}
+
+function clearNarratives(){
+
+    tournamentNarratives = [];
+
+}
+
+function getTournamentNarratives(){
+
+    return [...tournamentNarratives]
+
+        .sort((a,b)=>{
+
+            if(b.priority !== a.priority)
+                return b.priority - a.priority;
+
+            return b.timestamp - a.timestamp;
+
+        });
 
 }
 
@@ -12554,7 +12641,7 @@ function generateCurrentStory(
 
         leader.pts - second.pts;
 
-
+let story = null;
 
     const uniqueLeaders =
 
