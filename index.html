@@ -4,7 +4,7 @@
 
 <head>
 
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
 
     <title>Family World Cup Group Stage Score Tracker</title>
 
@@ -12,11 +12,29 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 15px; }
 
-       
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
 /* =====================================================
    SURVIVAL MODE V2
 ===================================================== */
 
+#app-header{
+
+    display:grid;
+
+    grid-template-columns:auto 1fr auto;
+
+    align-items:center;
+
+    gap:clamp(10px,2vw,24px);
+
+    padding:clamp(8px,1.5vw,14px) clamp(12px,2vw,22px);
+
+    background:#071224;
+
+    color:white;
+
+}
 
 #hero-banner{
 
@@ -779,7 +797,7 @@
 
     display:grid;
 
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
 
     gap:20px;
 
@@ -1184,159 +1202,26 @@
 }
 
 /* =====================================================
-   APPLICATION LAYOUT
+   APPLICATION SHELL
 ===================================================== */
 
-html,
-body{
+#app-shell{
 
-    margin:0;
+    display:flex;
 
-    padding:0;
-
-    height:100%;
-
-}
-
-body{
-
-    background:#dfe3ea;
-
-}
-
-.container{
-
-    max-width:1000px;
-
-    margin:0 auto;
-
-    background:white;
-
-    padding:0;
-
-    border-radius:12px;
-
-    box-shadow:0 4px 15px rgba(0,0,0,.05);
-
-    overflow:hidden;
-
-    position:relative;
-
-}
-
-#app-header{
-
-    position:fixed;
-
-    top:20px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:100%;
-
-    max-width:1000px;
-
-    height:72px;
-
-    display:grid;
-
-    grid-template-columns:auto 1fr auto;
-
-    align-items:center;
-
-    gap:clamp(10px,2vw,24px);
-
-    padding:0 clamp(12px,2vw,22px);
-
-    background:#071224;
-
-    color:white;
-
-    border-bottom:1px solid rgba(255,255,255,.08);
-
-    box-sizing:border-box;
-
-    box-shadow:0 4px 16px rgba(0,0,0,.25);
-
-    z-index:1000;
-
-}
-
-#app-pages{
-
-    padding-top:72px;
-
-    padding-bottom:72px;
+    flex-direction:column;
 
     min-height:100vh;
 
 }
 
-.app-page .dashboard-header{
+#app-viewport{
 
-    cursor:default;
+    flex:1;
 
-}
+    position:relative;
 
-.app-page .dashboard-header:hover{
-
-    background:#f8fafc;
-
-    transform:none;
-
-}
-
-.app-page .dashboard-header .section-title-row{
-
-    justify-content:flex-start;
-
-}
-
-.page-title{
-
-    justify-content:flex-start;
-
-}
-
-.page-content{
-
-    padding:20px;
-
-}
-
-#app-footer{
-
-    position:fixed;
-
-    bottom:20px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    width:100%;
-
-    max-width:1000px;
-
-    height:72px;
-
-    display:flex;
-
-    justify-content:space-around;
-
-    align-items:center;
-
-    background:#071224;
-
-    border-top:1px solid rgba(255,255,255,.08);
-
-    box-shadow:0 -4px 16px rgba(0,0,0,.25);
-
-    box-sizing:border-box;
-
-    z-index:1000;
+    overflow:hidden;
 
 }
 
@@ -1374,82 +1259,6 @@ body{
 
 }
 
-/* ======================================================
-   APPLICATION FOOTER
-====================================================== */
-.footer-button{
-
-    flex:1;
-
-    display:flex;
-
-    flex-direction:row;
-
-    align-items:center;
-
-    justify-content:center;
-
-    gap:10px;
-
-    border:none;
-
-    background:none;
-
-    color:#94a3b8;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    border-radius:12px;
-
-    padding:12px 16px;
-
-}
-
-.footer-button:hover{
-
-    color:white;
-
-    background:rgba(255,255,255,.06);
-
-}
-
-.footer-button.active{
-
-    color:#38bdf8;
-
-    background:rgba(56,189,248,.15);
-
-}
-
-.footer-icon{
-
-    font-size:26px;
-
-    line-height:1;
-
-    flex-shrink:0;
-
-}
-
-.footer-label{
-
-    font-size:.9rem;
-
-    font-weight:700;
-
-    letter-spacing:.3px;
-
-    white-space:nowrap;
-
-}
-
-.hidden{
-
-    display:none !important;
-
-}
 /* =====================================================
    UI V1
 ===================================================== */
@@ -2800,31 +2609,6 @@ white-space:nowrap;
 }
 
         .fixture-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; padding:10px 12px; border-bottom:1px solid #edf2f7; background:#fff; border-radius:6px; margin-bottom:6px; box-shadow:0 1px 3px rgba(0,0,0,0.02); font-size:0.88rem; }
-.fixture-row.completed{
-
-    background:#ecfdf5;
-
-    border-left:5px solid #22c55e;
-
-    box-shadow:0 2px 8px rgba(34,197,94,.15);
-
-}
-
-.fixture-row.completed .match-date{
-
-    color:#15803d;
-
-    font-weight:700;
-
-}
-
-.fixture-row.completed .team-winner{
-
-    color:#15803d;
-
-    font-weight:700;
-
-}
 
         .completed { background-color: #f0fff4; border-left: 4px solid #38a169; }
 
@@ -4241,11 +4025,11 @@ border:1px solid #f5c2c7;
 
 <div class="container">
 
- <!--=====================================================
-         APPLICATION HEADER
-    ======================================================-->
+<!--=====================================================
+     SURVIVAL MODE V2
+=====================================================-->
 
-    <header id="app-header">
+<header id="app-header">
 
     <div id="header-brand">
 
@@ -4293,439 +4077,228 @@ border:1px solid #f5c2c7;
 
 </header>
 
- <!--=====================================================
-         APPLICATION PAGES
-    ======================================================-->
+<div id="app-shell">
 
-<main id="app-pages">
-
-    <!-- ======================================================
-         HOME PAGE
-    ====================================================== -->        
+<div id="app-viewport">
 
 <section id="page-home" class="app-page active">
-    <div class="page-content">
 
-    <!-- ======================================================
-         TOURNAMENT TIMELINE
-    ====================================================== -->
+<div class="timeline-scroll">
 
-    <div class="timeline-scroll">
+    <div class="timeline-track">
+    <section id="tournament-timeline">
+
+    <div class="timeline-card">
+
+        <div class="timeline-title">
+            TOURNAMENT TIMELINE
+        </div>
 
         <div class="timeline-track">
 
-            <section id="tournament-timeline">
+            <div class="timeline-stage complete">
 
-                <div class="timeline-card">
+                <div class="timeline-dot">✓</div>
 
-                    <div class="timeline-title">
-                        TOURNAMENT TIMELINE
-                    </div>
-
-                    <div class="timeline-track">
-
-                        <div class="timeline-stage complete">
-
-                            <div class="timeline-dot">✓</div>
-
-                            <div class="timeline-text">
-                                <strong>GROUP STAGE</strong>
-                                <span>72 / 72</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage current">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>ROUND OF 32</strong>
-                                <span>In Progress</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>ROUND OF 16</strong>
-                                <span>Locked</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>QUARTER FINALS</strong>
-                                <span>Locked</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-stage">
-
-                            <div class="timeline-dot"></div>
-
-                            <div class="timeline-text">
-                                <strong>SEMI FINALS</strong>
-                                <span>Locked</span>
-                            </div>
-
-                        </div>
-
-                        <div class="timeline-arrow">→</div>
-
-                        <div class="timeline-finale">
-
-                            🏆
-
-                            <span>THE FINAL</span>
-
-                        </div>
-
-                    </div>
-
+                <div class="timeline-text">
+                    <strong>GROUP STAGE</strong>
+                    <span>72 / 72</span>
                 </div>
 
-            </section>
+            </div>
+
+            <div class="timeline-arrow">→</div>
+
+            <div class="timeline-stage current">
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-text">
+                    <strong>ROUND OF 32</strong>
+                    <span>In Progress</span>
+                </div>
+
+            </div>
+
+            <div class="timeline-arrow">→</div>
+
+            <div class="timeline-stage">
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-text">
+                    <strong>ROUND OF 16</strong>
+                    <span>Locked</span>
+                </div>
+
+            </div>
+
+            <div class="timeline-arrow">→</div>
+
+            <div class="timeline-stage">
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-text">
+                    <strong>QUARTER FINALS</strong>
+                    <span>Locked</span>
+                </div>
+
+            </div>
+
+            <div class="timeline-arrow">→</div>
+
+            <div class="timeline-stage">
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-text">
+                    <strong>SEMI FINALS</strong>
+                    <span>Locked</span>
+                </div>
+
+            </div>
+
+            <div class="timeline-arrow">→</div>
+
+            <div class="timeline-finale">
+
+                🏆
+
+                <span>THE FINAL</span>
+
+            </div>
 
         </div>
 
     </div>
 
-    <!-- ======================================================
-         ROAD TO THE FINAL
-    ====================================================== -->
-
-    <section id="road-to-final-container">
-
-        <div class="rttf-card">
-
-            <div class="rttf-header">
-
-                <div class="rttf-title">
-
-                    <span class="rttf-icon">🏆</span>
-
-                    <div>
-
-                        <div class="rttf-heading">
-                            ROAD TO THE FINAL
-                        </div>
-
-                        <div class="rttf-subheading">
-                            SURVIVAL MODE
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div id="road-to-final-pages">
-
-                <!-- RTTF Pages Render Here -->
-
-            </div>
-
-            <div class="rttf-pagination">
-
-                <span class="rttf-pagination-dot active"
-                      onclick="showRTTFPage(0)"></span>
-
-                <span class="rttf-pagination-dot"
-                      onclick="showRTTFPage(1)"></span>
-
-                <span class="rttf-pagination-dot"
-                      onclick="showRTTFPage(2)"></span>
-
-                <span class="rttf-pagination-dot"
-                      onclick="showRTTFPage(3)"></span>
-
-            </div>
-
-        </div>
-
     </section>
+    </div>
 
-    <!-- ======================================================
-         ROYAL DASHBOARD
-    ====================================================== -->
-
-    <section id="royal-dashboard">
-
-        <div id="royal-podium-card"
-             class="royal-dashboard-card">
-
-            <div class="royal-dashboard-header podium">
-
-                <div class="royal-dashboard-title">
-
-                    🏆 LIVE PODIUM
-
-                </div>
-
-            </div>
-
-            <div id="royal-podium-content"></div>
-
-            <button class="royal-dashboard-button"
-                    onclick="showPage('page-standings')">
-
-                View Full Standings →
-
-            </button>
-
-        </div>
-
-        <div id="royal-survival-card"
-             class="royal-dashboard-card">
-
-            <div class="royal-dashboard-header survival">
-
-                ❤️ SURVIVAL TRACKER
-
-            </div>
-
-            <div id="royal-survival-content"></div>
-
-            <button class="royal-dashboard-button"
-                    onclick="showPage('page-assignments')">
-
-                View Team Assignments →
-
-            </button>
-
-        </div>
-
-        <div id="royal-rivalries-card"
-             class="royal-dashboard-card">
-
-            <div class="royal-dashboard-header rivalry">
-
-                ⚔️ FAMILY RIVALRIES
-
-            </div>
-
-            <div id="royal-rivalries-content"></div>
-
-            <button class="royal-dashboard-button"
-                    onclick="showPage('page-rivalries')">
-
-                View Rivalry Matrix →
-
-            </button>
-
-        </div>
-
-    </section>
-
-    <!-- ======================================================
-         CHRONICLE
-    ====================================================== -->
-
-    <section id="chronicle-ticker"></section>
 </div>
-</section>
 
- <section id="page-fixtures"
-                 class="app-page"
-                 hidden>
+<section id="road-to-final-container">
 
-        </section>
+    <div class="rttf-card">
 
-        <section id="page-centre"
-                 class="app-page"
-                 hidden>
+        <div class="rttf-header">
 
-        </section>
+            <div class="rttf-title">
 
-        <section id="page-standings" class="app-page" hidden>
+                <span class="rttf-icon">🏆</span>
 
-    <div id="live-scoreboard">
+                <div>
 
-        <div class="dashboard-header">
+                    <div class="rttf-heading">ROAD TO THE FINAL</div>
 
-            <h3 class="section-title-row">
+                    <div class="rttf-subheading">SURVIVAL MODE</div>
 
-                <span>
-                    🏆 Live Scoreboard
-                </span>
-
-            </h3>
-
-        </div>
-
-        <div id="scoreboard-content">
-
-            <div class="rules-box-header section-title-row"
-                 onclick="toggleSection('score-rules','score-rules-arrow')"
-                 style="cursor:pointer; margin-bottom:10px;">
-
-                <span>📊 Scoring Rules</span>
-
-                <span id="score-rules-arrow">▶</span>
-
-            </div>
-
-            <div id="score-rules"
-                 class="rules-box"
-                 style="display:none; background:#f0f7ff; border:1px solid #bee3f8; padding:15px; border-radius:8px; margin-bottom:20px; font-size:0.85rem; color:#2c5282;">
-
-                <div id="scoring-rules-content"></div>
-
-            </div>
-
-            <div class="scoreboard-wrapper">
-
-                <table id="scoreboard">
-
-                    <thead>
-
-                        <tr>
-
-                            <th style="width:35%;">👤 Player</th>
-                            <th style="text-align:center;">🏆 Wins</th>
-                            <th style="text-align:center;">🤝 Draws</th>
-                            <th style="text-align:center;">⚽ Goals</th>
-                            <th style="text-align:center;">🧤 CS</th>
-                            <th id="bonus-header" style="text-align:center;"></th>
-                            <th id="progression-header" style="text-align:center;"></th>
-                            <th style="text-align:center;">🏆 Total</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody></tbody>
-
-                </table>
+                </div>
 
             </div>
 
         </div>
 
-    </div>
+        <div id="road-to-final-pages">
 
-</section>
-
-        <section id="page-assignments" class="app-page" hidden>
-
-    <div class="dashboard-header"
-         id="dashboard-section">
-
-        <h3 id="dashboard-title"
-             class="section-title-row page-title">
-
-            <span>
-
-                📋 Team Assignments & Favourites
-
-            </span>
-
-        </h3>
-
-    </div>
-
-    <div id="team-content">
-
-        <div class="rules-box"
-             id="team-guide-box"
-             style="background:#ebf8ff; border:1px solid #bee3f8; padding:12px; border-radius:8px; margin:15px 0; font-size:0.85rem; color:#2c5282;">
+            <!-- RTTF Pages Render Here -->
 
         </div>
 
-        <div class="config-grid"
-             id="star-configurator">
+        <div class="rttf-pagination">
 
-            <!-- Cards generated dynamically -->
+    <span class="rttf-pagination-dot active"
+          onclick="showRTTFPage(0)"></span>
 
-        </div>
+    <span class="rttf-pagination-dot"
+          onclick="showRTTFPage(1)"></span>
+
+    <span class="rttf-pagination-dot"
+          onclick="showRTTFPage(2)"></span>
+
+    <span class="rttf-pagination-dot"
+          onclick="showRTTFPage(3)"></span>
+
+</div>
 
     </div>
 
 </section>
 
-        <section id="page-rivalries"
-                 class="app-page"
-                 hidden>
-<div id="rivalry-matrix"></div>
-        </section>
+<section id="royal-dashboard">
 
-        <section id="page-infamy"
-                 class="app-page"
-                 hidden>
+    <div id="royal-podium-card" class="royal-dashboard-card">
 
-        </section>
+    <div class="royal-dashboard-header podium">
 
-        <section id="page-chronicle"
-                 class="app-page"
-                 hidden>
+        <div class="royal-dashboard-title">
+            🏆 LIVE PODIUM
+        </div>
 
-        </section>
+    </div>
 
-    </main>
+    <div id="royal-podium-content"></div>
 
-<!-- ======================================================
-     APPLICATION FOOTER
-====================================================== -->
+    <button class="royal-dashboard-button"
+            onclick="jumpToStandings()">
 
-<footer id="app-footer">
-
-    <button id="footer-fixtures"
-            class="footer-button">
-
-        <span class="footer-icon">⚽</span>
-
-        <span class="footer-label">
-            Fixtures
-        </span>
+        View Full Standings →
 
     </button>
 
-    <button id="footer-centre"
-            class="footer-button">
+</div>
 
-        <span class="footer-icon">🏟️</span>
+<div id="royal-survival-card"
+     class="royal-dashboard-card">
 
-        <span class="footer-label">
-            Centre
-        </span>
+    <div class="royal-dashboard-header survival">
 
-    </button>
+        ❤️ SURVIVAL TRACKER
 
-    <button id="footer-infamy"
-            class="footer-button">
+    </div>
 
-        <span class="footer-icon">😂</span>
+    <div id="royal-survival-content"></div>
 
-        <span class="footer-label">
-            Infamy
-        </span>
+    <button class="royal-dashboard-button"
+            onclick="jumpToAssignments()">
+
+        View Team Assignments →
 
     </button>
 
-</footer>    
+</div>
+
+<div id="royal-rivalries-card"
+     class="royal-dashboard-card">
+
+    <div class="royal-dashboard-header rivalry">
+
+        ⚔️ FAMILY RIVALRIES
+
+    </div>
+
+    <div id="royal-rivalries-content"></div>
+
+    <button class="royal-dashboard-button"
+            onclick="jumpToRivalries()">
+
+        View Rivalry Matrix →
+
+    </button>
+
+</div>
+
+</section>
+
+<section id="chronicle-ticker"></section>
+
+</section>
 
 <!--======================================================
      V1 UI
 ======================================================-->
-<div id="legacy-ui" class="hidden">
+
 <div class="admin-bar">
 
     <div>Tournament Mode: <span id="admin-status-badge" class="admin-status status-viewer">Viewer Mode (Read-Only)</span></div>
@@ -4982,7 +4555,7 @@ font-size:12px;
     </div>-->
 
 
-<div id="legacy-team-assignments" hidden>
+
 <div class="dashboard-header" 
 
     id="dashboard-section"    
@@ -5035,7 +4608,7 @@ font-size:12px;
 
 
 </div> <!-- team-content -->
-</div>
+
     
 
    
@@ -5439,7 +5012,6 @@ font-size:12px;
 
 </div>
 
-<div id="legacy-scoreboard" hidden>
 <div id="live-scoreboard">
 
 
@@ -5549,7 +5121,7 @@ font-size:12px;
     </table>
 
     </div>
-</div>
+
 </div>
 
 
@@ -5572,37 +5144,59 @@ font-size:12px;
 
 
 
-<section id="page-fixtures" class="app-page">
+<div id="fixtures-anchor"></div>
 
-    <!-- ======================================================
-         TOURNAMENT FIXTURES
-    ====================================================== -->
 
-    <div id="fixtures-anchor"></div>
 
-    <div class="dashboard-header">
+<div class="dashboard-header"
 
-        <h3 class="section-title-row">
+     onclick="toggleSection('fixtures-content','fixtures-arrow')">
 
-            <span>
-                🗓️ Full Tournament Fixtures
-            </span>
 
-        </h3>
 
-    </div>
+    <h3 class="section-title-row">
 
-    <div id="fixtures-content">
 
-        <div id="fixtures-container">
 
-            <!-- Loaded dynamically -->
+        <span>
 
-        </div>
+            🗓️ Full Tournament Fixtures
 
-    </div>
+        </span>
+
+
+
+        <span id="fixtures-arrow">
+
+            ▼
+
+        </span>
+
+
+
+    </h3>
+
+
+
 </div>
-</section>
+
+
+
+<div id="fixtures-content">
+
+
+
+    <div id="fixtures-container">
+
+    <!-- Loaded dynamically -->
+
+</div>
+
+
+
+</div> <!-- fixtures-content -->
+
+</div>
 
 
 
@@ -8549,49 +8143,6 @@ function getRTTFPlaceholder(fixtureId, side){
 
 }
 
-/* =====================================================
-   APPLICATION NAVIGATION
-===================================================== */
-
-function showPage(pageId){
-
-    document
-        .querySelectorAll(".app-page")
-        .forEach(page =>{
-
-            page.classList.remove("active");
-            page.hidden = true;
-
-        });
-
-    const page = document.getElementById(pageId);
-
-    if(page){
-
-        page.hidden = false;
-        page.classList.add("active");
-if(pageId === "page-rivalries"){
-
-    renderRivalryMatrix(fixtures);
-
-}
-        window.scrollTo({
-            top:0,
-            behavior:"smooth"
-        });
-
-    }
-
-}
-
-document
-    .getElementById("header-home-btn")
-    .addEventListener("click",()=>{
-
-        showPage("page-home");
-
-});
-
 // =====================================================
 // ENGINE 6.1 - ROAD TO THE FINAL RENDERER
 // =====================================================
@@ -8642,7 +8193,7 @@ function buildRTTFCard(fixture,prefix){
         document.createElement("div");
 
     card.className =
-    `rttf-match ${fixture.status}`;
+        "rttf-match";
 
     const home =
         fixture.home ||
@@ -8652,19 +8203,35 @@ function buildRTTFCard(fixture,prefix){
         fixture.away ||
         getRTTFPlaceholder(fixture.id,"away");
 
-    const homeFlag = flagCodes[fixture.home] || "";
-const awayFlag = flagCodes[fixture.away] || "";
+    const homeFlag = teamInfo[fixture.home]?.flag || "";
+const awayFlag = teamInfo[fixture.away]?.flag || "";
 
 let progressText = "";
 
-const winner = getMatchWinner(fixture.id);
+if(fixture.winner){
 
-if(winner){
+    const winnerTeam =
+    fixture.winner === "home"
+        ? fixture.home
+        : fixture.winner === "away"
+            ? fixture.away
+            : "";
 
-    progressText =
-        `🏆 ${winner.user} & ${winner.team} progress${
-            fixture.homeScore == fixture.awayScore ? " via pens" : ""
-        }`;
+    const winnerPlayer =
+        fixture.winner === "home"
+            ? fixture.homeUser
+            : fixture.winner === "away"
+                ? fixture.awayUser
+                : "";
+
+    if(winnerTeam){
+
+        progressText =
+            `🏆 ${winnerPlayer} & ${winnerTeam} progress${
+                fixture.homeScore === fixture.awayScore ? " via pens" : ""
+            }`;
+
+    }
 
 }
 
@@ -9010,33 +8577,25 @@ function isTeamAlive(team){
         return true;
     }
 
-    const knockoutFixtures = fixtures
-        .filter(f =>
-            f.id >= 73 &&
-            (f.home === team || f.away === team)
-        )
-        .sort((a,b) => a.round - b.round);
+    const knockoutFixture = fixtures.find(f =>
+        f.id >= 73 &&
+        (f.home === team || f.away === team)
+    );
 
-    if (!knockoutFixtures.length)
+    console.log(team, knockoutFixture);
+
+    if (!knockoutFixture)
         return false;
 
-    for (const fixture of knockoutFixtures){
+    if (knockoutFixture.status !== "completed")
+        return true;
 
-        if (fixture.status !== "completed"){
-            return true;
-        }
+    const winner = getMatchWinner(knockoutFixture.id);
 
-        const winner = getMatchWinner(fixture.id);
-
-        if (!winner || winner.team !== team){
-            return false;
-        }
-
-    }
-
-    return true;
+    return winner?.team === team;
 
 }
+
 
 
 function getAliveTeams(player){
@@ -9147,11 +8706,12 @@ function updateSurvivalUI(){
 
     if (dashboardTitle) {
 
-    dashboardTitle.innerHTML = `
-        <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
-    `;
+        dashboardTitle.innerHTML = `
+            <span>${survival ? "❤️ Survival Tracker" : "📋 Team Assignments & Favourites"}</span>
+            <span id="team-arrow">▶</span>
+        `;
 
-}
+    }
 
     // Scoreboard headers
 
@@ -15807,8 +15367,8 @@ function testParticipantResolver(){
     "awaySource":78,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":1,
-    "awayScore":2,
+    "homeScore":"",
+    "awayScore":"",
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -15816,7 +15376,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"completed"
+    "status":"upcoming"
 },
 {
     "id":92,
@@ -15830,16 +15390,16 @@ function testParticipantResolver(){
     "awaySource":80,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":2,
-    "awayScore":3,
+    "homeScore":"",
+    "awayScore":"",
     "homePens":null,
     "awayPens":null,
     "winner":null,
     "homeRedCards":0,
-    "awayRedCards":1,
+    "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"completed"
+    "status":"upcoming"
 },
 {
     "id":93,
@@ -16363,7 +15923,7 @@ if (
 
                 chip.id = `chip-${user}-${team.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
-        const flagCode = flagCodes[team]; 
+        const flagCode = teamInfo[team]?.flag;
 
                 const badge = getPrimaryBadge(team);
 
@@ -16873,8 +16433,8 @@ Object.keys(scores).forEach(p => {
 
     // Survival Mode
     scores[p].progression = progression[p] || 0;
-scores[p].alive = getAliveTeams(p);
-scores[p].eliminated = scores[p].alive === 0;
+    scores[p].alive = getAliveTeams(p);
+    scores[p].eliminated = scores[p].alive === 0;
 
     // Tournament Points
     scores[p].pts =
@@ -17704,7 +17264,6 @@ ${summary.closestRivalry?.record || "-"}
     container.appendChild(tile3);
 
 }
-
 function renderScoreboard(scores) {
 
 
@@ -17734,13 +17293,7 @@ function renderScoreboard(scores) {
 
 let sorted = window.sortedStandings;          
 
-const leader = sorted[0];
-const runnerUp = sorted[1];
-const lead = leader && runnerUp ? leader.pts - runnerUp.pts : 0;
-
-document.querySelector("#header-leader-chip .leader-name").innerText = leader.name;
-document.querySelector("#header-leader-chip .leader-points").innerText = `${leader.pts} pts`;
-document.querySelector("#header-leader-chip .leader-lead").innerText = `⭐ +${lead}`;    
+    
 
     document.getElementById("centre-leader-points").innerText =
 
@@ -18041,6 +17594,14 @@ document.getElementById("centre-watch-sub").innerHTML =
 document.getElementById("centre-leader").innerText =
 
     sorted[0].name;
+
+    
+
+
+
+document.getElementById("centre-leader-points").innerText =
+
+    `${sorted[0].pts} points`;
 
 
 
@@ -19382,21 +18943,41 @@ console.table(
 
     container.innerHTML = `
 
-    <div class="rivalry-header dashboard-header">
+    <div class="rivalry-header dashboard-header"
 
-        <h3 class="section-title-row">
+     onclick="toggleSection('rivalry-content','rivalry-arrow')">
 
-            <span>
 
-                ⚔️ Family Rivalries
 
-            </span>
+    <h3 class="section-title-row">
 
-        </h3>
 
-    </div>
 
-    <div id="rivalry-content">
+        <span>
+
+            ⚔️ Family Rivalries
+
+        </span>
+
+
+
+        <span id="rivalry-arrow">
+
+            ▶
+
+        </span>
+
+
+
+    </h3>
+
+
+
+</div>
+
+
+
+    <div id="rivalry-content" style="display:none;">
 
 
 
@@ -19888,9 +19469,8 @@ isSurvivalMode()
 
 
 
-            const homeFlag = flagCodes[f.home];
-
-            const awayFlag = flagCodes[f.away];
+            const homeFlag = teamInfo[f.home]?.flag;
+const awayFlag = teamInfo[f.away]?.flag;
 
 
 
@@ -20092,7 +19672,7 @@ if (f.round !== activeRound) {
         if (side === 'away') f.awayScore = val;
 
         f.status = (f.homeScore === "" || f.awayScore === "") ? "upcoming" : "completed";
-updateKnockoutWinner(f);
+
     }
 
 
@@ -20188,22 +19768,18 @@ let pending = fixtures.filter(f => {
         buildAliveTable();
     }
 
-    // Populate knockout winners
-    fixtures.forEach(updateKnockoutWinner);
-updateKnockoutBracket();
-
     // Core calculations
     calculateScores();
 
     // Tournament Centre
-    renderHallOfInfamy();
-    renderRivalryMatrix(fixtures);
+renderHallOfInfamy();
+renderRivalryMatrix(fixtures);
 
-    // Main UI
-    renderDashboard();
-    renderFixtures();
-    renderRoadToFinal();
-    renderQuickUpdate();
+// Main UI
+renderDashboard();
+renderFixtures();
+renderRoadToFinal();
+renderQuickUpdate();
 
     // Narrative
     rebuildChronicle();
