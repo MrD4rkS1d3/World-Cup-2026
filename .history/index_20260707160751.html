@@ -16611,8 +16611,8 @@ function testParticipantResolver(){
     "awaySource":88,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":3,
-    "awayScore":2,
+    "homeScore":"",
+    "awayScore":"",
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -16620,7 +16620,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"completed"
+    "status":"upcoming"
 },
 {
     "id":96,
@@ -18816,35 +18816,55 @@ if (biggestClimber) {
 
 if (biggestFaller) {
 
+
+
     document.getElementById("centre-faller").innerText =
 
         biggestFaller.name;
+
+
 
     document.getElementById("centre-faller-points").innerHTML =
 
         getMovementText(biggestFaller.rankChange);
 
+
+
     const fall =
 
         Math.abs(biggestFaller.rankChange);
 
+
+
     if (fall === 1) {
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
             "📉 Lost Ground This Matchday";
 
+
+
     } else if (fall === 2) {
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
             "📉 Double Overtake Shock";
 
+
+
     } else if (fall === 3) {
+
+
 
         const previousRank =
 
             previousPositions[biggestFaller.name];
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
@@ -18854,43 +18874,43 @@ if (biggestFaller) {
 
                 : "📉 Falls Three Places";
 
+
+
     } else {
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
             "💥 Freefall Down The Standings";
 
+
+
     }
 
-    updateNarrative(
 
-        "faller",
-
-        "📉",
-
-        `${biggestFaller.name} Falls`,
-
-        document.getElementById("centre-faller-story").innerText,
-
-        60
-
-    );
 
 } else {
+
+
 
     document.getElementById("centre-faller").innerText =
 
         "No Fallers";
 
+
+
     document.getElementById("centre-faller-points").innerText =
 
         "No positions lost";
+
+
 
     document.getElementById("centre-faller-story").innerText =
 
         "";
 
-    removeNarrative("faller");
+
 
 }
 
@@ -18900,37 +18920,11 @@ document.getElementById("centre-shakeup").innerText =
 
     shakeUpHeadline;
 
+
+
 document.getElementById("centre-shakeup-sub").innerHTML =
 
     shakeUpSub;
-
-if (
-
-    shakeUpHeadline &&
-
-    shakeUpHeadline !== "Awaiting Action"
-
-) {
-
-    updateNarrative(
-
-        "shakeup",
-
-        "🔥",
-
-        shakeUpHeadline,
-
-        shakeUpSub,
-
-        65
-
-    );
-
-} else {
-
-    removeNarrative("shakeup");
-
-}
 
 
 

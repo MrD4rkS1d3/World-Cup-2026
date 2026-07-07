@@ -17,13 +17,6 @@
    SURVIVAL MODE V2
 ===================================================== */
 
-
-#hero-banner{
-
-    flex:1;
-
-}
-
 #header-navigation{
 
     display:flex;
@@ -12629,15 +12622,19 @@ function generateCurrentStory(
 
 ) {
 
+
+
     const leader = sorted[0];
 
     const second = sorted[1];
+
+
 
     const gap =
 
         leader.pts - second.pts;
 
-    let story = null;
+let story = null;
 
     const uniqueLeaders =
 
@@ -12665,11 +12662,17 @@ function generateCurrentStory(
 
         ).size;
 
+
+
     // Tournament chaos
+
+
 
     if (uniqueLeaders >= 4) {
 
-        story = {
+
+
+        return {
 
             headline:
 
@@ -12681,69 +12684,99 @@ function generateCurrentStory(
 
         };
 
+
+
     }
+
+
 
     // Dominating
 
-    else if (gap >= 15) {
 
-        story = {
 
-            headline:
-
-                `👑 ${leader.name} Dominating`,
-
-            subheadline:
-
-                `${gap} point lead at the summit`
-
-        };
-
-    }
-
-    // Pulling Away
-
-    else if (gap >= 8) {
-
-        story = {
-
-            headline:
-
-                `🏆 ${leader.name} Pulling Away`,
-
-            subheadline:
-
-                `${gap} point lead at the summit`
-
-        };
-
-    }
-
-    // Building Momentum
-
-    else if (gap >= 5) {
-
-        story = {
-
-            headline:
-
-                `📈 ${leader.name} Building Momentum`,
-
-            subheadline:
-
-                `${gap} point advantage`
-
-        };
-
-    }
+if (gap >= 15) {
 
 
 
-        // Tight title race
+    return {
 
-    else if (gap <= 2) {
+        headline:
 
-        story = {
+            `👑 ${leader.name} Dominating`,
+
+        subheadline:
+
+            `${gap} point lead at the summit`
+
+    };
+
+
+
+}
+
+
+
+// Pulling Away
+
+
+
+if (gap >= 8) {
+
+
+
+    return {
+
+        headline:
+
+            `🏆 ${leader.name} Pulling Away`,
+
+        subheadline:
+
+            `${gap} point lead at the summit`
+
+    };
+
+
+
+}
+
+
+
+// Building Momentum
+
+
+
+if (gap >= 5) {
+
+
+
+    return {
+
+        headline:
+
+            `📈 ${leader.name} Building Momentum`,
+
+        subheadline:
+
+            `${gap} point advantage`
+
+    };
+
+
+
+}
+
+
+
+    // Tight title race
+
+
+
+    if (gap <= 2) {
+
+
+
+        return {
 
             headline:
 
@@ -12755,49 +12788,29 @@ function generateCurrentStory(
 
         };
 
+
+
     }
+
+
 
     // Default
 
-    else {
 
-        story = {
 
-            headline:
+    return {
 
-                `👑 ${leader.name} Leads`,
+        headline:
 
-            subheadline:
+            `👑 ${leader.name} Leads`,
 
-                `${gap} point advantage`
+        subheadline:
 
-        };
+            `${gap} point advantage`
 
-    }
+    };
 
-    if (story) {
 
-        updateNarrative(
-
-            "story",
-
-            "📰",
-
-            story.headline,
-
-            story.subheadline,
-
-            70
-
-        );
-
-    } else {
-
-        removeNarrative("story");
-
-    }
-
-    return story;
 
 }
 
@@ -16611,8 +16624,8 @@ function testParticipantResolver(){
     "awaySource":88,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":3,
-    "awayScore":2,
+    "homeScore":"",
+    "awayScore":"",
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -16620,7 +16633,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"completed"
+    "status":"upcoming"
 },
 {
     "id":96,
@@ -17652,49 +17665,61 @@ if (nextFixture) {
 
 const shock = calculateBiggestUpset();
 
+
+
 if (shock) {
 
+
+
     document.getElementById("award-upset").innerText =
+
         shock.resultText;
+
+
 
     document.getElementById("award-upset-sub").innerText =
+
         shock.description;
 
-    document.getElementById("hero-shock").innerText =
-        shock.resultText;
 
-    document.getElementById("hero-shock-sub").innerText =
-        "Tap for details";
 
-    updateNarrative(
+document.getElementById("hero-shock").innerText =
 
-        "shock",
+    shock.resultText;
 
-        "🔥",
 
-        shock.resultText,
 
-        shock.description,
+document.getElementById("hero-shock-sub").innerText =
 
-        90
+    "Tap for details";
 
-    );
+
 
 } else {
 
+
+
     document.getElementById("award-upset").innerText =
+
         "Awaiting Shock";
+
+
 
     document.getElementById("award-upset-sub").innerText =
+
         "No shock result yet";
+
+
 
     document.getElementById("hero-shock").innerText =
+
         "Awaiting Shock";
 
-    document.getElementById("hero-shock-sub").innerText =
-        "No shock result yet";
 
-    removeNarrative("shock");
+
+    document.getElementById("hero-shock-sub").innerText =
+
+        "No shock result yet";
 
 }
 
@@ -18746,69 +18771,85 @@ document.getElementById("centre-leader").innerText =
 
 if (biggestClimber) {
 
+
+
     document.getElementById("centre-climber").innerText =
 
         biggestClimber.name;
+
+
 
     document.getElementById("centre-climber-points").innerHTML =
 
         getMovementText(biggestClimber.rankChange);
 
+
+
     if (biggestClimber.rankChange === 1) {
+
+
 
         document.getElementById("centre-climber-story").innerText =
 
             `🚀 +${biggestClimber.matchdayPoints} pts Powered The Rise`;
 
+
+
     } else if (biggestClimber.rankChange === 2) {
+
+
 
         document.getElementById("centre-climber-story").innerText =
 
             "🚀 Two-Place Surge";
 
+
+
     } else if (biggestClimber.rankChange === 3) {
+
+
 
         document.getElementById("centre-climber-story").innerText =
 
             "🔥 Charging Through The Field";
 
+
+
     } else {
+
+
 
         document.getElementById("centre-climber-story").innerText =
 
             "🚀 Rocketing Up The Standings";
 
+
+
     }
 
-    updateNarrative(
 
-        "climber",
-
-        "📈",
-
-        `${biggestClimber.name} Climbs`,
-
-        document.getElementById("centre-climber-story").innerText,
-
-        60
-
-    );
 
 } else {
+
+
 
     document.getElementById("centre-climber").innerText =
 
         "No Movement";
 
+
+
     document.getElementById("centre-climber-points").innerText =
 
         "Ranks unchanged";
+
+
 
     document.getElementById("centre-climber-story").innerText =
 
         "";
 
-    removeNarrative("climber");
+
 
 }
 
@@ -18816,35 +18857,55 @@ if (biggestClimber) {
 
 if (biggestFaller) {
 
+
+
     document.getElementById("centre-faller").innerText =
 
         biggestFaller.name;
+
+
 
     document.getElementById("centre-faller-points").innerHTML =
 
         getMovementText(biggestFaller.rankChange);
 
+
+
     const fall =
 
         Math.abs(biggestFaller.rankChange);
 
+
+
     if (fall === 1) {
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
             "📉 Lost Ground This Matchday";
 
+
+
     } else if (fall === 2) {
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
             "📉 Double Overtake Shock";
 
+
+
     } else if (fall === 3) {
+
+
 
         const previousRank =
 
             previousPositions[biggestFaller.name];
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
@@ -18854,43 +18915,43 @@ if (biggestFaller) {
 
                 : "📉 Falls Three Places";
 
+
+
     } else {
+
+
 
         document.getElementById("centre-faller-story").innerText =
 
             "💥 Freefall Down The Standings";
 
+
+
     }
 
-    updateNarrative(
 
-        "faller",
-
-        "📉",
-
-        `${biggestFaller.name} Falls`,
-
-        document.getElementById("centre-faller-story").innerText,
-
-        60
-
-    );
 
 } else {
+
+
 
     document.getElementById("centre-faller").innerText =
 
         "No Fallers";
 
+
+
     document.getElementById("centre-faller-points").innerText =
 
         "No positions lost";
+
+
 
     document.getElementById("centre-faller-story").innerText =
 
         "";
 
-    removeNarrative("faller");
+
 
 }
 
@@ -18900,37 +18961,11 @@ document.getElementById("centre-shakeup").innerText =
 
     shakeUpHeadline;
 
+
+
 document.getElementById("centre-shakeup-sub").innerHTML =
 
     shakeUpSub;
-
-if (
-
-    shakeUpHeadline &&
-
-    shakeUpHeadline !== "Awaiting Action"
-
-) {
-
-    updateNarrative(
-
-        "shakeup",
-
-        "🔥",
-
-        shakeUpHeadline,
-
-        shakeUpSub,
-
-        65
-
-    );
-
-} else {
-
-    removeNarrative("shakeup");
-
-}
 
 
 

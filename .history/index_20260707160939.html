@@ -16611,8 +16611,8 @@ function testParticipantResolver(){
     "awaySource":88,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":3,
-    "awayScore":2,
+    "homeScore":"",
+    "awayScore":"",
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -16620,7 +16620,7 @@ function testParticipantResolver(){
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"completed"
+    "status":"upcoming"
 },
 {
     "id":96,
@@ -18900,37 +18900,11 @@ document.getElementById("centre-shakeup").innerText =
 
     shakeUpHeadline;
 
+
+
 document.getElementById("centre-shakeup-sub").innerHTML =
 
     shakeUpSub;
-
-if (
-
-    shakeUpHeadline &&
-
-    shakeUpHeadline !== "Awaiting Action"
-
-) {
-
-    updateNarrative(
-
-        "shakeup",
-
-        "🔥",
-
-        shakeUpHeadline,
-
-        shakeUpSub,
-
-        65
-
-    );
-
-} else {
-
-    removeNarrative("shakeup");
-
-}
 
 
 
