@@ -1046,7 +1046,7 @@
 
     align-items:center;
 
-    font-size:1.25rem;
+    font-size:1.15rem;
 
     font-weight:800;
 
@@ -1106,7 +1106,7 @@
 
     text-align:center;
 
-    font-size:1.15rem;
+    font-size:1.45rem;
 
     font-weight:800;
 
@@ -1156,7 +1156,7 @@
 
     text-align:center;
 
-    font-size:1.25rem;
+    font-size:1.35rem;
 
     font-weight:800;
 
@@ -1338,78 +1338,6 @@ body{
     box-shadow:0 4px 16px rgba(0,0,0,.25);
 
     z-index:1000;
-
-}
-
-#header-brand{
-
-    grid-area:brand;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-    padding:0 clamp(12px,2vw,22px);
-
-    height:72px;
-
-}
-
-#header-leader-chip{
-
-    grid-area:leader;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    height:72px;
-
-}
-
-#header-navigation{
-
-    grid-area:nav;
-
-    display:flex;
-
-    justify-content:flex-end;
-
-    align-items:center;
-
-    gap:10px;
-
-    padding-right:clamp(12px,2vw,22px);
-
-    height:72px;
-
-}
-
-#header-newswire{
-
-    grid-area:news;
-
-    height:28px;
-
-    display:flex;
-
-    align-items:center;
-
-    overflow:hidden;
-
-    border-top:1px solid rgba(255,255,255,.08);
-
-    padding:0 16px;
-
-    font-size:14px;
-
-    color:#f1f1f1;
-
-    white-space:nowrap;
 
 }
 
@@ -4853,7 +4781,7 @@ border:1px solid #f5c2c7;
 
 </section>
 
-<section id="page-assignments" class="app-page" hidden>
+        <section id="page-assignments" class="app-page" hidden>
 
     <div class="dashboard-header"
          id="dashboard-section">
@@ -5075,7 +5003,7 @@ border:1px solid #f5c2c7;
 
 </section>
 
-<section id="page-rivalries"
+        <section id="page-rivalries"
                  class="app-page"
                  hidden>
 <div id="rivalry-matrix"></div>
@@ -5190,6 +5118,8 @@ border:1px solid #f5c2c7;
 
 </div>
 
+
+
 <div class="hero-stat hero-link" onclick="jumpToShockResult()">
 
     <span class="hero-label">💥 Shock Result ▶</span>
@@ -5200,6 +5130,8 @@ border:1px solid #f5c2c7;
 
 </div>
 
+
+
 <div class="hero-stat hero-link" onclick="jumpToRivalries()">
 
     <span class="hero-label">⚔️ Rivalry King ▶</span>
@@ -5209,6 +5141,8 @@ border:1px solid #f5c2c7;
     <small id="hero-rivalry-sub">0 Rivalry Score</small>
 
 </div>
+
+
 
 <div class="hero-stat hero-link" onclick="jumpToHallOfInfamy()">
 
@@ -5441,8 +5375,13 @@ font-size:12px;
 
 </div>
 
+
+
 </div> <!-- team-content -->
-</div> 
+</div>
+    
+
+   
 
 <div id="tournament-centre">
 
@@ -5483,6 +5422,8 @@ font-size:12px;
 
 
 <div id="centre-content" style="display:none;">
+
+
 
     <div class="centre-grid">
 
@@ -5565,6 +5506,9 @@ font-size:12px;
          class="centre-sub centre-family-sub">-</div>
 
 </div>
+
+
+
         <div class="centre-card shakeup-card">
 
             <div class="centre-label">🔥 Matchday Shake-Up</div>
@@ -5574,6 +5518,8 @@ font-size:12px;
             <div id="centre-shakeup-sub" class="centre-sub">No movement yet</div>
 
         </div>
+
+
 
         <div class="centre-card watch-card">
 
@@ -5586,8 +5532,13 @@ font-size:12px;
             <div id="centre-watch-family" class="centre-sub centre-family-sub"></div>
 
         </div>
+
     </div>
+
+
+
 </div>
+
 </div>
 
 <div id="hall-of-infamy">
@@ -5828,6 +5779,7 @@ font-size:12px;
 
 
 </div>
+
 </div>
 
 <div id="legacy-scoreboard" hidden>
@@ -5905,6 +5857,8 @@ font-size:12px;
 
 </div>
 
+
+
     <div class="scoreboard-wrapper">
 
     <table id="scoreboard">
@@ -5941,8 +5895,12 @@ font-size:12px;
 </div>
 </div>
 
+
+
 <div id="rivalry-matrix"></div>
+
 <!--
+
 <div class="card">    
 
 
@@ -5954,6 +5912,8 @@ font-size:12px;
     </div>
 
 </div>-->
+
+
 
 <section id="page-fixtures" class="app-page">
 
@@ -5986,109 +5946,197 @@ font-size:12px;
     </div>
 </div>
 </section>
+
+
+
 <script>
 
-const teamInfo = {
+    const teamInfo = {
 
-// ===== SPECIAL TEAMS =====
+    // ===== SPECIAL TEAMS =====
 
 "Argentina": {
+
     rank: 1,
+
     flag: "ar",
+
     code: "ARG",
+
     badges: [
+
         "👑 World Champions",
+
         "🏆 Copa América Champions"
+
     ]
+
 },
 
 "Spain": {
+
     rank: 2,
+
     flag: "es",
+
     code: "ESP",
+
     badges: [
+
         "🏆 European Champions"
+
     ]
+
 },
 
 "Morocco": {
+
     rank: 7,
+
     flag: "ma",
+
     code: "MAR",
+
     badges: [
+
         "🏆 African Champions"
+
     ]
+
 },
 
 "USA": {
+
     rank: 17,
+
     flag: "us",
+
     code: "USA",
+
     badges: [
+
         "🏠 Host Nation"
+
     ]
+
 },
 
 "Mexico": {
+
     rank: 14,
+
     flag: "mx",
+
     code: "MEX",
+
     badges: [
+
         "🏠 Host Nation"
+
     ]
+
 },
 
 "Canada": {
+
     rank: 30,
+
     flag: "ca",
+
     code: "CAN",
+
     badges: [
+
         "🏠 Host Nation"
+
     ]
+
 },
 
 "France": { rank:3, flag:"fr", code:"FRA", badges:[] },
+
 "England": { rank:4, flag:"gb-eng", code:"ENG", badges:[] },
+
 "Portugal": { rank:5, flag:"pt", code:"POR", badges:[] },
+
 "Brazil": { rank:6, flag:"br", code:"BRA", badges:[] },
+
 "Netherlands": { rank:8, flag:"nl", code:"NED", badges:[] },
+
 "Belgium": { rank:9, flag:"be", code:"BEL", badges:[] },
+
 "Germany": { rank:10, flag:"de", code:"GER", badges:[] },
+
 "Croatia": { rank:11, flag:"hr", code:"CRO", badges:[] },
+
 "Colombia": { rank:13, flag:"co", code:"COL", badges:[] },
+
 "Senegal": { rank:15, flag:"sn", code:"SEN", badges:[] },
+
 "Uruguay": { rank:16, flag:"uy", code:"URU", badges:[] },
+
 "Japan": { rank:18, flag:"jp", code:"JPN", badges:[] },
+
 "Switzerland": { rank:19, flag:"ch", code:"SUI", badges:[] },
+
 "Iran": { rank:20, flag:"ir", code:"IRN", badges:[] },
+
 "Turkey": { rank:22, flag:"tr", code:"TUR", badges:[] },
+
 "Ecuador": { rank:23, flag:"ec", code:"ECU", badges:[] },
+
 "Austria": { rank:24, flag:"at", code:"AUT", badges:[] },
+
 "South Korea": { rank:25, flag:"kr", code:"KOR", badges:[] },
+
 "Australia": { rank:27, flag:"au", code:"AUS", badges:[] },
+
 "Algeria": { rank:28, flag:"dz", code:"ALG", badges:[] },
+
 "Egypt": { rank:29, flag:"eg", code:"EGY", badges:[] },
+
 "Norway": { rank:31, flag:"no", code:"NOR", badges:[] },
+
 "Ivory Coast": { rank:33, flag:"ci", code:"CIV", badges:[] },
+
 "Panama": { rank:34, flag:"pa", code:"PAN", badges:[] },
+
 "Sweden": { rank:38, flag:"se", code:"SWE", badges:[] },
+
 "Czechia": { rank:40, flag:"cz", code:"CZE", badges:[] },
+
 "Paraguay": { rank:41, flag:"py", code:"PAR", badges:[] },
+
 "Scotland": { rank:42, flag:"gb-sct", code:"SCO", badges:[] },
+
 "Tunisia": { rank:45, flag:"tn", code:"TUN", badges:[] },
+
 "DR Congo": { rank:46, flag:"cd", code:"COD", badges:[] },
+
 "Uzbekistan": { rank:50, flag:"uz", code:"UZB", badges:[] },
+
 "Qatar": { rank:56, flag:"qa", code:"QAT", badges:[] },
+
 "Iraq": { rank:57, flag:"iq", code:"IRQ", badges:[] },
+
 "South Africa": { rank:60, flag:"za", code:"RSA", badges:[] },
+
 "Saudi Arabia": { rank:61, flag:"sa", code:"KSA", badges:[] },
+
 "Jordan": { rank:63, flag:"jo", code:"JOR", badges:[] },
+
 "Bosnia and Herzegovina": { rank:64, flag:"ba", code:"BIH", badges:[] },
+
 "Cape Verde": { rank:67, flag:"cv", code:"CPV", badges:[] },
+
 "Ghana": { rank:73, flag:"gh", code:"GHA", badges:[] },
+
 "Curacao": { rank:82, flag:"cw", code:"CUW", badges:[] },
+
 "Haiti": { rank:83, flag:"ht", code:"HAI", badges:[] },
+
 "New Zealand": { rank:85, flag:"nz", code:"NZL", badges:[] }
+
 };
 
 // =====================================================
@@ -6109,19 +6157,28 @@ const ADMIN_PASSWORD = "family123"; // CHANGE YOUR ADMIN PASSWORD HERE
     let assignments = {
 
         Sam: ["Canada", "Belgium", "Uzbekistan", "Norway", "South Korea", "Spain"],
+
         Martin: ["Czechia", "Japan", "Australia", "France", "Tunisia", "Switzerland"],
+
         Elissa: ["England", "Germany", "Haiti", "Iraq", "Ghana", "Algeria"],
+
         Paul: ["Uruguay", "Turkey", "Jordan", "Iran", "New Zealand", "Mexico"],
+
         Lewis: ["Morocco", "Egypt", "Argentina", "USA", "DR Congo", "Sweden"],
+
         Jenni: ["Bosnia and Herzegovina", "Portugal", "Paraguay", "Qatar", "Senegal", "Colombia"],
+
         Sue: ["Brazil", "Austria", "Croatia", "Netherlands", "Ecuador", "Cape Verde"],
+
         Tom: ["South Africa", "Ivory Coast", "Scotland", "Saudi Arabia", "Curacao", "Panama"]
+
     };
 
 // =====================================================
 // ENGINE 7 - TOURNAMENT NARRATIVE ENGINE
 // Central repository for tournament stories and banter.
 // =====================================================
+
 
 // -----------------------------------------------------
 // Narrative Templates
@@ -6155,11 +6212,13 @@ const narrativeLibrary = {
 
 };
 
+
 // -----------------------------------------------------
 // Live Tournament Narratives
 // -----------------------------------------------------
 
 let tournamentNarratives = [];
+
 
 // -----------------------------------------------------
 // Narrative Library Helpers
@@ -6184,135 +6243,30 @@ function getEliminationNarrative(){
 
 }
 
-// =====================================================
-// NARRATIVE FIXTURE WINDOWS
-// =====================================================
-
-function getNarrativeFixtureWindow(mode){
-
-    const completed =
-
-        fixtures.filter(
-            f => f.status === "completed"
-        );
-
-    switch(mode){
-
-        case "tournament":
-
-            return completed;
-
-        case "round":{
-
-            if(!completed.length)
-                return [];
-
-            const latestRound =
-
-                Math.max(
-                    ...completed.map(
-                        f => f.round
-                    )
-                );
-
-            return completed.filter(
-                f => f.round === latestRound
-            );
-
-        }
-
-        case "latest":{
-
-            if(!completed.length)
-                return [];
-
-            const latestFixtureId =
-
-                Math.max(
-                    ...completed.map(
-                        f => f.id
-                    )
-                );
-
-            return completed.filter(
-                f => f.id === latestFixtureId
-            );
-
-        }
-
-        default:
-
-            return completed;
-
-    }
-
-}
 
 // -----------------------------------------------------
 // Tournament Narrative Helpers
 // -----------------------------------------------------
 
-function updateNarrative(
+function updateNarrative(category, icon, title, text, priority = 50){
 
-    category,
+    const existing = tournamentNarratives.find(
+        narrative => narrative.category === category
+    );
 
-    icon,
+    if(existing){
 
-    title,
-
-    text,
-
-    priority = 50,
-
-    options = {}
-
-){
-
-    // Never publish empty stories
-
-    if(
-
-        !title ||
-
-        title.startsWith("Awaiting") ||
-
-        title.startsWith("No Major") ||
-
-        title.startsWith("Tournament Complete")
-
-    ){
+        existing.icon = icon;
+        existing.title = title;
+        existing.text = text;
+        existing.priority = priority;
+        existing.timestamp = Date.now();
 
         return;
 
     }
 
-    const existing =
-
-        tournamentNarratives.find(
-
-            narrative =>
-
-                narrative.category === category
-
-        );
-
-    // Ignore identical publication
-
-    if(
-
-        existing &&
-
-        existing.title === title &&
-
-        existing.text === text
-
-    ){
-
-        return;
-
-    }
-
-    const story = {
+    tournamentNarratives.push({
 
         category,
 
@@ -6324,43 +6278,9 @@ function updateNarrative(
 
         priority,
 
-        round:
+        timestamp: Date.now()
 
-            options.round ||
-
-            null,
-
-        fixtureId:
-
-            options.fixtureId ||
-
-            null,
-
-        timestamp:
-
-            Date.now()
-
-    };
-
-    if(existing){
-
-        Object.assign(
-
-            existing,
-
-            story
-
-        );
-
-        return;
-
-    }
-
-    tournamentNarratives.push(
-
-        story
-
-    );
+    });
 
 }
 
@@ -6395,44 +6315,122 @@ function getTournamentNarratives(){
 }
 
 // =====================================================
+
 // TOURNAMENT INTELLIGENCE ENGINE
+
 // Engine 1 - Tournament Core
+
 // =====================================================
+
+
 
 const tournament = {
 
+
+
     version: "1.0",
+
+
 
     phase: "GROUP_STAGE",
 
+
+
     groups: {
 
+
+
     A: ["Mexico", "South Africa", "South Korea", "Czechia"],
+
+
+
     B: ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"],
+
+
+
     C: ["Brazil", "Morocco", "Haiti", "Scotland"],
+
+
+
     D: ["USA", "Paraguay", "Australia", "Turkey"],
+
+
+
     E: ["Germany", "Curacao", "Ivory Coast", "Ecuador"],
+
+
+
     F: ["Netherlands", "Japan", "Sweden", "Tunisia"],
+
+
+
     G: ["Belgium", "Egypt", "Iran", "New Zealand"],
+
+
+
     H: ["Spain", "Cape Verde", "Saudi Arabia", "Uruguay"],
+
+
+
     I: ["France", "Senegal", "Iraq", "Norway"],
+
+
+
     J: ["Argentina", "Algeria", "Austria", "Jordan"],
+
+
+
     K: ["Portugal", "DR Congo", "Uzbekistan", "Colombia"],
+
+
+
     L: ["England", "Croatia", "Ghana", "Panama"]
+
+
+
 },
 
 groupStageChampion: null,
 
     standings: {},
+
+
+
     finalGroups: {},
+
+
+
     thirdPlaceTable: {},
+
+
+
     qualification: {},
+
+
+
     bestThird: [],
+
+
+
     qualified: [],
+
+
+
     eliminated: [],
+
+
+
     bracket: {},
+
+
+
     timeline: {}
+
+
+
 };
+
+
 
 function getTeamGroup(team) {
 
@@ -6464,11 +6462,19 @@ function getTeamGroup(team) {
 
 }
 
+
+
 function getGroupTeams(group) {
+
+
 
     return tournament.groups[group] || [];
 
+
+
 }
+
+
 
 function getGroupFixtures(group) {
 
@@ -6490,9 +6496,15 @@ function getGroupFixtures(group) {
 
 }
 
+
+
 function validateTournamentGroups() {
 
+
+
     const allTeams = Object.values(tournament.groups).flat();
+
+
 
     const duplicates = allTeams.filter(
 
@@ -6501,6 +6513,8 @@ function validateTournamentGroups() {
             allTeams.indexOf(team) !== index
 
     );
+
+
 
     const missing = Object.keys(teamInfo).filter(
 
@@ -6528,81 +6542,193 @@ function validateTournamentGroups() {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 2 - STANDINGS ENGINE
+
 // =====================================================
+
+
 
 function calculateStandings(teams, fixtures) {
 
+
+
     const standings = {};
+
+
 
     teams.forEach(team => {
 
+
+
         standings[team] = {
 
+
+
     team,
+
+
+
     played: 0,
+
     won: 0,
+
     drawn: 0,
+
     lost: 0,
+
+
+
     gf: 0,
+
     ga: 0,
+
     gd: 0,
+
+
+
     pts: 0,
+
+
+
     fairPlay: 0
+
+
+
 };
+
+
+
     });
+
+
 
     fixtures.forEach(fixture => {
 
+
+
         if (fixture.status !== "completed") return;
+
+
 
         const home = standings[fixture.home];
 
         const away = standings[fixture.away];
 
+
+
         if (!home || !away) return;
 
+
+
         home.played++;
+
         away.played++;
+
+
+
         home.gf += fixture.homeScore;
+
         home.ga += fixture.awayScore;
+
+
+
         away.gf += fixture.awayScore;
+
         away.ga += fixture.homeScore;
+
+
 
         if (fixture.homeScore > fixture.awayScore) {
 
+
+
             home.won++;
+
             away.lost++;
+
+
+
             home.pts += 3;
+
+
+
         }
+
+
+
         else if (fixture.homeScore < fixture.awayScore) {
 
+
+
             away.won++;
+
             home.lost++;
+
+
+
             away.pts += 3;
+
+
+
         }
+
+
+
         else {
 
+
+
             home.drawn++;
+
             away.drawn++;
+
+
+
             home.pts++;
+
             away.pts++;
+
+
+
         }
+
+
+
     });
+
+
 
     Object.values(standings).forEach(team => {
 
+
+
         team.gd = team.gf - team.ga;
+
+
 
     });
 
+
+
     return Object.values(standings);
+
+
+
 }
 
+
+
 // =====================================================
+
 // ENGINE 2.1 - GROUP STANDINGS WRAPPER
+
 // =====================================================
+
+
 
 function calculateGroupStandings(group) {
 
@@ -6626,9 +6752,15 @@ function calculateGroupStandings(group) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 2.5 - STANDINGS CACHE
+
 // =====================================================
+
+
 
 function rebuildTournamentStandings() {
 
@@ -6654,6 +6786,8 @@ function rebuildTournamentStandings() {
 
 }
 
+
+
 function getGroupStandings(group) {
 
 
@@ -6664,9 +6798,15 @@ function getGroupStandings(group) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 2.7 - BASIC TABLE SORTER
+
 // =====================================================
+
+
 
 function getSortedGroupStandings(group) {
 
@@ -6712,9 +6852,15 @@ function getSortedGroupStandings(group) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.1 - TIE DETECTION
+
 // =====================================================
+
+
 
 function detectPointTies(group) {
 
@@ -6780,9 +6926,15 @@ function detectPointTies(group) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.2 - HEAD TO HEAD FIXTURE ENGINE
+
 // =====================================================
+
+
 
 function getHeadToHeadFixtures(teams) {
 
@@ -6808,9 +6960,15 @@ function getHeadToHeadFixtures(teams) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.3 - MINI LEAGUE ENGINE
+
 // =====================================================
+
+
 
 function calculateMiniLeague(teams) {
 
@@ -6834,9 +6992,15 @@ function calculateMiniLeague(teams) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.4 - FIFA TIE RESOLVER
+
 // =====================================================
+
+
 
 function resolveFifaTie(group, tiedTeams) {
 
@@ -6948,9 +7112,15 @@ function resolveFifaTie(group, tiedTeams) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.4 - RESOLVED GROUP STANDINGS
+
 // =====================================================
+
+
 
 function getResolvedGroupStandings(group) {
 
@@ -7030,9 +7200,15 @@ function getResolvedGroupStandings(group) {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.5 - FINAL GROUP TABLES
+
 // =====================================================
+
+
 
 function buildFinalGroupTables() {
 
@@ -7084,9 +7260,15 @@ function buildFinalGroupTables() {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.6 - LIVE THIRD PLACE TABLE
+
 // =====================================================
+
+
 
 function buildThirdPlaceTable() {
 
@@ -7208,9 +7390,15 @@ function buildThirdPlaceTable() {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.7 - QUALIFICATION STATUS
+
 // =====================================================
+
+
 
 function updateQualificationStatus() {
 
@@ -7524,9 +7712,15 @@ Object.values(tournament.finalGroups).forEach(group => {
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 3.7 HELPERS
+
 // =====================================================
+
+
 
 function getRemainingMatches(team) {
 
@@ -7538,6 +7732,8 @@ function getRemainingMatches(team) {
 
 }
 
+
+
 function getMaximumPoints(team) {
 
 
@@ -7547,6 +7743,8 @@ function getMaximumPoints(team) {
 
 
 }
+
+
 
 function getThirdPlaceThreats(team) {
 
@@ -7603,6 +7801,8 @@ function getThirdPlaceThreats(team) {
 
 
 }
+
+
 
 function analyseThirdPlaceTeam(team) {
 
@@ -7694,6 +7894,8 @@ canStillQualify:
 
 }
 
+
+
 function isGuaranteed(team) {
 
 
@@ -7714,9 +7916,15 @@ return (
 
 }
 
+
+
 // =====================================================
+
 // ENGINE 4.0 - QUALIFIED TEAMS
+
 // =====================================================
+
+
 
 function buildQualifiedTeams() {
 
@@ -7790,6 +7998,8 @@ function buildQualifiedTeams() {
 
 }
 
+
+
 // =====================================================
 // ENGINE 4.1 - FIFA THIRD PLACE ALLOCATION
 // =====================================================
@@ -7798,6 +8008,7 @@ function buildQualifiedTeams() {
 // Key = Sorted qualifying third-place groups
 // Value = Which group's third-place team occupies each
 // Round of 32 BEST_THIRD fixture.
+
 
 function buildBestThirdAllocationKey(){
 
@@ -7884,9 +8095,14 @@ function validateBestThirdAllocation(){
 
 }
 
+
 // =====================================================
+
 // ENGINE 4.2 - FIFA ROUND OF 32 TEMPLATE
+
 // =====================================================
+
+
 
 const fifaRoundOf32Slots = {
 
@@ -8036,9 +8252,15 @@ const fifaRoundOf32Slots = {
 
 };
 
+
+
 // =====================================================
+
 // KNOCKOUT QUALIFIERS
+
 // =====================================================
+
+
 
 function getQualifiedTeams(){
 
@@ -8050,9 +8272,15 @@ function getQualifiedTeams(){
 
 }
 
+
+
 // =====================================================
+
 // SLOT RESOLUTION HELPERS
+
 // =====================================================
+
+
 
 function getGroupWinner(group){
 
@@ -8064,6 +8292,8 @@ function getGroupWinner(group){
 
 }
 
+
+
 function getGroupRunnerUp(group){
 
 
@@ -8074,6 +8304,8 @@ function getGroupRunnerUp(group){
 
 }
 
+
+
 function getBestThird(index){
 
 
@@ -8083,6 +8315,8 @@ function getBestThird(index){
 
 
 }
+
+
 
 // =====================================================
 // TEAM OWNER
@@ -8103,7 +8337,6 @@ function getOwner(team){
     return "";
 
 }
-
 // =====================================================
 // TEMPORARY ROUND OF 32 OVERRIDE
 // Remove once FIFA Annex C JSON is wired in
@@ -8135,8 +8368,12 @@ const temporaryRoundOf32 = {
 };
 
 // =====================================================
+
 // ROUND OF 32 GENERATOR
+
 // =====================================================
+
+
 
 function generateRoundOf32Fixtures(){
 
@@ -8238,8 +8475,12 @@ updateKnockoutWinner(fixture);
 }
 
 // =====================================================
+
 // ENGINE 4.3 - MATCH WINNER
+
 // =====================================================
+
+
 
 function getMatchWinner(matchId){
 
@@ -8311,46 +8552,12 @@ function getMatchWinner(matchId){
 }
 
 // =====================================================
-// PROGRESSION PRODUCER
-// =====================================================
 
-function getLatestProgressionStory(){
-
-    const latestKnockout =
-
-        getNarrativeFixtureWindow("latest")
-
-            .find(f => f.round >= 4);
-
-    if(!latestKnockout)
-        return null;
-
-    const winner =
-
-        getMatchWinner(latestKnockout.id);
-
-    if(!winner)
-        return null;
-
-    return{
-
-        headline:
-
-            `🏆 ${winner.team} Progress`,
-
-        subheadline:
-
-            `${winner.user} reaches the next round`,
-
-        fixture: latestKnockout
-
-    };
-
-}
-
-// =====================================================
 // ENGINE 4.5 - MATCH LOSER
+
 // =====================================================
+
+
 
 function getMatchLoser(matchId){
 
@@ -8421,9 +8628,15 @@ function getMatchLoser(matchId){
 
 }
 
+
+
 // =====================================================
+
 // PLACE WINNER INTO FIXTURE
+
 // =====================================================
+
+
 
 function placeWinner(fromMatch,toMatch,side){
 
@@ -8483,6 +8696,8 @@ function placeWinner(fromMatch,toMatch,side){
 
 }
 
+
+
 function placeLoser(fromMatch,toMatch,side){
 
 
@@ -8540,7 +8755,9 @@ function placeLoser(fromMatch,toMatch,side){
 }
 
 // =====================================================
+
 // UPDATE KNOCKOUT BRACKET
+
 // =====================================================
 
 function updateKnockoutBracket(){
@@ -8729,9 +8946,9 @@ function getRTTFPlaceholder(fixtureId, side){
 
 }
 
-//=====================================================
-//   APPLICATION NAVIGATION - Wires
-//=====================================================
+/* =====================================================
+   APPLICATION NAVIGATION - Wires
+===================================================== */
 
 function showPage(pageId){
 
@@ -8809,6 +9026,8 @@ document
 
 });
 
+
+
 function jumpToPodium(){
 
     showPage("page-standings");
@@ -8857,6 +9076,7 @@ function renderRoadToFinal(){
     });
 
 }
+
 
 function buildRTTFCard(fixture,prefix){
 
@@ -8988,7 +9208,6 @@ card.innerHTML = `
     return card;
 
 }
-
 // =====================================================
 // ENGINE 6.2 - ROAD TO THE FINAL (HOME RENDERER)
 // =====================================================
@@ -9138,8 +9357,10 @@ showRTTFPage(currentRTTFPage);
 }
 
 let currentRTTFPage = 0;
+
 let rttfTouchStartX = 0;
 let rttfTouchStartY = 0;
+
 let rttfSwipeInitialised = false;
 
 function showRTTFPage(pageIndex){
@@ -9486,8 +9707,12 @@ function initialiseRTTFSwipe(){
 }
 
 // =====================================================
+
 // ENGINE 5.0 - SURVIVAL MODE
+
 // =====================================================
+
+
 
 function buildAliveTable(){
 
@@ -9517,9 +9742,15 @@ function buildAliveTable(){
 
 }
 
+
+
 // =====================================================
+
 // TEAM ALIVE CHECK
+
 // =====================================================
+
+
 
 function isTeamAlive(team){
 
@@ -9555,6 +9786,7 @@ function isTeamAlive(team){
 
 }
 
+
 function getAliveTeams(player){
 
 
@@ -9564,6 +9796,8 @@ function getAliveTeams(player){
 
 
 }
+
+
 
 // Helpers
 
@@ -9627,6 +9861,8 @@ function renderScoringRules(){
 // SURVIVAL MODE ACTIVE
 
 // =====================================================
+
+
 
 function isSurvivalMode(){
 
@@ -9703,6 +9939,8 @@ function isKnockoutStage(){
 
 }
 
+
+
 function getPlayerPosition(player, scores) {
 
 
@@ -9718,6 +9956,8 @@ function getPlayerPosition(player, scores) {
 
 
 }
+
+
 
 function getCurrentLeader(scores) {
 
@@ -9742,6 +9982,8 @@ function getCurrentLeader(scores) {
 
 
 }
+
+
 
 function getOneToWatch(
 
@@ -10524,6 +10766,8 @@ console.log(
 
 }
 
+
+
 function getRankChangeText(player) {
 
 
@@ -10547,6 +10791,8 @@ function getRankChangeText(player) {
     return `<span class="podium-hold">▬ Holding Position</span>`;
 
 }
+
+
 
 function getMovementText(change) {
 
@@ -10581,6 +10827,8 @@ function getMovementText(change) {
     return `<span class="podium-hold">▬ No Movement</span>`;
 
 }
+
+
 
 function highlightPlayer(player, text) {
 
@@ -10681,96 +10929,195 @@ function getTeamTitle(team) {
 
 }
 
-function calculateShock(fixturesToCheck) {
+
+
+function calculateBiggestUpset() {
+
+
 
     let biggest = null;
 
-    fixturesToCheck.forEach(f => {
 
-        if (f.status !== "completed")
-            return;
+
+    fixtures.forEach(f => {
+
+
+
+        if (f.status !== "completed") return;
+
+
 
         const homeRank = getTeamRank(f.home);
+
         const awayRank = getTeamRank(f.away);
 
+
+
         let shock = 0;
+
         let description = "";
+
         let resultText = "";
 
-        // Home Win
-        if (Number(f.homeScore) > Number(f.awayScore)) {
+
+
+        // HOME WIN
+
+        if (f.homeScore > f.awayScore) {
+
+
 
             shock = homeRank - awayRank;
 
+
+
             if (shock > 0) {
+
+
 
                 const title = getTeamTitle(f.away);
 
-                description =
-                    `${f.home} (#${homeRank}) defeated ${title ? `${title} ${f.away}` : f.away} (#${awayRank})`;
+
+
+description =
+
+    `${f.home} (#${homeRank}) defeated ${
+
+        title ? `${title} ${f.away}` : f.away
+
+    } (#${awayRank})`;
+
+
 
                 resultText =
+
                     `${f.home} ${f.homeScore}-${f.awayScore} ${f.away}`;
+
+
 
             }
 
+
+
         }
 
-        // Away Win
-        else if (Number(f.awayScore) > Number(f.homeScore)) {
+
+
+        // AWAY WIN
+
+        else if (f.awayScore > f.homeScore) {
+
+
 
             shock = awayRank - homeRank;
 
+
+
             if (shock > 0) {
+
+
 
                 const title = getTeamTitle(f.home);
 
-                description =
-                    `${f.away} (#${awayRank}) defeated ${title ? `${title} ${f.home}` : f.home} (#${homeRank})`;
+
+
+description =
+
+    `${f.away} (#${awayRank}) defeated ${
+
+        title ? `${title} ${f.home}` : f.home
+
+    } (#${homeRank})`;
+
+
 
                 resultText =
+
                     `${f.home} ${f.homeScore}-${f.awayScore} ${f.away}`;
+
+
 
             }
 
+
+
         }
 
-        // Draw
+
+
+        // DRAW
+
         else {
 
+
+
             const underdogRank =
+
                 Math.max(homeRank, awayRank);
 
+
+
             const favouriteRank =
+
                 Math.min(homeRank, awayRank);
+
+
 
             shock = underdogRank - favouriteRank;
 
+
+
             if (shock > 0) {
 
+
+
                 const underdog =
-                    homeRank > awayRank ? f.home : f.away;
 
-                const favourite =
-                    homeRank < awayRank ? f.home : f.away;
+    homeRank > awayRank ? f.home : f.away;
 
-                const title =
-                    getTeamTitle(favourite);
 
-                description =
-                    `${underdog} (#${underdogRank}) held ${title ? `${title} ${favourite}` : favourite} (#${favouriteRank})`;
+
+const favourite =
+
+    homeRank < awayRank ? f.home : f.away;
+
+
+
+const title = getTeamTitle(favourite);
+
+
+
+description =
+
+    `${underdog} (#${underdogRank}) held ${
+
+        title ? `${title} ${favourite}` : favourite
+
+    } (#${favouriteRank})`;
+
+
 
                 resultText =
+
                     `${f.home} ${f.homeScore}-${f.awayScore} ${f.away}`;
+
+
 
             }
 
+
+
         }
 
-        if (shock <= 0)
-            return;
+
+
+        if (shock <= 0) return;
+
+
 
         if (!biggest || shock > biggest.shock) {
+
+
 
             biggest = {
 
@@ -10778,19 +11125,25 @@ function calculateShock(fixturesToCheck) {
 
                 description,
 
-                resultText,
-
-                fixture: f
+                resultText
 
             };
 
+
+
         }
 
+
+
     });
+
+
 
     return biggest;
 
 }
+
+
 
 function calculateMatchOfTheTournament() {
 
@@ -11208,6 +11561,8 @@ function toggleRound(round) {
 
 }
 
+
+
 function toggleSection(contentId, arrowId) {
 
 
@@ -11242,6 +11597,8 @@ function toggleSection(contentId, arrowId) {
 
 }
 
+
+
 function toggleSection(contentId, arrowId) {
 
     const section = document.getElementById(contentId);
@@ -11261,6 +11618,8 @@ function toggleSection(contentId, arrowId) {
     }
 
 }
+
+
 
 function expandAndScroll(sectionId, contentId, arrowId) {
 
@@ -11310,6 +11669,8 @@ function expandAndScroll(sectionId, contentId, arrowId) {
 
 }
 
+
+
 function calculateMatchdayShakeUp(
 
     currentPositions,
@@ -11354,6 +11715,8 @@ function calculateMatchdayShakeUp(
 
 }
 
+
+
 function getMatchdayShakeUpHeadline(
 
     currentPositions,
@@ -11361,6 +11724,8 @@ function getMatchdayShakeUpHeadline(
     previousPositions
 
 ) {
+
+
 
     const changes =
 
@@ -11774,13 +12139,21 @@ if (
 
 }
 
-    // Nothing newsworthy happened
+    // Fallback
 
-return null;
+return {
+
+    headline: "📊 No Major Changes",
+
+    subheadline: "Leaderboard Remains Stable"
+
+};
 
 }
 
 let tournamentLog = [];
+
+
 
 function addTournamentEvent(
 
@@ -11820,6 +12193,8 @@ function addTournamentEvent(
 
 }
 
+
+
 function getLeaderFromPositions(
 
     positions
@@ -11841,6 +12216,8 @@ function getLeaderFromPositions(
 
 
 }
+
+
 
 function replayTournamentHistory() {
 
@@ -12114,6 +12491,8 @@ function getLeadershipStats() {
 
 }
 
+
+
 function getPlayerPositionHistory(player) {
 
 
@@ -12137,6 +12516,8 @@ function getPlayerPositionHistory(player) {
 
 
 }
+
+
 
 function getRedCardRoyalty() {
 
@@ -12206,6 +12587,8 @@ function getRedCardRoyalty() {
 
 }
 
+
+
 function getRedCardStandings() {
 
 
@@ -12253,6 +12636,8 @@ function getRedCardStandings() {
 
 
 }
+
+
 
 function generateCurrentStory(
 
@@ -12436,6 +12821,8 @@ function generateCurrentStory(
 
 }
 
+
+
 function getHallOfInfamyHeadline() {
 
 
@@ -12577,6 +12964,8 @@ if (
 
 
 }
+
+
 
 function getOwnGoalStandings() {
 
@@ -12877,6 +13266,8 @@ function ordinal(n) {
 
 }
 
+
+
 function getFavouriteOwner(team) {
 
 
@@ -12892,6 +13283,8 @@ function getFavouriteOwner(team) {
 
 
 }
+
+
 
 function getFavouriteTeamInFixture(fixture) {
 
@@ -12951,6 +13344,8 @@ function getFavouriteTeamInFixture(fixture) {
 
 }
 
+
+
 function getQualificationDot(teamName) {
 
     // Survival Mode - ignore group qualification
@@ -12999,9 +13394,15 @@ function getQualificationDot(teamName) {
 
 }
 
+
+
 // =====================================================
+
 // SLOT RESOLUTION
+
 // =====================================================
+
+
 
 function resolveSlot(slot, fixtureId, usedBestThirdGroups){
 
@@ -13199,56 +13600,6 @@ function testParticipantResolver(){
     });
 
 }
-
-// =====================================================
-// ENGINE 7 NEWSWIRE
-// =====================================================
-
-function buildNewswire(){
-
-    const narratives =
-        getTournamentNarratives();
-
-    if(narratives.length === 0){
-
-        return "📰 Awaiting Tournament News";
-
-    }
-
-    return narratives
-
-        .map(
-
-            narrative =>
-
-                `${narrative.icon} ${narrative.title}`
-
-        )
-
-        .join("   •   ");
-
-}
-
-function renderNewswire() {
-
-    const track =
-
-        document.getElementById(
-
-            "newswire-track"
-
-        );
-
-    if (!track) return;
-
-    const text = buildNewswire();
-
-    track.innerHTML =
-
-        `<span>${text}</span><span>${text}</span>`;
-
-}
-
 //Helper End//
 
     // Tracks starred selections globally, loads from local device storage if previously saved
@@ -13305,6 +13656,8 @@ function renderNewswire() {
 
     };
 
+    
+
     // Tracks if specific user locked their choice on this device
 
     let lockedUsers = {
@@ -13326,6 +13679,8 @@ function renderNewswire() {
         Tom: false
 
     };
+
+
 
     //let previousRanks = {};
 
@@ -16325,8 +16680,8 @@ function renderNewswire() {
     "awaySource":90,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":2,
-    "awayScore":0,
+    "homeScore":"",
+    "awayScore":"",
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -16334,7 +16689,7 @@ function renderNewswire() {
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"completed"
+    "status":"upcoming"
 },
 {
     "id":98,
@@ -16515,7 +16870,7 @@ function renderNewswire() {
 
 // =====================================================
 
-function checkAdminPassword(val) {
+    function checkAdminPassword(val) {
 
         let badge = document.getElementById("admin-status-badge");
 
@@ -16543,7 +16898,7 @@ function checkAdminPassword(val) {
 
     }
 
-function selectProfile(user) {
+    function selectProfile(user) {
 
         activePlayer = user;
 
@@ -16808,7 +17163,7 @@ chip.innerHTML = `
     }
 
 
-function toggleStar(user, team) {
+    function toggleStar(user, team) {
 
         if (!isAdmin) { 
 
@@ -17069,7 +17424,6 @@ Object.keys(scores).forEach(p => {
     return scores;
 
 }
-
 function buildScores(maxFixtureId = Infinity){
 
     let scores = {
@@ -17269,7 +17623,6 @@ return scores;
 
     
 }
-
 function calculateScores(maxFixtureId = Infinity) {
 
     const scores = buildScores(); 
@@ -17310,44 +17663,27 @@ if (nextFixture) {
     document.getElementById("hero-next-match").innerText =
 
         "Tournament Complete";
+
+
+
 }
 
-const tournamentShock =
 
-    calculateShock(
 
-        getNarrativeFixtureWindow("tournament")
+const shock = calculateBiggestUpset();
 
-    );
-
-const roundShock =
-
-    calculateShock(
-
-        getNarrativeFixtureWindow("round")
-
-    );
-
-if (tournamentShock) {
+if (shock) {
 
     document.getElementById("award-upset").innerText =
-
-        tournamentShock.resultText;
+        shock.resultText;
 
     document.getElementById("award-upset-sub").innerText =
-
-        tournamentShock.description;
-
-}
-
-if (roundShock) {
+        shock.description;
 
     document.getElementById("hero-shock").innerText =
-
-        roundShock.resultText;
+        shock.resultText;
 
     document.getElementById("hero-shock-sub").innerText =
-
         "Tap for details";
 
     updateNarrative(
@@ -17356,25 +17692,15 @@ if (roundShock) {
 
         "🔥",
 
-        roundShock.resultText,
+        shock.resultText,
 
-        roundShock.description,
+        shock.description,
 
-        90,
-
-        {
-
-            round: roundShock.fixture?.round,
-
-            fixtureId: roundShock.fixture?.id
-
-        }
+        90
 
     );
 
-} 
-
-else {
+} else {
 
     document.getElementById("award-upset").innerText =
         "Awaiting Shock";
@@ -17389,40 +17715,6 @@ else {
         "No shock result yet";
 
     removeNarrative("shock");
-
-}
-
-// -----------------------------------------------------
-// Progression Producer
-// -----------------------------------------------------
-
-const progressionStory =
-
-    getLatestProgressionStory();
-
-if (progressionStory) {
-
-    updateNarrative(
-
-        "progression",
-
-        "🏆",
-
-        progressionStory.headline,
-
-        progressionStory.subheadline,
-
-        80,
-
-        {
-
-            round: progressionStory.fixture?.round,
-
-            fixtureId: progressionStory.fixture?.id
-
-        }
-
-    );
 
 }
 
@@ -17674,6 +17966,8 @@ function getRankPositions(scores) {
 
 }
 
+
+
 function getLatestCompletedFixture(fixtures) {
 
 
@@ -17885,7 +18179,6 @@ function renderRoyalPodium(sorted){
     });
 
 }
-
 function renderRoyalSurvival(sorted){
 
     const container =
@@ -18011,7 +18304,6 @@ Still Competing
     container.appendChild(tile3);
 
 }
-
 function renderRoyalRivalries(){
 
     const container =
@@ -18404,7 +18696,7 @@ sorted.forEach((p, index) => {
 
     .sort((a,b) => a.rankChange - b.rankChange)[0];
 
-const shakeUp =
+   const shakeUp =
 
     getMatchdayShakeUpHeadline(
 
@@ -18414,31 +18706,17 @@ const shakeUp =
 
     );
 
+
+
 const shakeUpHeadline =
 
-    shakeUp?.headline || null;
+    shakeUp.headline;
+
+
 
 const shakeUpSub =
 
-    shakeUp?.subheadline || null;
-
-if (shakeUp) {
-
-    updateNarrative(
-
-        "shakeup",
-
-        "📊",
-
-        shakeUpHeadline,
-
-        shakeUpSub,
-
-        60
-
-    );
-
-}
+    shakeUp.subheadline;
 
 document.getElementById("centre-climber").innerText =
 
@@ -20514,7 +20792,7 @@ if (f.round !== activeRound) {
 
 // --- NEW: GENERATE UPDATE CODE ---
 
-function updateFixtureData(id, side, val) {
+    function updateFixtureData(id, side, val) {
 
         let f = fixtures.find(match => match.id === id);
 
@@ -20526,7 +20804,9 @@ function updateFixtureData(id, side, val) {
 updateKnockoutWinner(f);
     }
 
-function renderQuickUpdate() {
+
+
+    function renderQuickUpdate() {
 
     let list = document.getElementById("quick-update-list");
 
@@ -20607,9 +20887,11 @@ let pending = fixtures.filter(f => {
 
     renderRivalryMatrix(fixtures);
 
-function renderAll() {
 
-      // Survival state
+
+    function renderAll() {
+
+    // Survival state
     if (isSurvivalMode()) {
         generateRoundOf32Fixtures();
         buildAliveTable();
@@ -20637,7 +20919,6 @@ updateKnockoutBracket();
     // Narrative
     rebuildChronicle();
     renderTournamentLog();
-    renderNewswire();
 
     // Survival Mode
     updateSurvivalUI();
@@ -20658,7 +20939,7 @@ console.log(
 
 }
 
-function generateUpdateCode() { 
+    function generateUpdateCode() { 
 
         // Create a master object containing everything 
 
@@ -20688,7 +20969,9 @@ function generateUpdateCode() {
 
     }
 
-// initLandingPage();
+
+
+   // initLandingPage();
 
 function jumpToLeader() {
 
@@ -20708,6 +20991,8 @@ function jumpToLeader() {
 
 }
 
+
+
 function jumpToShockResult() {
 
 
@@ -20726,6 +21011,8 @@ function jumpToShockResult() {
 
 }
 
+
+
 function jumpToMatchAward() {
 
 
@@ -20743,6 +21030,8 @@ function jumpToMatchAward() {
 
 
 }
+
+
 
 function jumpToNextFixture() {
 
@@ -20810,6 +21099,8 @@ function jumpToNextFixture() {
 
 function renderTournamentLog() {
 
+
+
     const container =
 
         document.getElementById(
@@ -20858,6 +21149,8 @@ function renderTournamentLog() {
 
 }
 
+
+
 function jumpToChronicle() {
 
 
@@ -20875,6 +21168,24 @@ function jumpToChronicle() {
 
 
 }
+
+/*
+
+    expandAndScroll(
+
+        "tournament-chronicle",
+
+        "chronicle-content",
+
+        "chronicle-arrow"
+
+    );
+
+
+
+}
+
+*/
 
 function jumpToRivalries() {
 
@@ -20894,6 +21205,8 @@ function jumpToRivalries() {
 
 }
 
+
+
 function jumpToHallOfInfamy() {
 
 
@@ -20912,7 +21225,11 @@ function jumpToHallOfInfamy() {
 
 }
 
+
+
 // Replay TESTs //
+
+
 
 function rebuildChronicle() {
 
@@ -21101,6 +21418,8 @@ function rebuildChronicle() {
 console.log(tournamentLog);
 
 }
+
+
 
 function renderHallOfInfamy() {
 
@@ -21372,11 +21691,15 @@ document.getElementById(
 
 }
 
+
+
 // =====================================================
 
 // TOURNAMENT DIAGNOSTICS
 
 // =====================================================
+
+
 
 function runTournamentDiagnostics() {
 
@@ -21638,6 +21961,7 @@ function adminLog(...args){
 
 }
 
+
 function clearAdminLog(){
 
     document.getElementById(
@@ -21816,7 +22140,11 @@ function previewRoadToFinal(){
 
 runTournamentDiagnostics();
 
+
+
 renderAll();
+
+
 
 </script>
 

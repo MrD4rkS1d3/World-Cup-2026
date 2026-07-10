@@ -8311,44 +8311,6 @@ function getMatchWinner(matchId){
 }
 
 // =====================================================
-// PROGRESSION PRODUCER
-// =====================================================
-
-function getLatestProgressionStory(){
-
-    const latestKnockout =
-
-        getNarrativeFixtureWindow("latest")
-
-            .find(f => f.round >= 4);
-
-    if(!latestKnockout)
-        return null;
-
-    const winner =
-
-        getMatchWinner(latestKnockout.id);
-
-    if(!winner)
-        return null;
-
-    return{
-
-        headline:
-
-            `🏆 ${winner.team} Progress`,
-
-        subheadline:
-
-            `${winner.user} reaches the next round`,
-
-        fixture: latestKnockout
-
-    };
-
-}
-
-// =====================================================
 // ENGINE 4.5 - MATCH LOSER
 // =====================================================
 
@@ -16325,8 +16287,8 @@ function renderNewswire() {
     "awaySource":90,
     "homeUser":"",
     "awayUser":"",
-    "homeScore":2,
-    "awayScore":0,
+    "homeScore":"",
+    "awayScore":"",
     "homePens":null,
     "awayPens":null,
     "winner":null,
@@ -16334,7 +16296,7 @@ function renderNewswire() {
     "awayRedCards":0,
     "homeOwnGoals":0,
     "awayOwnGoals":0,
-    "status":"completed"
+    "status":"upcoming"
 },
 {
     "id":98,
@@ -17389,40 +17351,6 @@ else {
         "No shock result yet";
 
     removeNarrative("shock");
-
-}
-
-// -----------------------------------------------------
-// Progression Producer
-// -----------------------------------------------------
-
-const progressionStory =
-
-    getLatestProgressionStory();
-
-if (progressionStory) {
-
-    updateNarrative(
-
-        "progression",
-
-        "🏆",
-
-        progressionStory.headline,
-
-        progressionStory.subheadline,
-
-        80,
-
-        {
-
-            round: progressionStory.fixture?.round,
-
-            fixtureId: progressionStory.fixture?.id
-
-        }
-
-    );
 
 }
 
