@@ -9231,17 +9231,41 @@ function getTournamentStage(){
 
         if(nextFixture){
 
-            return{
+            let page = 3;
 
-                round,
+switch(round){
 
-                page: round - 4,
+    case 4:
+        page = 0;
+        break;
 
-                complete:false,
+    case 5:
+        page = 1;
+        break;
 
-                nextFixture
+    case 6:
+    case 7:
+        page = 2;
+        break;
 
-            };
+    case 8:
+    case 9:
+        page = 3;
+        break;
+
+}
+
+return{
+
+    round,
+
+    page,
+
+    complete:false,
+
+    nextFixture
+
+};
 
         }
 
