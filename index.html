@@ -845,6 +845,240 @@
 }
 
 /* =====================================================
+   GRAND FINALE
+===================================================== */
+
+.grand-finale{
+
+    display:flex;
+    flex-direction:column;
+
+    width:100%;
+    height:100%;
+
+    padding:10px 24px;
+
+    box-sizing:border-box;
+
+}
+
+.grand-finale-header{
+
+    text-align:center;
+    margin-bottom:18px;
+
+}
+
+.grand-final-title{
+
+    font-size:1rem;
+
+    font-weight:800;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    color:#0D1B2A;
+
+}
+
+.grand-kickoff{
+
+    margin-top:6px;
+    font-size:13px;
+    color:#666;
+
+}
+
+.grand-final-arena{
+
+    display:grid;
+
+    width:100%;
+
+    grid-template-columns:1fr auto 1fr;
+
+    align-items:center;
+
+    justify-items:stretch;
+
+    gap:20px;
+
+    margin:20px 0 28px;
+
+}
+
+.grand-final-card{
+
+    position:relative;
+
+    width:100%;
+    min-height:260px;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    border:2px solid #D9E2EC;
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    box-shadow:0 6px 16px rgba(0,0,0,.10);
+
+}
+
+.grand-final-trophy{
+
+    font-size:72px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+.grand-final-message{
+
+    text-align:center;
+
+    margin:8px 0 20px;
+
+    font-weight:700;
+    letter-spacing:1px;
+
+    color:#666;
+
+}
+
+.grand-third-place{
+
+    margin-top:auto;
+
+    border:2px dashed #D9E2EC;
+
+    border-radius:16px;
+
+    min-height:90px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:#888;
+
+    font-weight:700;
+
+}
+
+.grand-team{
+
+    margin-bottom:10px;
+
+    text-align:center;
+
+    font-size:1.45rem;
+
+    font-weight:900;
+
+    letter-spacing:.04em;
+
+    color:#0D1B2A;
+
+    text-transform:uppercase;
+
+}
+
+.grand-score{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    z-index:2;
+
+    font-size:4.2rem;
+
+    font-weight:900;
+
+    color:#ffffff;
+
+    text-shadow:
+        0 3px 10px rgba(0,0,0,.45),
+        0 0 20px rgba(0,0,0,.25);
+
+}
+
+.grand-manager{
+
+    margin-top:12px;
+
+    text-align:center;
+
+    font-size:1rem;
+
+    font-weight:700;
+
+    color:#64748b;
+
+}
+
+.grand-final-card .rttf-flag{
+
+    width:52px;
+
+    height:36px;
+
+    border-radius:6px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.12);
+
+}
+
+/* =====================================================
+   GRAND FINALE - DESKTOP SCALING
+===================================================== */
+
+@media (min-width:1000px){
+
+    .grand-final-arena{
+
+        grid-template-columns:1fr auto 1fr;
+
+        gap:28px;
+
+    }   
+
+    .grand-final-card{
+
+       min-height:340px;
+
+    }
+
+    .grand-final-trophy{
+
+        font-size:120px;
+
+    }
+
+    .grand-third-place{
+
+        min-height:120px;
+
+    }
+
+}
+
+/* =====================================================
    ROYAL DASHBOARD
 ===================================================== */
 
@@ -2258,7 +2492,9 @@ min-width:0;
 
 }
 
-.rttf-page{
+#road-to-final-pages > .rttf-page:not(.grand-finale-page){
+
+    width:100%;
 
     display:grid;
 
@@ -2267,6 +2503,20 @@ min-width:0;
     gap:16px;
 
     align-items:start;
+
+}
+
+/* =====================================================
+   GRAND FINALE PAGE
+===================================================== */
+
+#road-to-final-pages > .grand-finale-page{
+
+    width:100%;
+
+    display:block;
+
+    box-sizing:border-box;
 
 }
 
@@ -8988,7 +9238,183 @@ card.innerHTML = `
     return card;
 
 }
+// =====================================================
+// ENGINE 6.2A - GRAND FINALE PAGE
+// =====================================================
 
+function buildGrandFinalePage(){
+
+    const page =
+        document.createElement("div");
+
+    page.className =
+        "rttf-page grand-finale-page";
+
+    const final =
+        fixtures.find(f => f.round === 9);
+
+    const home =
+        final?.home ||
+        getRTTFPlaceholder(final?.id,"home");
+
+    const away =
+        final?.away ||
+        getRTTFPlaceholder(final?.id,"away");
+
+    const homeUser =
+        final?.homeUser || "";
+
+    const awayUser =
+        final?.awayUser || "";
+
+    const homeScore =
+        final?.homeScore ?? "-";
+
+    const awayScore =
+        final?.awayScore ?? "-";
+
+    const kickoff =
+        final
+            ? `${final.date} • ${final.kickoff}`
+            : "Final Kick-off";
+
+    const homeFlag =
+        final?.home
+            ? getTeamFlag(home)
+            : "";
+
+    const awayFlag =
+        final?.away
+            ? getTeamFlag(away)
+            : "";
+
+    page.innerHTML = `
+
+<div class="rttf-round-title">
+
+    Finals Weekend
+
+</div>
+
+<div class="grand-finale">
+
+    <div class="grand-finale-header">
+
+        <div class="grand-final-title">
+
+            🏆 THE WORLD CUP FINAL
+
+        </div>
+
+        <div class="grand-kickoff">
+
+            ${kickoff}
+
+        </div>
+
+    </div>
+
+    <div class="grand-final-arena">
+
+       <!-- HOME FINALIST -->
+
+<div class="grand-final-column">
+
+    <div class="grand-team">
+
+        ${home}
+
+    </div>
+
+    <div
+        class="grand-final-card"
+
+        ${
+            final?.home
+                ? `style="background-image:url('https://flagcdn.com/${homeFlag}.svg')"`
+                : ""
+        }>
+
+        <div class="grand-score">
+
+            ${homeScore}
+
+        </div>
+
+    </div>
+
+    <div class="grand-manager">
+
+        👤 ${homeUser}
+
+    </div>
+
+</div>
+
+        <!-- TROPHY -->
+
+        <div class="grand-final-trophy">
+
+            🏆
+
+        </div>
+
+ <!-- AWAY FINALIST -->
+
+<div class="grand-final-column">
+
+    <div class="grand-team">
+
+        ${away}
+
+    </div>
+
+    <div
+        class="grand-final-card"
+
+        ${
+            final?.away
+                ? `style="background-image:url('https://flagcdn.com/${awayFlag}.svg')"`
+                : ""
+        }>
+
+        <div class="grand-score">
+
+            ${awayScore}
+
+        </div>
+
+    </div>
+
+    <div class="grand-manager">
+
+        👤 ${awayUser}
+
+    </div>
+
+</div>
+
+    </div>
+
+    <div class="grand-final-message">
+
+        THE TROPHY AWAITS
+
+    </div>
+
+    <div class="grand-third-place">
+
+        THIRD PLACE FIXTURE
+
+    </div>
+
+</div>
+
+`;
+
+    return page;
+
+}
 // =====================================================
 // ENGINE 6.2 - ROAD TO THE FINAL (HOME RENDERER)
 // =====================================================
@@ -9104,30 +9530,12 @@ fixtures
 container.appendChild(page3);
 
 // -----------------------------------------------------
-// PAGE 4 - FINALS WEEKEND
+// PAGE 4 - GRAND FINALE
 // -----------------------------------------------------
 
-const page4 = document.createElement("div");
-page4.className = "rttf-page";
-page4.classList.remove("active");
-
-page4.innerHTML =
-    `<div class="rttf-round-title">Finals Weekend</div>`;
-
-fixtures
-.filter(f=>f.round===8 || f.round===9)
-.forEach(fixture=>{
-
-    page4.appendChild(
-        buildRTTFCard(
-            fixture,
-            fixture.round===8 ? "3P" : "F"
-        )
-    );
-
-});
-
-container.appendChild(page4);
+container.appendChild(
+    buildGrandFinalePage()
+);
 
 const stage = getTournamentStage();
 
