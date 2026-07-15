@@ -592,6 +592,16 @@
 
 }
 
+.rttf-match.featured{
+
+    max-width:760px;
+
+    margin:0 auto;
+
+    padding:18px 24px;
+
+}
+
 .rttf-card-header{
 
     display:flex;
@@ -601,6 +611,44 @@
     align-items:center;
 
     margin-bottom:12px;
+
+}
+
+.rttf-card-header.featured{
+
+    justify-content:center;
+
+    margin-bottom:18px;
+
+}
+
+.rttf-kickoff.featured{
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    color:#475569;
+
+}
+
+.rttf-match.featured .rttf-score-box{
+
+    width:38px;
+
+    height:38px;
+
+    font-size:1rem;
+
+}
+
+.rttf-match.featured .rttf-flag{
+
+    width:40px;
+
+    height:28px;
+
+    border-radius:5px;
 
 }
 
@@ -936,11 +984,31 @@
 
 .grand-final-trophy{
 
-    font-size:72px;
-
     display:flex;
+
     justify-content:center;
+
     align-items:center;
+
+    padding:0 12px;
+
+}
+
+.grand-final-trophy-image{
+
+    width:160px;
+
+    height:auto;
+
+    display:block;
+
+    transform:translateY(-10px);
+
+    filter:drop-shadow(0 6px 12px rgba(0,0,0,.15));
+
+    user-select:none;
+
+    pointer-events:none;
 
 }
 
@@ -961,19 +1029,27 @@
 
     margin-top:auto;
 
-    border:2px dashed #D9E2EC;
-
-    border-radius:16px;
-
-    min-height:90px;
-
     display:flex;
-    justify-content:center;
-    align-items:center;
 
-    color:#888;
+    flex-direction:column;
 
-    font-weight:700;
+    gap:12px;
+
+}
+
+.grand-third-title{
+
+    text-align:center;
+
+    font-size:.9rem;
+
+    font-weight:800;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+    color:#92400e;
 
 }
 
@@ -1064,11 +1140,13 @@
 
     }
 
-    .grand-final-trophy{
+    .grand-final-trophy-image{
 
-        font-size:120px;
+    width:240px;
 
-    }
+    transform:translateY(-16px);
+
+}
 
     .grand-third-place{
 
@@ -9108,13 +9186,13 @@ function renderRoadToFinal(){
 
 }
 
-function buildRTTFCard(fixture,prefix){
+function buildRTTFCard(fixture,prefix,isFeatured=false){
 
     const card =
         document.createElement("div");
 
     card.className =
-    `rttf-match ${fixture.status}`;
+`rttf-match ${fixture.status}${isFeatured ? " featured" : ""}`;
 
     const home =
         fixture.home ||
@@ -9142,36 +9220,67 @@ if(winner){
 
 card.innerHTML = `
 
-<div class="rttf-card-header">
+${
+isFeatured
 
-    <span class="rttf-fixture-id">
-        ${prefix}-${
-    fixture.round===4 ? fixture.id-72 :
-    fixture.round===5 ? fixture.id-88 :
-    fixture.round===6 ? fixture.id-96 :
-    fixture.round===7 ? fixture.id-100 :
-    fixture.round===8 ? "3P" :
-    fixture.round===9 ? "F" :
-    fixture.id
-}
-    </span>
+? `
 
-    <span class="rttf-progress">
-    ${progressText}
-    </span>
+<div class="rttf-card-header featured">
 
-    <span class="rttf-kickoff">
+    <span class="rttf-kickoff featured">
+
         ${fixture.date} • ${fixture.kickoff}
+
     </span>
 
 </div>
+
+`
+
+: `
+
+<div class="rttf-card-header">
+
+    <span class="rttf-fixture-id">
+
+        ${prefix}-${
+            fixture.round===4 ? fixture.id-72 :
+            fixture.round===5 ? fixture.id-88 :
+            fixture.round===6 ? fixture.id-96 :
+            fixture.round===7 ? fixture.id-100 :
+            fixture.round===8 ? "3P" :
+            fixture.round===9 ? "F" :
+            fixture.id
+        }
+
+    </span>
+
+    <span class="rttf-progress">
+
+        ${progressText}
+
+    </span>
+
+    <span class="rttf-kickoff">
+
+        ${fixture.date} • ${fixture.kickoff}
+
+    </span>
+
+</div>
+
+`
+}
 
 <div class="rttf-match-row">
 
     <div class="rttf-side left">
 
-        <img class="rttf-flag"
-             src="https://flagcdn.com/${homeFlag}.svg">
+        ${homeFlag
+? `<img
+      class="rttf-flag"
+      src="https://flagcdn.com/${homeFlag}.svg">`
+: ""}
 
         <div>
 
@@ -9218,8 +9327,11 @@ card.innerHTML = `
 
     <div class="rttf-side right">
 
-        <img class="rttf-flag"
-             src="https://flagcdn.com/${awayFlag}.svg">
+        ${awayFlag
+? `<img
+      class="rttf-flag"
+      src="https://flagcdn.com/${awayFlag}.svg">`
+: ""}
 
         <div>
 
@@ -9355,9 +9467,12 @@ function buildGrandFinalePage(){
 
         <div class="grand-final-trophy">
 
-            🏆
+    <img
+        src="images/world-cup-trophy.png"
+        alt="World Cup Trophy"
+        class="grand-final-trophy-image">
 
-        </div>
+</div>
 
  <!-- AWAY FINALIST -->
 
@@ -9404,9 +9519,24 @@ function buildGrandFinalePage(){
 
     <div class="grand-third-place">
 
-        THIRD PLACE FIXTURE
+    <div class="grand-third-title">
+
+        🥉 THIRD PLACE PLAY-OFF
 
     </div>
+
+    ${(() => {
+
+        const thirdPlaceFixture =
+            fixtures.find(f => f.round === 8);
+
+        return thirdPlaceFixture
+    ? buildRTTFCard(thirdPlaceFixture,"3P",true).outerHTML
+    : "";
+
+    })()}
+
+</div>
 
 </div>
 
